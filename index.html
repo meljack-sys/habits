@@ -1330,7 +1330,7 @@ function checkTrophies(){
   if(msg)toast((ui.lang==='ar'?'جائزة جديدة! ':'New trophy! ')+msg);
 }
 let COACHNOTE=null;
-try{COACHNOTE=JSON.parse(localStorage.getItem('istiqama.coach')||'null')}catch(e){}
+try{const x=JSON.parse(localStorage.getItem('istiqama.coach')||'null');if(x)COACHNOTE=x}catch(e){}
 async function loadCoachNote(){
   try{
     const r=await fetch('coach.json?t='+Date.now(),{cache:'no-store'});

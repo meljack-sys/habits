@@ -1329,6 +1329,34 @@ function checkTrophies(){
   try{localStorage.setItem('istiqama.trophies2',JSON.stringify(seen))}catch(e){}
   if(msg)toast((ui.lang==='ar'?'جائزة جديدة! ':'New trophy! ')+msg);
 }
+let COACHNOTE=null;
+try{COACHNOTE=JSON.parse(localStorage.getItem('istiqama.coach')||'null')}catch(e){}
+async function loadCoachNote(){
+  try{
+    const r=await fetch('coach.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)return;
+    const c=await r.json();
+    if(c&&c.notes&&typeof c.notes==='object'){
+      const changed=JSON.stringify(c)!==JSON.stringify(COACHNOTE);
+      COACHNOTE=c;try{localStorage.setItem('istiqama.coach',JSON.stringify(c))}catch(e){}
+      if(changed&&ui.tab==='impact'&&!(ui.tab==='setup'&&draftDirty))render();
+    }
+  }catch(e){}
+}
+function claudeNote(pids){
+  if(mode==='sample'||!COACHNOTE||!COACHNOTE.notes)return '';
+  const ar=ui.lang==='ar',N=COACHNOTE.notes;
+  const keys=(pids.length>1?['together']:[]).concat(pids).filter(k=>N[k]&&(ar?N[k].ar:N[k].en));
+  if(!keys.length)return '';
+  let when='';try{when=fmtShort.format(pd(COACHNOTE.week))}catch(e){}
+  const blocks=keys.map(k=>{
+    const t=String((ar?N[k].ar:N[k].en)||'').split(/\n+/).filter(Boolean).map(x=>'<p style="margin-top:8px;line-height:1.75">'+esc(x)+'</p>').join('');
+    const nm=k==='together'?(ar?'معًا':'Together'):pname(k);
+    return '<div style="margin-top:12px"><div class="pname"><span class="dot" style="background:'+(k==='together'?'var(--brand)':pcol(k))+'"></span>'+esc(nm)+'</div>'+t+'</div>';
+  }).join('');
+  return '<section class="card coach claude-note span2" data-notr="1" lang="'+LG()+'" dir="'+DIR()+'"><div class="areahead"><span class="areaico">'+svgi('heart')+'</span><h2>'+(ar?'رسالة من Claude':'A note from Claude')+'</h2></div>'
+    +(when?'<small class="note">'+(ar?'عن الأسبوع الذي بدأ في ':'For the week starting ')+esc(when)+'</small>':'')+blocks+'</section>';
+}
 async function loadContent(){
   try{
     const r=await fetch('content.json?t='+Date.now(),{cache:'no-store'});
@@ -2281,7 +2309,7 @@ function viewImpact(){
   const mo=P.mo(0);
   const head='<div class="datenav"><div style="flex:1"><h2>Impact on our lives</h2><small>'+(ui.period==='month'?fmtMonLong.format(mo[0]):'Since you started')+'</small></div><div class="pill-seg" role="group" aria-label="Period"><button data-act="period" data-v="month" aria-pressed="'+(ui.period==='month')+'">Month</button><button data-act="period" data-v="life" aria-pressed="'+(ui.period==='life')+'">All time</button></div></div>';
   const intro='<p class="disc">Two kinds of information appear here. <b>Your numbers</b> are counted from your own check-ins. <b>What research found</b> comes from published studies of large groups. Those studies show associations, not guarantees for any one person, and this is not medical or financial advice.</p>';
-  const coaches='<div class="grid two">'+(pids.length>1&&coachJointCard()?coachJointCard().replace('class="card coach"','class="card coach span2"'):'')+pids.map(coachCard).join('')+'</div>';
+  const coaches='<div class="grid two">'+claudeNote(pids)+(pids.length>1&&coachJointCard()?coachJointCard().replace('class="card coach"','class="card coach span2"'):'')+pids.map(coachCard).join('')+'</div>';
   const cards=AREAS.map(a=>{
     const k=kindsIn(pids,a.id);if(!Object.keys(k).length)return '';
     const m=metricRows(pids,k,a.id);
@@ -2601,7 +2629,7 @@ function boot(){
   else{const s=makeSample();S=s.cfg;L=s.logs;V=s.vals;mode='sample';sync='sample'}
   render();
   attachDb();
-  loadContent();
+  loadContent();loadCoachNote();
 }
 boot();
 /* Keep the shared Cairo-day background current when a tab remains open overnight. */

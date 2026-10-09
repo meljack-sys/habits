@@ -664,6 +664,121 @@ html[dir="rtl"] .tabs button{line-height:1.3}
 .top #lang,.pill-seg button,.focus label{min-height:44px}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .week-jicon,:root:not([data-theme="light"]) .agh .ic,:root:not([data-theme="light"]) .impact-chapter .areaico,:root:not([data-theme="light"]) .agroup2 .areaico{background:linear-gradient(140deg,color-mix(in srgb,var(--cat,#A16ADC) 63%,#170B2A),color-mix(in srgb,var(--cat,#8D45D3) 36%,#170B2A));color:#FFFFFF}}
 :root[data-theme="dark"] .week-jicon,:root[data-theme="dark"] .agh .ic,:root[data-theme="dark"] .impact-chapter .areaico,:root[data-theme="dark"] .agroup2 .areaico{background:linear-gradient(140deg,color-mix(in srgb,var(--cat,#A16ADC) 63%,#170B2A),color-mix(in srgb,var(--cat,#8D45D3) 36%,#170B2A));color:#FFFFFF}
+/* === Claude's weekly letter — Option A (presentation only) === */
+/* All colour overrides are scoped to the new card, leaving the approved app intact. */
+.claude-note{
+  --cn-paper-start:#FEFBFF;--cn-paper-mid:#FCF8FF;--cn-paper-end:#FFFFFF;
+  --cn-stroke:#D4B9E6;--cn-rule:#9560D3;--cn-fold:#EEE0FA;
+  --cn-seal-bg:#F3E6FC;--cn-seal-border:#CBAAE5;
+  --cn-closed:rgba(250,243,255,.55);--cn-closed-border:#E2D0EC;
+  --cn-open:#FFFFFF;--cn-open-border:#C7A7DE;
+  position:relative;isolation:isolate;overflow:hidden;
+  border:1px solid var(--cn-stroke);border-top:3px solid var(--cn-rule);
+  border-radius:17px;padding:19px 15px 16px;
+  background:linear-gradient(155deg,var(--cn-paper-start),var(--cn-paper-mid) 56%,var(--cn-paper-end));
+  box-shadow:0 5px 22px rgba(62,33,98,.085);
+  color:var(--ink);font-size:14.3px;line-height:1.72;
+}
+.claude-note::before{
+  content:"";position:absolute;inset-block-start:0;inset-inline-end:0;
+  width:76px;height:76px;opacity:.65;pointer-events:none;
+  background:radial-gradient(circle at 100% 0,var(--cn-fold) 0,var(--cn-fold) 35%,transparent 36%);
+}
+.claude-note .cn-head{position:relative;display:flex;align-items:center;gap:12px;margin:0}
+.claude-note .cn-heading{flex:1;min-width:0}
+.claude-note .cn-head h2{font-size:20px;line-height:1.4;letter-spacing:-.025em;font-weight:800;color:var(--ink)}
+.claude-note .cn-seal{
+  flex:none;display:grid;place-items:center;width:43px;height:43px;
+  border-radius:50%;background:var(--cn-seal-bg);border:1.5px solid var(--cn-seal-border);
+  color:var(--brand-ink);box-shadow:0 3px 7px rgba(63,31,88,.07);
+}
+.claude-note .cn-seal svg{width:33px;height:33px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.claude-note .cn-sub{display:block;margin-top:6px;font-size:12px;line-height:1.65;font-weight:600;color:var(--ink3)}
+.claude-note .cn-persons{display:grid;gap:9px;margin-top:21px;min-width:0}
+.claude-note .cn-person{
+  min-width:0;background:var(--cn-closed);border:1px solid var(--cn-closed-border);
+  border-radius:12px;
+}
+.claude-note .cn-person[open]{background:var(--cn-open);border-color:var(--cn-open-border);box-shadow:0 3px 12px rgba(86,51,114,.065)}
+.claude-note summary{
+  list-style:none;display:flex;align-items:center;justify-content:space-between;
+  gap:7px;min-height:52px;padding:0 13px;cursor:pointer;touch-action:manipulation;
+}
+.claude-note summary::-webkit-details-marker{display:none}
+.claude-note summary::marker{content:""}
+.claude-note summary:focus-visible{outline:3px solid #AF75EF;outline-offset:3px;border-radius:9px}
+.claude-note .cn-name{display:flex;align-items:center;gap:9px;margin:0;font-size:15px;font-weight:800;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
+.claude-note .cn-dot{display:block;width:11px;height:11px;flex:none;border-radius:50%}
+.claude-note .cn-person[data-key="together"] .cn-dot{background:#7635BD!important}
+.claude-note .cn-chevron{
+  display:block;flex:none;width:10px;height:10px;margin-inline:8px 5px;
+  border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);
+  transform:rotate(45deg);transition:transform .16s;
+}
+.claude-note .cn-person[open] .cn-chevron{transform:rotate(225deg)}
+.claude-note .cn-inner{padding:1px 13px 14px;min-width:0}
+.claude-note .cn-prose{font-size:14.3px;line-height:1.8;overflow-wrap:anywhere;white-space:normal}
+.claude-note .cn-prose p{margin:0 0 9px;color:var(--ink2)}
+.claude-note .cn-prose p:first-child{color:var(--ink);font-weight:650}
+.claude-note .cn-prose p:last-child{margin-bottom:0}
+.claude-note .cn-areas{display:grid;gap:9px;margin-top:16px;min-width:0}
+.claude-note .cn-area{
+  --cn-cat:#7133AF;--cn-cat-bg:#F3E8FC;--cn-cat-stroke:#B58CD8;
+  background:var(--cn-cat-bg);border-inline-start:3px solid var(--cn-cat-stroke);
+  border-radius:9px;padding:10px 11px;min-width:0;overflow-wrap:anywhere;
+}
+.claude-note .cn-area.area-faith{--cn-cat:#7133AF;--cn-cat-bg:#F2E5FE;--cn-cat-stroke:#B58CD8}
+.claude-note .cn-area.area-body{--cn-cat:#974408;--cn-cat-bg:#FFF0DF;--cn-cat-stroke:#E1A35E}
+.claude-note .cn-area.area-mind{--cn-cat:#00657C;--cn-cat-bg:#E2F6F9;--cn-cat-stroke:#72C4D1}
+.claude-note .cn-area.area-family{--cn-cat:#795600;--cn-cat-bg:#FFF3D9;--cn-cat-stroke:#DFC17B}
+.claude-note .cn-area.area-money{--cn-cat:#07643B;--cn-cat-bg:#E3F6E9;--cn-cat-stroke:#92CAA6}
+.claude-note .cn-area.area-heart{--cn-cat:#9C2453;--cn-cat-bg:#FDEAF1;--cn-cat-stroke:#D68DAA}
+.claude-note .cn-area .agh{display:flex;align-items:center;gap:8px;margin:0 0 4px;color:var(--cn-cat);font-size:12px;font-weight:850;line-height:1.55;letter-spacing:.015em;text-transform:uppercase}
+.claude-note .cn-area .agh .ic{flex:none;width:22px;height:22px;padding:1px;border-radius:7px;background:transparent;color:var(--cn-cat)}
+.claude-note .cn-area p{margin:0;color:var(--ink2);font-size:13.6px;line-height:1.77}
+.claude-note .cn-flourish{display:block;width:89px;height:18px;margin:18px 6px 0 auto;color:var(--brand);opacity:.72}
+.claude-note .cn-flourish path{stroke:currentColor;stroke-width:1.3;fill:none;stroke-linecap:round}
+/* Explicit theme and OS-driven theme use the same high-contrast jewel colours. */
+:root[data-theme="dark"] .claude-note{
+  --cn-paper-start:#402851;--cn-paper-mid:#372443;--cn-paper-end:#342344;
+  --cn-stroke:#816298;--cn-rule:#BE92ED;--cn-fold:#624279;
+  --cn-seal-bg:#53366A;--cn-seal-border:#A57DC3;
+  --cn-closed:#3C294C;--cn-closed-border:#795F88;
+  --cn-open:#3A294C;--cn-open-border:#AA85C5;
+}
+:root[data-theme="dark"] .claude-note .cn-person[data-key="together"] .cn-dot{background:#C896FF!important}
+:root[data-theme="dark"] .claude-note .cn-area.area-faith{--cn-cat:#E5BEFF;--cn-cat-bg:#482D5F;--cn-cat-stroke:#9462BD}
+:root[data-theme="dark"] .claude-note .cn-area.area-body{--cn-cat:#FFBE92;--cn-cat-bg:#503328;--cn-cat-stroke:#AA7046}
+:root[data-theme="dark"] .claude-note .cn-area.area-mind{--cn-cat:#89E6EF;--cn-cat-bg:#26424D;--cn-cat-stroke:#488B9A}
+:root[data-theme="dark"] .claude-note .cn-area.area-family{--cn-cat:#FFE09A;--cn-cat-bg:#50422B;--cn-cat-stroke:#A58B53}
+:root[data-theme="dark"] .claude-note .cn-area.area-money{--cn-cat:#A3F1C0;--cn-cat-bg:#274934;--cn-cat-stroke:#5C9F78}
+:root[data-theme="dark"] .claude-note .cn-area.area-heart{--cn-cat:#FFB0CB;--cn-cat-bg:#4E2B41;--cn-cat-stroke:#A8617E}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .claude-note{
+    --cn-paper-start:#402851;--cn-paper-mid:#372443;--cn-paper-end:#342344;
+    --cn-stroke:#816298;--cn-rule:#BE92ED;--cn-fold:#624279;
+    --cn-seal-bg:#53366A;--cn-seal-border:#A57DC3;
+    --cn-closed:#3C294C;--cn-closed-border:#795F88;
+    --cn-open:#3A294C;--cn-open-border:#AA85C5;
+  }
+  :root:not([data-theme="light"]) .claude-note .cn-person[data-key="together"] .cn-dot{background:#C896FF!important}
+  :root:not([data-theme="light"]) .claude-note .cn-area.area-faith{--cn-cat:#E5BEFF;--cn-cat-bg:#482D5F;--cn-cat-stroke:#9462BD}
+  :root:not([data-theme="light"]) .claude-note .cn-area.area-body{--cn-cat:#FFBE92;--cn-cat-bg:#503328;--cn-cat-stroke:#AA7046}
+  :root:not([data-theme="light"]) .claude-note .cn-area.area-mind{--cn-cat:#89E6EF;--cn-cat-bg:#26424D;--cn-cat-stroke:#488B9A}
+  :root:not([data-theme="light"]) .claude-note .cn-area.area-family{--cn-cat:#FFE09A;--cn-cat-bg:#50422B;--cn-cat-stroke:#A58B53}
+  :root:not([data-theme="light"]) .claude-note .cn-area.area-money{--cn-cat:#A3F1C0;--cn-cat-bg:#274934;--cn-cat-stroke:#5C9F78}
+  :root:not([data-theme="light"]) .claude-note .cn-area.area-heart{--cn-cat:#FFB0CB;--cn-cat-bg:#4E2B41;--cn-cat-stroke:#A8617E}
+}
+html[dir="rtl"] .claude-note{line-height:1.85}
+html[dir="rtl"] .claude-note .cn-head h2{letter-spacing:0}
+html[dir="rtl"] .claude-note .cn-prose{line-height:1.93}
+html[dir="rtl"] .claude-note .cn-area p{line-height:1.86}
+html[dir="rtl"] .claude-note .cn-area .agh{letter-spacing:0;text-transform:none;font-size:12.4px}
+/* On RTL, anchor the signature at the physical left (the end of reading). */
+html[dir="rtl"] .claude-note .cn-flourish{margin-inline-start:auto;margin-inline-end:6px}
+@media(prefers-reduced-motion:reduce){.claude-note .cn-chevron{transition:none}}
+/* === End Claude letter styling === */
+
 </style>
 </head>
 <body>
@@ -747,6 +862,7 @@ const LIB=[
   H('tafsir','Read tafsir, 2 pages','اقرأ التفسير (صفحتان)','faith','tafsir',{amount:2}),
   H('qiyam','Night prayer','قيام الليل','faith','practice',{target:3}),
   H('witr','Shafa and Witr','الشفع والوتر','faith','practice'),
+  H('mulk','Read Surat Al Mulk every night','اقرأ سورة الملك كل ليلة','faith','practice',{target:7}),
   H('azkar_am','Morning azkar','أذكار الصباح','faith','practice'),
   H('azkar_pm','Evening azkar','أذكار المساء','faith','practice'),
   H('fast','Fast Monday or Thursday','صيام الاثنين أو الخميس','faith','practice',{target:2,per:'month'}),
@@ -1350,15 +1466,15 @@ function claudeNote(pids){
   if(!keys.length)return '';
   let when='';try{when=fmtShort.format(pd(COACHNOTE.week))}catch(e){}
   const blocks=keys.map(k=>{
-    const t=String((ar?N[k].ar:N[k].en)||'').split(/\n+/).filter(Boolean).map(x=>'<p style="margin-top:8px;line-height:1.75">'+esc(x)+'</p>').join('');
+    const t=String((ar?N[k].ar:N[k].en)||'').split(/\n+/).filter(Boolean).map(x=>'<p>'+esc(x)+'</p>').join('');
     const nm=k==='together'?(ar?'معًا':'Together'):pname(k);
     const AR_=N[k].areas||{};
     const ar2=AREAS.filter(a=>AR_[a.id]&&String((ar?AR_[a.id].ar:AR_[a.id].en)||'').trim()).map(a=>
-      '<div class="cn-area area-'+esc(a.id)+'" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)"><div class="agh area-'+esc(a.id)+'">'+svgi(a.id)+'<span>'+esc(areaName(a.id))+'</span></div><p style="margin-top:6px;line-height:1.75">'+esc(ar?AR_[a.id].ar:AR_[a.id].en)+'</p></div>').join('');
-    return '<div style="margin-top:12px"><div class="pname"><span class="dot" style="background:'+(k==='together'?'var(--brand)':pcol(k))+'"></span>'+esc(nm)+'</div>'+t+ar2+'</div>';
+      '<div class="cn-area area-'+esc(a.id)+'"><div class="agh area-'+esc(a.id)+'">'+svgi(a.id)+'<span>'+esc(areaName(a.id))+'</span></div><p>'+esc(ar?AR_[a.id].ar:AR_[a.id].en)+'</p></div>').join('');
+    return '<details class="cn-person" data-key="'+esc(k)+'"'+(k===keys[0]?' open':'')+'><summary><span class="pname cn-name"><span class="dot cn-dot" style="background:'+(k==='together'?'var(--brand)':pcol(k))+'"></span>'+esc(nm)+'</span><span class="cn-chevron" aria-hidden="true"></span></summary><div class="cn-inner"><div class="cn-prose">'+t+'</div>'+(ar2?'<div class="cn-areas">'+ar2+'</div>':'')+'</div></details>';
   }).join('');
-  return '<section class="card coach claude-note span2" data-notr="1" lang="'+LG()+'" dir="'+DIR()+'"><div class="areahead"><span class="areaico">'+svgi('heart')+'</span><h2>'+(ar?'رسالة من Claude':'A note from Claude')+'</h2></div>'
-    +(when?'<small class="note">'+(ar?'عن الأسبوع الذي بدأ في ':'For the week starting ')+esc(when)+'</small>':'')+blocks+'</section>';
+  return '<section class="card coach claude-note span2" data-notr="1" lang="'+LG()+'" dir="'+DIR()+'"><div class="areahead cn-head"><span class="areaico cn-seal"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 11.5c4-4 10-2 11 1 1-3 7-5 11-1 6 6-4 16-11 20-7-4-17-14-11-20z"/><path d="M12 19c3 0 5 3 7 4 3-2 5-4 9-4"/></svg></span><div class="cn-heading"><h2>'+(ar?'رسالة من Claude':'A note from Claude')+'</h2>'
+    +(when?'<small class="note cn-sub">'+(ar?'عن الأسبوع الذي بدأ في ':'For the week starting ')+esc(when)+'</small>':'')+'</div></div><div class="cn-persons">'+blocks+'</div><svg class="cn-flourish" viewBox="0 0 92 18" aria-hidden="true"><path d="M2 13c16-16 20 10 36 0 10-8 20-12 26-6 5 5 10 8 25-1"/></svg></section>';
 }
 async function loadContent(){
   try{

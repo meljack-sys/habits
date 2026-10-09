@@ -1352,7 +1352,10 @@ function claudeNote(pids){
   const blocks=keys.map(k=>{
     const t=String((ar?N[k].ar:N[k].en)||'').split(/\n+/).filter(Boolean).map(x=>'<p style="margin-top:8px;line-height:1.75">'+esc(x)+'</p>').join('');
     const nm=k==='together'?(ar?'معًا':'Together'):pname(k);
-    return '<div style="margin-top:12px"><div class="pname"><span class="dot" style="background:'+(k==='together'?'var(--brand)':pcol(k))+'"></span>'+esc(nm)+'</div>'+t+'</div>';
+    const AR_=N[k].areas||{};
+    const ar2=AREAS.filter(a=>AR_[a.id]&&String((ar?AR_[a.id].ar:AR_[a.id].en)||'').trim()).map(a=>
+      '<div class="cn-area area-'+esc(a.id)+'" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--line)"><div class="agh area-'+esc(a.id)+'">'+svgi(a.id)+'<span>'+esc(areaName(a.id))+'</span></div><p style="margin-top:6px;line-height:1.75">'+esc(ar?AR_[a.id].ar:AR_[a.id].en)+'</p></div>').join('');
+    return '<div style="margin-top:12px"><div class="pname"><span class="dot" style="background:'+(k==='together'?'var(--brand)':pcol(k))+'"></span>'+esc(nm)+'</div>'+t+ar2+'</div>';
   }).join('');
   return '<section class="card coach claude-note span2" data-notr="1" lang="'+LG()+'" dir="'+DIR()+'"><div class="areahead"><span class="areaico">'+svgi('heart')+'</span><h2>'+(ar?'رسالة من Claude':'A note from Claude')+'</h2></div>'
     +(when?'<small class="note">'+(ar?'عن الأسبوع الذي بدأ في ':'For the week starting ')+esc(when)+'</small>':'')+blocks+'</section>';

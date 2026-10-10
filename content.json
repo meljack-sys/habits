@@ -1,6 +1,6 @@
 {
  "v": 2,
- "updated": "2026-10-09",
+ "updated": "2026-10-10",
  "pools": {
   "today": [
    {
@@ -1879,6 +1879,45 @@
     3,
     10,
     25
+   ]
+  },
+  {
+   "id": "k_budgetdays",
+   "icon": "wallet",
+   "en": "Within budget",
+   "ar": "ضمن الميزانية",
+   "dEn": "Days you stayed within the daily limit. Next level: {n} days.",
+   "dAr": "أيام التزمت فيها بالحد اليومي. المستوى التالي: {n} يومًا.",
+   "rule": {
+    "t": "days",
+    "h": "under"
+   },
+   "tiers": [
+    3,
+    7,
+    14,
+    30,
+    60,
+    100
+   ]
+  },
+  {
+   "id": "k_logger",
+   "icon": "check",
+   "en": "Every day logged",
+   "ar": "كل يوم مسجّل",
+   "dEn": "Full weeks with spending logged every day. Next level: {n} weeks.",
+   "dAr": "أسابيع كاملة سجّلت فيها مصروفك كل يوم. المستوى التالي: {n} أسبوعًا.",
+   "rule": {
+    "t": "logweeks"
+   },
+   "tiers": [
+    1,
+    2,
+    4,
+    8,
+    12,
+    26
    ]
   }
  ]

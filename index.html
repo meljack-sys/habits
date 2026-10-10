@@ -866,6 +866,14 @@ select.in{width:100%}
 .fx-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:start}
 .fx-main{display:grid;min-width:0;overflow-wrap:anywhere}
 .fx-side{display:grid;gap:6px;justify-items:end}
+.fx-hint{margin:0 0 6px}
+.bd-acc{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
+.bd-acc-h{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;min-height:48px;background:none;border:0;padding:6px 0;font:inherit;color:inherit;text-align:start;cursor:pointer}
+.bd-acc-h>span:first-child{display:grid;gap:2px;min-width:0}
+.bd-acc-h small{font-weight:400}
+.bd-acc-i{font-size:22px;font-weight:700;width:32px;text-align:center;flex:none}
+.bd-acc-b{display:grid;gap:10px;padding-bottom:6px}
+.bd-savebar{position:sticky;bottom:84px;z-index:3;padding:10px 0;background:var(--surface)}
 .fx-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .fx-st{font-size:12.5px;font-weight:700;color:var(--ink2);display:inline-flex;gap:4px;align-items:center}
 .fx-st .ic{width:13px;height:13px}
@@ -901,6 +909,23 @@ select.in{width:100%}
 .cell.auto{cursor:default}
 .autorow{cursor:default}
 .cat-oo{margin:6px 0 0}
+
+/* ---------- Money tab pages (functional styling, to be restyled) ---------- */
+.mnav{display:flex;flex-wrap:wrap;margin:0 0 12px}
+.mnav button{flex:1 1 auto;min-height:44px}
+.mwrap{display:block}
+.mlog-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 12px}
+.mlog-nav b{flex:1;text-align:center}
+.mlog-nav .chipbtn{min-height:44px;min-width:44px}
+.mlog-add{width:100%;min-height:48px;margin:12px 0}
+.mlog-day-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:44px;background:none;border:0;padding:6px 0;color:inherit;font:inherit;text-align:start;cursor:pointer}
+.mlog-day-btn[aria-current="true"]{font-weight:700}
+.moneymini .mc-nums{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px}
+.mc-fx{display:block;width:100%;text-align:start;background:none;border:0;padding:8px 0;color:inherit;font:inherit;cursor:pointer;min-height:44px}
+#sheet.as-page{position:static;inset:auto;z-index:auto;display:block}
+#sheet.as-page[hidden]{display:none}
+#sheet.as-page .sheet-card{max-height:none;overflow:visible;max-width:none;border-radius:var(--r,18px);box-shadow:none;padding:16px 14px}
+#sheet.as-page [data-act="sheetclose"]{display:none}
 </style>
 </head>
 <body>
@@ -1048,6 +1073,7 @@ const IC={
 };
 IC.faith=IC.spiritual;IC.mind=IC.knowledge;IC.family=IC.relationships;IC.money=IC.wealth;IC.heart=IC.health;
 IC.body='<circle cx="12" cy="5" r="2.2"/><path d="M12 8.5v5.5M7.5 10.5l4.5-2 4.5 2M9 20.5l3-6.5 3 6.5"/>';
+IC.t_money=IC.wealth;
 IC.plus='<path d="M12 5v14M5 12h14"/>';IC.minus='<path d="M5 12h14"/>';IC.warn='<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.4"/>';
 const svgi=(n,cls,sw)=>'<svg class="ic '+(cls||'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||2)+'" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
 const areaName=id=>{const a=AREAS.find(x=>x.id===id)||AREAS[5];return (typeof ui!=='undefined'&&ui.lang==='ar')?a.ar:a.name};
@@ -1083,7 +1109,7 @@ const P={
    Order does not matter: longer phrases are tried first. Arabic is plain spoken style. */
 const AR_PAIRS=[
 ['spent','صُرف'],['average','المتوسط'],['a day','في اليوم'],['month end','نهاية الشهر'],['at this pace','بهذا المعدل'],['logged','مسجّلة'],['this week','هذا الأسبوع'],['last month','الشهر الماضي'],
-['Edit categories','عدّل الفئات'],['Within the daily limit (automatic)','ضمن الحد اليومي (تلقائي)'],['Tap a category to show or hide it. Add your own below. Past expenses keep their category.','اضغط على الفئة لإظهارها أو إخفائها. أضف فئاتك أدناه. المصروفات القديمة تحتفظ بفئتها.'],['Categories','الفئات'],['New category','فئة جديدة'],['e.g. Pets','مثلًا: حيوانات أليفة'],['Arabic name (optional)','الاسم بالعربي (اختياري)'],['Add category','أضف الفئة'],['Back','رجوع'],['Give the category a name first.','اكتب اسم الفئة أولًا.'],['That category already exists.','هذه الفئة موجودة بالفعل.'],['Category added.','تمت إضافة الفئة.'],['Where the money goes','أين يذهب المال'],['Last month','الشهر الماضي'],['Week','الأسبوع'],['Month','الشهر'],['spent<br>this week','صُرف<br>هذا الأسبوع'],['No expenses logged in this period yet. Add them from Today and this fills in by itself.','لا توجد مصروفات مسجّلة في هذه الفترة بعد. سجّلها من «اليوم» وهتتعبّى لوحدها.'],['Biggest expense:','أكبر مصروف:'],['Not categorised','بدون فئة'],
+['Edit categories','عدّل الفئات'],['Money','المال'],['Within the daily limit (automatic)','ضمن الحد اليومي (تلقائي)'],['Tap a category to show or hide it. Add your own below. Past expenses keep their category.','اضغط على الفئة لإظهارها أو إخفائها. أضف فئاتك أدناه. المصروفات القديمة تحتفظ بفئتها.'],['Categories','الفئات'],['New category','فئة جديدة'],['e.g. Pets','مثلًا: حيوانات أليفة'],['Arabic name (optional)','الاسم بالعربي (اختياري)'],['Add category','أضف الفئة'],['Back','رجوع'],['Give the category a name first.','اكتب اسم الفئة أولًا.'],['That category already exists.','هذه الفئة موجودة بالفعل.'],['Category added.','تمت إضافة الفئة.'],['Where the money goes','أين يذهب المال'],['Last month','الشهر الماضي'],['Week','الأسبوع'],['Month','الشهر'],['spent<br>this week','صُرف<br>هذا الأسبوع'],['No expenses logged in this period yet. Add them from Today and this fills in by itself.','لا توجد مصروفات مسجّلة في هذه الفترة بعد. سجّلها من «اليوم» وهتتعبّى لوحدها.'],['Biggest expense:','أكبر مصروف:'],['Not categorised','بدون فئة'],
 ['shared by both of you','مشترك بينكماا'],
 ['Tap to add what you spend. Limit # EGP a day','اضغط لتسجّل مصروفك. الحد # جنيه في اليوم'],['# expense','مصروف #'],['# expenses','# مصروفات'],['Total for the day','إجمالي اليوم'],['Add expense','أضف المصروف'],['Done','تم'],['Amount (EGP)','المبلغ (جنيه)'],['What for (optional)','لأي شيء (اختياري)'],['e.g. bread, taxi','مثلًا: عيش، تاكسي'],['Added today','المضاف اليوم'],['Added on this day','المضاف في هذا اليوم'],['Nothing added yet.','لم تُضف شيئًا بعد.'],['Enter an amount.','اكتب المبلغ.'],['Add each expense when it happens. The total adds up by itself and a new day starts at midnight.','سجّل كل مصروف وقت ما يحصل. الإجمالي بيتجمع لوحده، واليوم الجديد يبدأ عند منتصف الليل.'],['Delete this expense','احذف هذا المصروف'],['Category','الفئة'],['Expense','مصروف'],['Earlier total','إجمالي سابق'],['limit # EGP · over by #','الحد # جنيه · زاد بـ #'],['limit # EGP · left #','الحد # جنيه · المتبقي #'],
 /* tabs and chrome */
@@ -2590,7 +2616,7 @@ function viewToday(){
         return '<div class="agroup area-'+a.id+'"><div class="agh">'+svgi(a.id)+'<span>'+esc(areaName(a.id))+'</span></div>'+rs.map(h=>habitRow(h,pid,d,dstr)).join('')+'</div>';
       }).join('')+'</div></section>';
   }).join('');
-  return nav+(isToday?meBanner()+moneyCard():'')+'<div class="grid'+(activePids().length>1?' two':'')+'">'+blocks+'</div>';
+  return nav+(isToday?meBanner()+moneyMini():'')+'<div class="grid'+(activePids().length>1?' two':'')+'">'+blocks+'</div>';
 }
 
 /* ---------- week ---------- */
@@ -2654,7 +2680,7 @@ function openSheet(type,pid,hid,dstr){
   ui.sheet={type:type,pid:pid,hid:hid,d:dstr,tag:(cur&&typeof cur==='object')?cur.t:null,note:(cur&&typeof cur==='object')?(cur.n||''):''};
   renderSheet();
 }
-function closeSheet(){ui.sheet=null;renderSheet()}
+function closeSheet(){ui.sheet=null;if(ui.tab==='money')render();else renderSheet()}
 function renderSheet(){
   const el=$('#sheet');if(!el)return;
   if(!ui.sheet){el.hidden=true;el.innerHTML='';return}
@@ -2693,7 +2719,7 @@ function collectSf(){
 }
 const sfv=(sh,k,d)=>(sh.f&&sh.f[k]!==undefined)?sh.f[k]:(d===undefined?'':d);
 function sfSet(k,v){const sh=ui.sheet;if(!sh)return;(sh.f||(sh.f={}))[k]=v;const n=document.querySelector('#sheet [data-sf="'+k+'"]');if(n){if(n.type==='checkbox')n.checked=!!v;else n.value=v}}
-function sheetShell(label,inner,cls){return '<div class="sheet-bg" data-act="sheetclose"></div><div class="sheet-card exp-sheet '+(cls||'')+'" role="dialog" aria-modal="true" aria-label="'+esc(label)+'">'+inner+'</div>'}
+function sheetShell(label,inner,cls){if(ui.sheet&&ui.sheet.page)return '<div class="sheet-card exp-sheet mpage-card '+(cls||'')+'">'+inner+'</div>';return '<div class="sheet-bg" data-act="sheetclose"></div><div class="sheet-card exp-sheet '+(cls||'')+'" role="dialog" aria-modal="true" aria-label="'+esc(label)+'">'+inner+'</div>'}
 const tyTxt={x:['Expense','مصروف'],r:['Refund','مرتجع'],i:['Income','دخل']};
 function lastAcSet(k){ui.lastAc=k;try{localStorage.setItem('istiqama.lastac',k||'')}catch(e){}}
 function chipBtn(act,val,txt,sel,extra){return '<button type="button" class="chipbtn'+(sel?' sel':'')+(extra?' '+extra:'')+'" data-act="'+act+'" data-v="'+esc(val)+'" data-notr="1" aria-pressed="'+(!!sel)+'">'+esc(txt)+'</button>'}
@@ -2880,6 +2906,8 @@ function renderFixSheet(el,sh){
   const can=canEditBud();
   const nav='<div class="datenav fx-nav"><button class="iconbtn" data-act="fxmo" data-n="-1" aria-label="'+esc(T2('Previous month','الشهر الماضي'))+'">'+svgi('chl')+'</button><div style="flex:1;min-width:0;text-align:center"><h2>'+esc(fmtMonLong.format(md))+'</h2></div><button class="iconbtn" data-act="fxmo" data-n="1" aria-label="'+esc(T2('Next month','الشهر القادم'))+'"'+(ym>=prevYm(nowYm,-6)?' disabled':'')+'>'+svgi('chr')+'</button></div>';
   const sm=fxSummary(ym);
+  const noDay=bud().fixed.filter(f=>fxActive(f,ym)&&fxState(f,ym).st==='noday').length;
+  const hint=(noDay&&can)?'<div class="note fx-hint">'+T2(noDay+(noDay===1?' payment has':' payments have')+' no due day yet. It is optional: tap Edit on a payment to add one and get reminders.',noDay+(noDay===1?' دفعة بلا':' دفعات بلا')+' يوم استحقاق بعد. هذا اختياري: اضغط تعديل على أي دفعة لإضافته وتصلك التذكيرات.')+'</div>':'';
   const summary='<div class="note fx-sum">'+T2(sm.paid+' of '+sm.n+' paid'+(sm.over?' · '+sm.over+' overdue':'')+(sm.soon?' · '+sm.soon+' due within a week':''),sm.paid+' من '+sm.n+' مدفوعة'+(sm.over?' · '+sm.over+' متأخرة':'')+(sm.soon?' · '+sm.soon+' مستحقة خلال أسبوع':''))+'</div>';
   const groups=['eg','uae','loan'].map(g=>{
     const items=bud().fixed.filter(f=>f.g===g&&fxActive(f,ym));if(!items.length)return '';
@@ -2893,14 +2921,16 @@ function renderFixSheet(el,sh){
       let tot=0;items.forEach(f=>{const p=fxPaid(ym,f.k);tot+=p?Number(p.a)||0:fxAmt(f)});
       foot='<div class="fx-foot">'+T2('Siblings fund '+nf(fund)+' AED a month. You cover the gap: ','يحوّل الإخوة '+nf(fund)+' درهمًا شهريًا. وأنت تغطي الفرق: ')+'<b class="num">'+nf(Math.max(0,tot-fund))+' AED</b></div>';
     }
-    const rows=items.map(f=>{
+    const rank={overdue:0,soon:1,later:2,noday:3,paid:4};
+    const sorted=items.map((f,i)=>({f:f,i:i,r:rank[fxState(f,ym).st]})).sort((a,b)=>a.r-b.r||a.i-b.i).map(x=>x.f);
+    const rows=sorted.map(f=>{
       const s=fxState(f,ym),c=fxCur(f),am=fxAmt(f);
       let stTxt,stCls=s.st;
       if(s.st==='paid')stTxt=T2('Paid ','تم الدفع ')+fmtShort.format(pd(s.p.d))+' · '+nfc(s.p.a,c);
       else if(s.st==='overdue')stTxt=s.n?T2('Overdue by '+s.n+(s.n===1?' day':' days'),'متأخر '+s.n+(s.n===1?' يوم':' أيام')):T2('Overdue','متأخر');
       else if(s.st==='soon')stTxt=s.n===0?T2('Due today','مستحق اليوم'):T2('Due in '+s.n+(s.n===1?' day':' days'),'مستحق بعد '+s.n+(s.n===1?' يوم':' أيام'));
       else if(s.st==='later')stTxt=T2('Due on day '+s.day,'مستحق يوم '+s.day);
-      else stTxt=T2('No due day set','لم يُحدَّد يوم الاستحقاق');
+      else stTxt='';
       const note=fxNote(f);
       const open=sh.k===f.k;
       let form='';
@@ -2914,14 +2944,14 @@ function renderFixSheet(el,sh){
           +'<div class="sticky-save"><button type="button" class="btn" data-act="fxeditsave" data-k="'+esc(f.k)+'">'+T2('Save','احفظ')+'</button><button type="button" class="btn alt" data-act="fxclose">'+T2('Cancel','إلغاء')+'</button></div></div>';
       }
       return '<li class="fx-item fx-'+stCls+'"><div class="fx-row"><div class="fx-main"><b data-notr="1">'+esc(fxName(f))+'</b><small class="muted" data-notr="1">'+nfc(am,c)+(f.day?' · '+T2('day '+f.day,'يوم '+f.day):'')+(note?' · '+esc(note):'')+'</small></div>'
-        +'<div class="fx-side"><span class="fx-st fx-st-'+stCls+'">'+(s.st==='paid'?svgi('check','',3):s.st==='overdue'?svgi('warn','',3):'')+esc(stTxt)+'</span>'
+        +'<div class="fx-side">'+(stTxt?'<span class="fx-st fx-st-'+stCls+'">'+(s.st==='paid'?svgi('check','',3):s.st==='overdue'?svgi('warn','',3):'')+esc(stTxt)+'</span>':'')
         +'<span class="fx-btns">'+(s.st==='paid'?'<button type="button" class="chipbtn" data-act="fxundo" data-k="'+esc(f.k)+'">'+T2('Undo','تراجع')+'</button>':'<button type="button" class="chipbtn sel" data-act="fxopen" data-k="'+esc(f.k)+'">'+T2('Mark paid','تم الدفع')+'</button>')
         +(can?'<button type="button" class="chipbtn" data-act="fxedit" data-k="'+esc(f.k)+'">'+T2('Edit','تعديل')+'</button>':'')+'</span></div></div>'+form+'</li>';
     }).join('');
     return '<section class="fx-group"><div class="fx-gh"><h4>'+T2(GRP[g][0],GRP[g][1])+'</h4><span class="fx-gsum num">'+esc(gsum)+'</span></div><ul class="fx-list">'+rows+'</ul>'+foot+'</section>';
   }).join('');
   const inner='<h3>'+T2('Fixed monthly payments','المدفوعات الشهرية الثابتة')+'</h3><div class="note" style="margin:-2px 0 10px">'+T2('Reminders only. Marking one paid saves the date and amount. They never count toward the daily limit.','تذكيرات فقط. عند تحديد دفعة كمدفوعة يُسجَّل التاريخ والمبلغ. ولا تُحسب أبدًا ضمن الحد اليومي.')+'</div>'
-    +nav+summary+groups+'<div class="sticky-save"><button type="button" class="btn alt" data-act="sheetclose">'+T2('Close','إغلاق')+'</button></div>';
+    +nav+summary+hint+groups;
   el.innerHTML=sheetShell(T2('Fixed monthly payments','المدفوعات الشهرية الثابتة'),inner,'fx-sheet');
   el.hidden=false;trDom();
 }
@@ -2956,17 +2986,21 @@ function renderBudSheet(el,sh){
   const rates=['AED','SAR','USD'].map(c=>'<label class="f bd-rate">1 '+c+' =<span class="bd-rin"><input class="in num" type="number" inputmode="decimal" min="0" step="any" data-sf="rt-'+c+'" value="'+esc(sfv(sh,'rt-'+c,String(rateOf(c))))+'"'+(can?'':' disabled')+'><small>EGP</small></span></label>').join('');
   const accts='<div class="chips bd-accts">'+bud().accts.map(a=>'<span class="chipbtn acct-chip" data-notr="1">'+esc(acctName(a.k))+(can?'<button type="button" class="acct-x" data-act="acdel" data-v="'+esc(a.k)+'" aria-label="'+esc(T2('Remove ','احذف ')+acctName(a.k))+'">×</button>':'')+'</span>').join('')+'</div>'
     +(can?'<div class="bd-add"><label class="f">'+T2('New account or card (name only, never the full number)','حساب أو بطاقة جديدة (الاسم فقط، ولا تكتب الرقم كاملًا أبدًا)')+'<input class="in" data-sf="acn" type="text" maxlength="30" value="'+esc(f('acn'))+'" autocomplete="off" placeholder="'+esc(T2('e.g. Visa 4821','مثلًا فيزا 4821'))+'"></label><button type="button" class="btn alt" data-act="acadd">'+T2('Add account','أضف حساب')+'</button></div>':'');
-  const addLine=can?'<div class="bd-add"><h4 class="exp-lh">'+T2('Add a budget line','أضف بند ميزانية')+'</h4><label class="f">'+T2('Name','الاسم')+'<input class="in" data-sf="ln" type="text" maxlength="30" value="'+esc(f('ln'))+'" autocomplete="off"></label><label class="f">'+T2('Monthly amount (EGP)','المبلغ الشهري (جنيه)')+'<input class="in" data-sf="lm" type="number" inputmode="decimal" min="0" step="any" value="'+esc(f('lm'))+'"></label><button type="button" class="btn alt" data-act="lineadd">'+T2('Add line','أضف البند')+'</button></div>':'';
+  const addLine=can?'<div class="bd-add"><label class="f">'+T2('Name','الاسم')+'<input class="in" data-sf="ln" type="text" maxlength="30" value="'+esc(f('ln'))+'" autocomplete="off"></label><label class="f">'+T2('Monthly amount (EGP)','المبلغ الشهري (جنيه)')+'<input class="in" data-sf="lm" type="number" inputmode="decimal" min="0" step="any" value="'+esc(f('lm'))+'"></label><button type="button" class="btn alt" data-act="lineadd">'+T2('Add line','أضف البند')+'</button></div>':'';
+  const op=ui.bdopen||{};
+  const acc=(k,title,summ,body)=>'<section class="bd-sec bd-acc'+(op[k]?' open':'')+'"><button type="button" class="bd-acc-h" data-act="bdtog" data-v="'+k+'" aria-expanded="'+(!!op[k])+'"><span><b>'+title+'</b>'+(op[k]?'':'<small class="muted" data-notr="1">'+summ+'</small>')+'</span><span class="bd-acc-i" aria-hidden="true">'+(op[k]?'−':'+')+'</span></button>'+(op[k]?'<div class="bd-acc-b">'+body+'</div>':'')+'</section>';
+  const ratesSum=['AED','SAR','USD'].map(c=>c+' '+rateOf(c)).join(' · ');
+  const nCats=(bud().cats||[]).length;
   const inner='<h3>'+T2('Budgets','الميزانيات')+'</h3><div class="note" style="margin:-2px 0 10px">'+(can?T2('Muhammed sets the monthly budgets. You both see them everywhere.','محمد هو من يحدد الميزانيات الشهرية، وكلاكما يراها.'):T2('Only Muhammed changes these. You can see them.','محمد هو من يغيّرها، ويمكنكِ الاطلاع عليها.'))+'</div>'
     +'<section class="bd-sec"><div class="bd-h"><h4>'+T2('Monthly budget per line','الميزانية الشهرية لكل بند')+'</h4><span class="num bd-total">'+nf(total)+' EGP</span></div><ul class="bd-list">'+lines+'</ul>'
     +(can?'<label class="f bd-dlim">'+T2('Daily spending limit (EGP). Put 0 to use the living budget ÷ days in the month.','حد المصروف اليومي (بالجنيه). اكتب 0 ليُحسب من ميزانية المعيشة ÷ عدد أيام الشهر.')+'<input class="in num" type="number" inputmode="decimal" min="0" step="any" data-sf="dlim" value="'+esc(sfv(sh,'dlim',String(Number(bud().dlim)||0)))+'"></label>':'')
     +'<div class="note">'+T2('Daily limit today: ','الحد اليومي اليوم: ')+'<b class="num">'+nf(lim)+' EGP</b>'+(Number(bud().dlim)>0?'':' '+T2('(living budget ÷ days in the month)','(ميزانية المعيشة ÷ عدد أيام الشهر)'))+'</div>'
     +(can?'<label class="chk-line"><input type="checkbox" data-sf="ooin"'+(sfv(sh,'ooin',!!bud().ooin)===true?' checked':'')+'> '+T2('Count one-offs (like home setup) in the budget and the daily limit','احسب المصاريف لمرة واحدة (مثل تجهيز البيت) ضمن الميزانية والحد اليومي')+'</label>':'')+'</section>'
-    +'<section class="bd-sec"><div class="bd-h"><h4>'+T2('Exchange rates','أسعار الصرف')+'</h4></div><div class="bd-rates">'+rates+'</div><div class="note">'+T2('EGP is the main currency. An expense paid in another currency is converted once, at the rate on the day you add it.','الجنيه هو العملة الأساسية. يُحوَّل المصروف بعملة أخرى مرة واحدة بسعر يوم إضافته.')+'</div></section>'
-    +'<section class="bd-sec"><div class="bd-h"><h4>'+T2('Accounts and cards','الحسابات والكروت')+'</h4></div>'+accts+'</section>'
-    +'<section class="bd-sec"><div class="bd-h"><h4>'+T2('Categories','الفئات')+'</h4></div>'+catEditorHtml(sh)+'</section>'
-    +addLine
-    +'<div class="sticky-save">'+(can?'<button type="button" class="btn" data-act="budsave">'+T2('Save budgets','احفظ الميزانيات')+'</button>':'')+'<button type="button" class="btn alt" data-act="sheetclose">'+T2('Close','إغلاق')+'</button></div>';
+    +acc('rates',T2('Exchange rates','أسعار الصرف'),ratesSum,'<div class="bd-rates">'+rates+'</div><div class="note">'+T2('EGP is the main currency. An expense paid in another currency is converted once, at the rate on the day you add it.','الجنيه هو العملة الأساسية. يُحوَّل المصروف بعملة أخرى مرة واحدة بسعر يوم إضافته.')+'</div>')
+    +acc('accts',T2('Accounts and cards','الحسابات والكروت'),bud().accts.length+' '+T2('accounts','حسابات'),accts)
+    +acc('cats',T2('Categories','الفئات'),nCats+' '+T2('categories','فئة'),catEditorHtml(sh))
+    +(can?acc('addline',T2('Add a budget line','أضف بند ميزانية'),T2('a new monthly line','بند شهري جديد'),addLine):'')
+    +'<div class="sticky-save bd-savebar">'+(can?'<button type="button" class="btn" data-act="budsave">'+T2('Save budgets','احفظ الميزانيات')+'</button>':'')+((ui.sheet&&ui.sheet.page)?'':'<button type="button" class="btn alt" data-act="sheetclose">'+T2('Close','إغلاق')+'</button>')+'</div>';
   el.innerHTML=sheetShell(T2('Budgets','الميزانيات'),inner,'bd-sheet');
   el.hidden=false;trDom();
 }
@@ -3019,9 +3053,78 @@ function moneyCard(){
   const v=getVal(repOf(sp,sp.who[0]),dstr,sp.id),has=v!=null&&typeof v!=='object',lim=spLim(dstr);
   const todayRow='<div class="mc-today">'+T2('Today ','اليوم ')+(has?'<b class="num">'+nf(v)+'</b>':'<b class="num">0</b>')+' / <span class="num">'+nf(lim)+'</span> EGP '+(has?stBadge(Number(v)<=lim,T2('Within the limit','ضمن الحد'),T2('Over the limit','فوق الحد')):'')+'</div>';
   const sm=fxSummary(ym);
-  const fx='<div class="mc-fx"><span>'+svgi('t_week')+T2('Fixed payments: '+sm.paid+' of '+sm.n+' paid','المدفوعات الثابتة: '+sm.paid+' من '+sm.n+' مدفوعة')+(sm.over?'<b class="fx-over"> · '+T2(sm.over+' overdue',sm.over+' متأخرة')+'</b>':'')+(sm.soon?'<b class="fx-soon"> · '+T2(sm.soon+' due soon',sm.soon+' مستحقة قريب')+'</b>':'')+'</span></div>';
-  return '<div class="grid"><section class="card moneycard"><div class="card-h"><h2>'+T2('Money this month','مالية هذا الشهر')+'</h2><span class="sub">'+esc(fmtMonLong.format(t))+'</span></div>'+rows+todayRow+fx+moneyNoteHtml()
-    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="openfix">'+T2('Fixed payments','المدفوعات الثابتة')+'</button><button type="button" class="chipbtn" data-act="openbud">'+T2('Budgets','الميزانيات')+'</button></div></section></div>';
+  const fx='<button type="button" class="mc-fx" data-act="mtab" data-v="fix"><span>'+svgi('t_week')+T2('Fixed payments: '+sm.paid+' of '+sm.n+' paid','المدفوعات الثابتة: '+sm.paid+' من '+sm.n+' مدفوعة')+(sm.over?'<b class="fx-over"> · '+T2(sm.over+' overdue',sm.over+' متأخرة')+'</b>':'')+(sm.soon?'<b class="fx-soon"> · '+T2(sm.soon+' due soon',sm.soon+' مستحقة قريب')+'</b>':'')+'</span></button>';
+  return '<div class="grid"><section class="card moneycard"><div class="card-h"><h2>'+T2('Money this month','مالية هذا الشهر')+'</h2><span class="sub">'+esc(fmtMonLong.format(t))+'</span></div>'+rows+fx+moneyNoteHtml()
+    +'</section></div>';
+}
+/* ---------- Money tab: its own pages (Log, Dashboard, Fixed payments, Budgets) ---------- */
+function moneyMini(){
+  const sp=spendHabit();if(!sp)return '';
+  const t=today(),ym=ymOf(ds(t)),act=monthAct(ym),dstr=ds(t);
+  const l=bud().lines.find(x=>x.dl);
+  const s=l?lineStatus(l,ym,act):null;
+  const v=getVal(repOf(sp,sp.who[0]),dstr,sp.id),has=v!=null&&typeof v!=='object',lim=spLim(dstr);
+  return '<div class="grid"><section class="card moneymini"><div class="card-h"><h2>'+T2('Money','المال')+'</h2>'+(s?bsBadge(s.st):'')+'</div>'
+    +'<div class="mc-nums">'+(s?'<span>'+(s.rem>=0?T2('Left this month ','المتبقي هذا الشهر '):T2('Over this month by ','التجاوز هذا الشهر '))+'<b class="num">'+nf(Math.abs(s.rem))+'</b> EGP</span>':'')
+    +'<span>'+T2('Today ','اليوم ')+'<b class="num">'+nf(has?v:0)+'</b> / <span class="num">'+nf(lim)+'</span></span></div>'
+    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="mtab" data-v="log">'+T2('Open Money','افتح المال')+'</button></div></section></div>';
+}
+function mtabInit(){
+  const m=ui.mtab||'log';
+  if(m==='fix'||m==='bud'){
+    if(!ui.sheet||!ui.sheet.page||ui.sheet.type!==m)ui.sheet=(m==='fix')?{type:'fix',f:{},ym:ymOf(ds(today())),mode:null,k:null,page:true}:{type:'bud',f:{},page:true};
+  }else if(ui.sheet&&ui.sheet.page)ui.sheet=null;
+}
+function viewMoney(){
+  mtabInit();
+  const sub=ui.mtab||'log';
+  const tabs=[['log',T2('Log','السجل')],['dash',T2('Dashboard','اللوحة')],['fix',T2('Fixed payments','الثابتة')],['bud',T2('Budgets','الميزانيات')]];
+  const nav='<div class="pill-seg mnav" role="group" aria-label="'+esc(T2('Money pages','صفحات المال'))+'">'+tabs.map(x=>'<button type="button" data-act="mtab" data-v="'+x[0]+'" aria-pressed="'+(sub===x[0])+'">'+x[1]+'</button>').join('')+'</div>';
+  let body='';
+  if(sub==='fix'||sub==='bud')body='<div id="mpage"></div>';
+  else if(!spendHabit())body='<div class="card"><p class="note">'+T2('Turn on the daily spending habit in Setup to use the log and the dashboard.','فعّل عادة تسجيل المصروف اليومي من الإعدادات لاستخدام السجل واللوحة.')+'</p></div>';
+  else if(sub==='dash')body=moneyDash();
+  else body=moneyLog();
+  return '<div class="mwrap">'+nav+body+'</div>';
+}
+function moneyDash(){
+  return moneyCard()+'<div class="grid two">'+budgetCard()+spendCatCard()+spendCard()+reportCard()+'</div>';
+}
+function moneyLog(){
+  const sp=spendHabit(),t=today(),off=Math.min(0,ui.mday||0),d=addDays(t,off),dstr=ds(d),isToday=off===0;
+  const list=expList(dstr,sp,null),parts=dayParts(list),limit=spLim(dstr),over=parts.day>limit,cur=esc(S.currency);
+  const pct=limit>0?clamp(parts.day/limit,0,1):0;
+  const who=me();
+  const when=isToday?T2('Today','اليوم'):(off===-1?T2('Yesterday','أمس'):fmtLong.format(d));
+  const nav='<div class="mlog-nav"><button type="button" class="chipbtn" data-act="mday" data-v="-1" aria-label="'+esc(T2('Previous day','اليوم السابق'))+'">'+svgi(ui.lang==='ar'?'chr':'chl','',3)+'</button><b>'+esc(when)+(isToday?'':' <small class="muted">'+esc(fmtShort.format(d))+'</small>')+'</b>'
+    +'<button type="button" class="chipbtn" data-act="mday" data-v="1"'+(isToday?' disabled':'')+' aria-label="'+esc(T2('Next day','اليوم التالي'))+'">'+svgi(ui.lang==='ar'?'chl':'chr','',3)+'</button>'+(isToday?'':'<button type="button" class="chipbtn" data-act="mday" data-v="0">'+T2('Today','اليوم')+'</button>')+'</div>';
+  const bar=limit>0?'<div class="exp-bar" aria-hidden="true"><i style="width:'+Math.round(pct*100)+'%"></i></div><div class="exp-total-foot">'+stBadge(!over,T2('Within the limit','ضمن الحد'),T2('Over the limit','فوق الحد'))+'<span>'+T2('limit ','الحد ')+nf(limit)+' '+cur+(over?T2(' · over by ',' · تجاوز ')+nf(parts.day-limit):T2(' · left ',' · المتبقي ')+nf(limit-parts.day))+'</span></div>':'';
+  const totalCard='<div class="exp-total'+(over?' over':'')+'"><div class="exp-total-top"><span class="exp-total-lbl">'+T2('Counts toward the daily limit','المحسوب ضمن الحد اليومي')+'</span><span class="exp-total-num num">'+nf2(parts.day)+' <small>'+cur+'</small></span></div>'+bar
+    +(parts.other?'<div class="note exp-other">'+T2('Outside the daily limit (not counted): ','خارج الحد اليومي (غير محسوب): ')+'<b class="num">'+nf2(parts.other)+'</b> '+cur+'</div>':'')
+    +(parts.inc?'<div class="note exp-other">'+T2('Income logged: ','الدخل المسجّل: ')+'<b class="num">'+nf2(parts.inc)+'</b> '+cur+'</div>':'')+'</div>';
+  const rows=list.slice().sort((a,b)=>b.t-a.t).map(x=>{
+    const nm=(x.c&&catName(x.c))?'<b data-notr="1">'+esc(catName(x.c))+(x.sc?' · '+esc(subName(x.c,x.sc)):'')+'</b>':'';
+    const note=x.n?'<span data-notr="1">'+esc(expNote(x.n))+'</span>':'';
+    const tag=x.ty==='r'?'<span class="tag-r">'+T2('Refund','مرتجع')+'</span>':x.ty==='i'?'<span class="tag-i">'+T2('Income','دخل')+'</span>':'';
+    const meta=[x.ac?acctName(x.ac):'',x.t>1?timeFmt.format(new Date(x.t)):'',x.cur?nf2(x.oa)+' '+x.cur:''].filter(Boolean).join(' · ');
+    return '<li class="exp-item"><span class="dot" style="background:'+pcol(x.pid)+'" title="'+esc(pname(x.pid))+'"></span>'
+      +'<button type="button" class="exp-main exp-edit" data-act="mlogedit" data-p="'+x.pid+'" data-id="'+esc(x.id)+'" data-d="'+dstr+'" aria-label="'+esc(T2('Edit this entry','عدّل هذا المصروف'))+'"><span class="exp-what">'+tag+nm+note+(!nm&&!note&&!tag?'<span class="muted">'+T2('Expense','مصروف')+'</span>':'')+'</span><small class="muted exp-time" data-notr="1">'+esc(meta)+'</small></button>'
+      +'<span class="exp-amt num'+(x.ty==='r'?' neg':x.ty==='i'?' pos':'')+'">'+(x.ty==='r'?'−':x.ty==='i'?'+':'')+nf2(x.a)+'</span></li>';
+  }).join('');
+  const addBtn='<button type="button" class="btn mlog-add" data-act="exp" data-p="'+who+'" data-h="'+esc(sp.id)+'" data-d="'+dstr+'">'+svgi('plus','',3)+' '+T2('Add expense, refund or income','أضف مصروفًا أو مرتجعًا أو دخلًا')+'</button>';
+  const dayCard='<section class="card span2 mlog-day"><div class="card-h"><h2>'+T2('Log','السجل')+'</h2></div>'+nav+totalCard+addBtn
+    +(rows?'<h4 class="exp-lh">'+T2('Entries','المسجّل')+' <small class="muted">'+T2('(tap one to edit or delete)','(اضغط على أي واحد لتعديله أو حذفه)')+'</small></h4><ul class="exp-list">'+rows+'</ul>':'<div class="note exp-empty">'+T2('Nothing logged for this day yet.','لم يُسجَّل شيء لهذا اليوم بعد.')+'</div>')+'</section>';
+  /* recent days */
+  const days=[];for(let i=0;i<7;i++){const dd=addDays(t,-i),k=ds(dd);if(dd<pd(S.start))break;const l2=expList(k,sp,null);const p2=dayParts(l2);days.push({i:i,d:dd,k:k,n:l2.length,p:p2,lim:spLim(k)})}
+  const emptyN=days.filter(x=>!x.n).length;
+  const recDays=days.filter(x=>x.n>0);
+  const rec=!recDays.length?'':'<section class="card span2 mlog-recent"><div class="card-h"><h2>'+T2('Last 7 days','آخر 7 أيام')+'</h2></div><ul class="rep-list">'+recDays.map(x=>{
+    const ok=x.n>0&&x.p.day<=x.lim;
+    return '<li class="rep-row"><button type="button" class="mlog-day-btn" data-act="mdayset" data-v="'+(-x.i)+'"'+(off===-x.i?' aria-current="true"':'')+'><span data-notr="1">'+esc(x.i===0?T2('Today','اليوم'):x.i===1?T2('Yesterday','أمس'):fmtLong.format(x.d))+'</span>'
+      +'<b class="num">'+(x.n?nf(x.p.day):'–')+'</b><small class="muted num">'+(x.n?x.n+' '+T2(x.n===1?'entry':'entries',x.n===1?'مسجّل':'مسجّلة'):T2('nothing logged','لا شيء'))+'</small>'
+      +(x.n?'<span class="st '+(ok?'ok':'bad')+'">'+(ok?T2('Within','ضمن'):T2('Over','فوق'))+'</span>':'')+'</button></li>';
+  }).join('')+'</ul>'+(emptyN?'<div class="note">'+T2(emptyN+(emptyN===1?' day':' days')+' with nothing logged in the last 7.','لا مصاريف مسجّلة في '+emptyN+(emptyN===1?' يوم':' أيام')+' من آخر 7.')+'</div>':'')+'</section>';
+  return meBanner()+'<div class="grid">'+dayCard+'</div>'+moneyCard()+(rec?'<div class="grid">'+rec+'</div>':'');
 }
 /* ---------- Dashboard: budget vs actual ---------- */
 function budgetCard(){
@@ -3042,8 +3145,7 @@ function budgetCard(){
     +'<div class="note">'+secTxt(totC)+'</div>'
     +'<ul class="bv-list">'+rows+'</ul>'
     +'<div class="note bv-key">'+T2('Green: more than 5% under. Grey: within 5%. Amber: more than 5% over. Red: more than 20% over. Day-by-day lines are compared with the pace of the month so far.','أخضر: أقل من الميزانية بأكثر من 5%. رمادي: ضمن 5%. برتقالي: أعلى من الميزانية بأكثر من 5%. أحمر: أعلى بأكثر من 20%. تُقارن البنود اليومية بوتيرة الصرف في الشهر حتى الآن.')+'</div>'
-    +moneyNoteHtml()
-    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="openfix">'+T2('Fixed payments','المدفوعات الثابتة')+'</button><button type="button" class="chipbtn" data-act="openbud">'+T2('Budgets','الميزانيات')+'</button></div></section>';
+    +moneyNoteHtml()+'</section>';
 }
 /* ---------- Dashboard: where the money goes (net of refunds, income left out) ---------- */
 function spendCatCard(){
@@ -3344,7 +3446,7 @@ function viewDash(){
     return '<div class="arow">'+svgi(a.id)+'<div><div class="t"><span>'+a.name+'</span><em>this month</em></div>'+bars+'</div></div>';
   }).join('');
   const balCard='<section class="card span2"><div class="card-h"><h2>Balance across life areas</h2><span class="sub">'+fmtMonLong.format(mo[0])+(pids.length===1?' · dashed = last month':'')+'</span></div><div class="balance">'+radar(pids)+'<div class="arows">'+arows+'</div></div></section>';
-  return '<div class="grid two">'+heroCard+impCard+trendCard+spendCard()+budgetCard()+spendCatCard()+reportCard()+weightCard(pids)+heats+balCard+habitsMonthCard(pids,mo)+trophyCard(pids)+'</div>';
+  return '<div class="grid two">'+heroCard+impCard+trendCard+weightCard(pids)+heats+balCard+habitsMonthCard(pids,mo)+trophyCard(pids)+'</div>';
 }
 
 /* ---------- dashboard blocks added for the new habit types ---------- */
@@ -3678,15 +3780,21 @@ function renderTop(){
   w.innerHTML=items.map(i=>'<button data-act="who" data-w="'+i[0]+'" aria-pressed="'+(ui.who===i[0])+'"><span class="dot" style="background:'+i[2]+'"></span><span style="overflow:hidden;text-overflow:ellipsis">'+esc(i[1])+'</span></button>').join('');
   w.hidden=ui.tab==='setup';
   const lb=$('#lang');if(lb)lb.textContent=ui.lang==='ar'?'English':'عربي';
-  const tabs=[['today','Today','t_today'],['week','Week','t_week'],['dash','Dashboard','t_dash'],['impact','Impact','t_impact'],['setup','Setup','t_setup']];
+  const tabs=[['today','Today','t_today'],['week','Week','t_week'],['money','Money','t_money'],['dash','Dashboard','t_dash'],['impact','Impact','t_impact'],['setup','Setup','t_setup']];
   $('#tabs').innerHTML=tabs.map(t=>'<button data-act="tab" data-t="'+t[0]+'"'+(ui.tab===t[0]?' aria-current="page"':'')+'>'+svgi(t[2])+t[1]+'</button>').join('');
 }
 function render(){
   applyScene();
   renderStatus();renderTop();
-  const fn={today:viewToday,week:viewWeek,dash:viewDash,impact:viewImpact,setup:viewSetup}[ui.tab];
+  if(ui.tab!=='money'&&ui.sheet&&ui.sheet.page)ui.sheet=null;
+  const fn={today:viewToday,week:viewWeek,money:viewMoney,dash:viewDash,impact:viewImpact,setup:viewSetup}[ui.tab];
+  const y0=window.scrollY,sEl=$('#sheet');
+  if(sEl&&sEl.parentNode!==document.body)document.body.appendChild(sEl);
   $('#view').innerHTML=(ui.tab==='setup'&&mode!=='sample'?'':banner())+(['today','week','dash','impact'].indexOf(ui.tab)>=0?quoteBanner(ui.tab):'')+fn();
+  const mp=$('#mpage');
+  if(sEl){if(mp&&ui.sheet&&ui.sheet.page){mp.appendChild(sEl);sEl.classList.add('as-page')}else sEl.classList.remove('as-page')}
   post();renderSheet();checkTrophies();trDom();
+  if(window.scrollY!==y0)window.scrollTo(0,y0);
 }
 function post(){
   const nds=document.querySelectorAll('.needle');
@@ -3731,8 +3839,13 @@ document.addEventListener('click',e=>{
   else if(a==='repsec'){ui.repSec=t.dataset.v;render()}
   else if(a==='ledger')exportLedger(t.dataset.v);
   else if(a==='setme'){meSet(t.dataset.p);render()}
-  else if(a==='openfix')openFix();
-  else if(a==='openbud')openBud();
+  else if(a==='openfix'){ui.tab='money';ui.mtab='fix';ui.sheet=null;render();window.scrollTo(0,0)}
+  else if(a==='openbud'){ui.tab='money';ui.mtab='bud';ui.sheet=null;render();window.scrollTo(0,0)}
+  else if(a==='bdtog'){collectSf();ui.bdopen=ui.bdopen||{};ui.bdopen[t.dataset.v]=!ui.bdopen[t.dataset.v];renderSheet()}
+  else if(a==='mtab'){ui.tab='money';ui.mtab=t.dataset.v;ui.sheet=null;ui.confirmReset=false;render();window.scrollTo(0,0)}
+  else if(a==='mday'){ui.mday=Math.max(-90,Math.min(0,(t.dataset.v==='0'?0:(ui.mday||0)+Number(t.dataset.v))));render()}
+  else if(a==='mdayset'){ui.mday=Math.max(-90,Math.min(0,Number(t.dataset.v)||0));render();window.scrollTo(0,0)}
+  else if(a==='mlogedit'){const sp=spendHabit();if(sp){openSheet('exp',t.dataset.p,sp.id,t.dataset.d);expStartEdit(t.dataset.p,t.dataset.id)}}
   else if(a==='fxmo'){const sh=ui.sheet;if(sh){const n=+t.dataset.n;sh.ym=prevYm(sh.ym,-n);sh.k=null;sh.mode=null;renderSheet()}}
   else if(a==='fxopen'){const sh=ui.sheet;if(sh){collectSf();sh.k=t.dataset.k;sh.mode='pay';sh.f={};renderSheet()}}
   else if(a==='fxedit'){const sh=ui.sheet;if(sh){collectSf();sh.k=t.dataset.k;sh.mode='edit';sh.f={};renderSheet()}}

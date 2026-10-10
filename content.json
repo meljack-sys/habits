@@ -1042,6 +1042,243 @@
     "ar": "الاختيارات الصغيرة الذكية، حين تتكرر طويلًا، تصنع نتائج كبيرة. والأمر نفسه ينطبق على الاختيارات الصغيرة المهملة.",
     "by": "The Compound Effect · Darren Hardy"
    }
+  ],
+  "money": [
+   {
+    "id": "m12",
+    "c": "money",
+    "en": "Write every expense on the day you spend it. The purchase you forget is the one that surprises you at the end of the month.",
+    "ar": "سجّل كل مصروف في يومه. الشراء الذي تنساه هو الذي يفاجئك آخر الشهر.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m01",
+    "c": "faith",
+    "en": "Those who, when they spend, are neither wasteful nor stingy, but keep a balance between the two.",
+    "ar": "الذين إذا أنفقوا لم يسرفوا ولم يبخلوا، وكان إنفاقهم وسطًا بين ذلك.",
+    "by": "Qur’an · Al-Furqan 25:67",
+    "byAr": "القرآن · الفرقان 25:67",
+    "orig": "وَالَّذِينَ إِذَا أَنفَقُوا لَمْ يُسْرِفُوا وَلَمْ يَقْتُرُوا وَكَانَ بَيْنَ ذَٰلِكَ قَوَامًا"
+   },
+   {
+    "id": "m13",
+    "c": "money",
+    "en": "A small daily spend adds up fast: 50 a day is 1,500 a month and 18,000 a year.",
+    "ar": "المصروف الصغير اليومي يتراكم بسرعة: 50 كل يوم تصير 1,500 في الشهر و18,000 في السنة.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m14",
+    "c": "money",
+    "en": "Before buying anything that is not on your list, wait one night. Most wants fade by morning.",
+    "ar": "قبل أن تشتري أي شيء ليس في قائمتك، انتظر ليلة واحدة. معظم الرغبات تخفّ مع الصباح.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m02",
+    "c": "faith",
+    "en": "Do not keep your hand tied to your neck, and do not stretch it out fully, or you will sit blamed and regretful.",
+    "ar": "لا تجعل يدك مقيّدة إلى عنقك، ولا تفتحها كل الفتح فتجلس ملومًا نادمًا.",
+    "by": "Qur’an · Al-Isra 17:29",
+    "byAr": "القرآن · الإسراء 17:29",
+    "orig": "وَلَا تَجْعَلْ يَدَكَ مَغْلُولَةً إِلَىٰ عُنُقِكَ وَلَا تَبْسُطْهَا كُلَّ الْبَسْطِ فَتَقْعُدَ مَلُومًا مَّحْسُورًا"
+   },
+   {
+    "id": "m15",
+    "c": "money",
+    "en": "Delivery is usually the most expensive way to eat. One more home-cooked meal a week changes the monthly number more than it seems.",
+    "ar": "التوصيل غالبًا أغلى طريقة للأكل. وجبة إضافية في البيت كل أسبوع تغيّر رقم الشهر أكثر مما تتوقع.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m16",
+    "c": "money",
+    "en": "Fixed payments are not daily decisions. Mark them paid once and keep the daily limit for living costs.",
+    "ar": "المدفوعات الثابتة ليست قرارًا يوميًا. علّمها كمدفوعة مرة واحدة واترك الحد اليومي لمصاريف المعيشة.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m03",
+    "c": "faith",
+    "en": "Eat and drink, but do not be wasteful. He does not love the wasteful.",
+    "ar": "كلوا واشربوا ولا تسرفوا، إنه لا يحب المسرفين.",
+    "by": "Qur’an · Al-A‘raf 7:31",
+    "byAr": "القرآن · الأعراف 7:31",
+    "orig": "وَكُلُوا وَاشْرَبُوا وَلَا تُسْرِفُوا ۚ إِنَّهُ لَا يُحِبُّ الْمُسْرِفِينَ"
+   },
+   {
+    "id": "m17",
+    "c": "money",
+    "en": "A daily limit is a promise to your future self, not a punishment. Staying under it on most days matters more than one perfect day.",
+    "ar": "الحد اليومي وعد لنفسك في المستقبل وليس عقابًا. الالتزام به في أغلب الأيام أهم من يوم مثالي واحد.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m18",
+    "c": "money",
+    "en": "If you return something, log the refund. The real cost is only what stays with you.",
+    "ar": "إذا أرجعت شيئًا فسجّل المرتجع. التكلفة الحقيقية هي ما يبقى معك فقط.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m04",
+    "c": "faith",
+    "en": "A servant’s feet will not move on the Day of Judgement until he is asked about his wealth: where he earned it and how he spent it.",
+    "ar": "لا تتحرك قدما العبد يوم القيامة حتى يُسأل عن ماله: من أين كسبه وفيمَ أنفقه.",
+    "by": "The Prophet ﷺ · Sunan at-Tirmidhi 2417",
+    "byAr": "النبي ﷺ · سنن الترمذي 2417",
+    "orig": "لا تَزُولُ قَدَمَا عَبْدٍ يَوْمَ الْقِيَامَةِ حَتَّى يُسْأَلَ عَنْ عُمُرِهِ فِيمَ أَفْنَاهُ... وَعَنْ مَالِهِ مِنْ أَيْنَ اكْتَسَبَهُ وَفِيمَ أَنْفَقَهُ"
+   },
+   {
+    "id": "m19",
+    "c": "money",
+    "en": "Ask: do I need it, or do I want it today? Needs go in the log without a second thought. Wants get the one-night rule.",
+    "ar": "اسأل نفسك: أحتاجه أم أريده اليوم؟ الحاجة تُسجَّل بلا تردد، والرغبة تنتظر ليلة.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m20",
+    "c": "money",
+    "en": "Spend five minutes every Sunday on last week: the biggest category, the biggest single purchase, and one thing to change.",
+    "ar": "خصّص خمس دقائق كل أحد لمراجعة الأسبوع الماضي: أكبر فئة، وأكبر عملية شراء، وشيئًا واحدًا تغيّره.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m05",
+    "c": "faith",
+    "en": "Wealth is not having many possessions. True wealth is the richness of the soul.",
+    "ar": "الغنى ليس بكثرة المتاع، ولكن الغنى غنى النفس.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 6446, Sahih Muslim 1051",
+    "byAr": "النبي ﷺ · صحيح البخاري 6446، صحيح مسلم 1051",
+    "orig": "لَيْسَ الْغِنَى عَنْ كَثْرَةِ الْعَرَضِ، وَلَكِنَّ الْغِنَى غِنَى النَّفْسِ"
+   },
+   {
+    "id": "m21",
+    "c": "money",
+    "en": "A short note beside each expense, the shop or the reason, makes the monthly review ten times easier.",
+    "ar": "ملاحظة قصيرة بجانب كل مصروف، اسم المحل أو السبب، تجعل مراجعة الشهر أسهل بكثير.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m22",
+    "c": "money",
+    "en": "One big purchase can undo a good month. Decide big purchases on paper and keep them outside the daily limit.",
+    "ar": "عملية شراء كبيرة واحدة قد تفسد شهرًا جيدًا. قرّر المشتريات الكبيرة على الورق وأبقها خارج الحد اليومي.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m06",
+    "c": "faith",
+    "en": "The upper hand is better than the lower hand.",
+    "ar": "اليد العليا خير من اليد السفلى.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 1429, Sahih Muslim 1033",
+    "byAr": "النبي ﷺ · صحيح البخاري 1429، صحيح مسلم 1033",
+    "orig": "الْيَدُ الْعُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى"
+   },
+   {
+    "id": "m23",
+    "c": "money",
+    "en": "Income is easier to grow than spending is to cut forever. Give a few minutes every day to the next application or client message.",
+    "ar": "زيادة الدخل أسهل من تقليل الصرف إلى الأبد. أعطِ بضع دقائق كل يوم لطلب العمل أو الرسالة التالية للعميل.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m24",
+    "c": "money",
+    "en": "Children learn money from what they watch. Let them see you pause before a purchase and say why.",
+    "ar": "الأطفال يتعلمون التعامل مع المال مما يشاهدونه. دعهم يرونك تتوقف قبل الشراء وتشرح السبب.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m07",
+    "c": "faith",
+    "en": "What a good thing is honest wealth in the hands of a good man.",
+    "ar": "نِعم المال الصالح للرجل الصالح.",
+    "by": "The Prophet ﷺ · Musnad Ahmad 17763",
+    "byAr": "النبي ﷺ · مسند أحمد 17763",
+    "orig": "نِعْمَ الْمَالُ الصَّالِحُ لِلرَّجُلِ الصَّالِحِ"
+   },
+   {
+    "id": "m25",
+    "c": "money",
+    "en": "Prices in another currency feel smaller than they are. Check the converted amount before you pay.",
+    "ar": "الأسعار بعملة أخرى تبدو أصغر مما هي. راجع المبلغ بعد التحويل قبل أن تدفع.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m26",
+    "c": "money",
+    "en": "Subscriptions renew quietly. Once a month, look at the list and cancel what you did not use.",
+    "ar": "الاشتراكات تتجدد بصمت. مرة في الشهر راجع القائمة وألغِ ما لم تستخدمه.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m08",
+    "c": "faith",
+    "en": "It is enough sin for a man to neglect those he is responsible for feeding.",
+    "ar": "يكفي الرجل إثمًا أن يضيّع من يعولهم.",
+    "by": "The Prophet ﷺ · Sunan Abi Dawud 1692",
+    "byAr": "النبي ﷺ · سنن أبي داود 1692",
+    "orig": "كَفَى بِالْمَرْءِ إِثْمًا أَنْ يُضَيِّعَ مَنْ يَقُوتُ"
+   },
+   {
+    "id": "m27",
+    "c": "money",
+    "en": "A budget is not a cage. It is a plan that lets you spend the rest without guilt.",
+    "ar": "الميزانية ليست قفصًا. هي خطة تتيح لك صرف الباقي دون شعور بالذنب.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m28",
+    "c": "money",
+    "en": "Compare this month with last month at the same day, not with the whole month. The fair comparison keeps you honest.",
+    "ar": "قارن هذا الشهر بالشهر الماضي عند اليوم نفسه، لا بالشهر كاملًا. المقارنة العادلة تبقيك صادقًا مع نفسك.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m09",
+    "c": "faith",
+    "en": "Begin with yourself and give to yourself first. If something is left, give it to your family.",
+    "ar": "ابدأ بنفسك فتصدّق عليها، فإن بقي شيء فلأهلك.",
+    "by": "The Prophet ﷺ · Sahih Muslim 997",
+    "byAr": "النبي ﷺ · صحيح مسلم 997",
+    "orig": "ابْدَأْ بِنَفْسِكَ فَتَصَدَّقْ عَلَيْهَا، فَإِنْ فَضَلَ شَيْءٌ فَلِأَهْلِكَ"
+   },
+   {
+    "id": "m10",
+    "c": "faith",
+    "en": "Whoever fears Allah, He makes a way out for him and provides for him from where he does not expect.",
+    "ar": "ومن يتق الله يجعل له مخرجًا ويرزقه من حيث لا يحتسب.",
+    "by": "Qur’an · At-Talaq 65:2-3",
+    "byAr": "القرآن · الطلاق 65:2-3",
+    "orig": "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا ۝ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ"
+   },
+   {
+    "id": "m11",
+    "c": "faith",
+    "en": "Satan threatens you with poverty and orders you to indecency, while Allah promises you forgiveness and bounty.",
+    "ar": "الشيطان يخوّفكم الفقر ويأمركم بالفحشاء، والله يعدكم مغفرة منه وفضلًا.",
+    "by": "Qur’an · Al-Baqarah 2:268",
+    "byAr": "القرآن · البقرة 2:268",
+    "orig": "الشَّيْطَانُ يَعِدُكُمُ الْفَقْرَ وَيَأْمُرُكُم بِالْفَحْشَاءِ ۖ وَاللَّهُ يَعِدُكُم مَّغْفِرَةً مِّنْهُ وَفَضْلًا"
+   }
   ]
  },
  "impact": {

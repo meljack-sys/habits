@@ -926,6 +926,499 @@ select.in{width:100%}
 #sheet.as-page[hidden]{display:none}
 #sheet.as-page .sheet-card{max-height:none;overflow:visible;max-width:none;border-radius:var(--r,18px);box-shadow:none;padding:16px 14px}
 #sheet.as-page [data-act="sheetclose"]{display:none}
+
+/* ============================================================================
+   MONEY STUDIO — visual-only extension, 2026-10-10
+   Same royal-violet design system and existing money status colours.
+   The selectors and all data-act / data-sf hooks remain untouched.
+   ============================================================================ */
+
+/* The sixth tab must fit without compromising the Money page. */
+.tabs nav{gap:2px}
+.tabs button{min-width:0;overflow-wrap:anywhere;text-align:center;line-height:1.25}
+.tabs button .ic{flex:none}
+.mwrap{display:grid;gap:16px;min-width:0;padding-bottom:calc(42px + env(safe-area-inset-bottom,0px))}
+.mwrap>.grid{min-width:0;gap:16px}
+.mwrap .card{min-width:0}
+.mwrap .card-h{align-items:flex-start;gap:12px;margin-bottom:15px}
+.mwrap .card-h>div:first-child{min-width:0}
+.mwrap .card-h h2{font-size:19px;line-height:1.36}
+.mwrap .card-h .sub{display:block;margin-top:4px;overflow-wrap:anywhere}
+.mwrap .note,.mwrap .muted{line-height:1.6}
+.mwrap .num,.moneymini .num,.exp-sheet .num{font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+
+/* Sub-navigation: a four-way, phone-width in-page control; never wraps. */
+.mwrap .mnav{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;
+  width:100%;max-width:none;min-width:0;gap:4px;margin:0;
+  padding:5px;border:1px solid var(--line);border-radius:16px;
+  background:var(--surface);box-shadow:var(--shadow)
+}
+.mwrap .mnav button{
+  display:grid;place-items:center;min-width:0;min-height:54px;padding:8px 3px;
+  font-size:clamp(11px,2.75vw,13px);font-weight:750;line-height:1.24;
+  text-align:center;white-space:normal;overflow-wrap:anywhere;
+  border-radius:11px;color:var(--ink2);background:transparent;box-shadow:none;
+  transition:background .16s,color .16s
+}
+.mwrap .mnav button[aria-pressed="true"]{
+  background:var(--brand);color:#fff;
+  box-shadow:0 3px 9px color-mix(in srgb,var(--brand) 26%,transparent)
+}
+.mwrap .mnav button:not([aria-pressed="true"]):hover{background:var(--brand-soft)}
+
+/* Shared money cards, hierarchical numerals, and semantic budget status. */
+.moneycard{position:relative;overflow:hidden;border-color:var(--line);
+  background:linear-gradient(145deg,var(--brand-soft),var(--surface) 42%)}
+.moneycard .card-h{padding-bottom:11px;border-bottom:1px solid var(--line)}
+.moneycard .mc-line{gap:9px;margin:0 0 14px}
+.moneycard .mc-top,.bv-top{align-items:flex-start;gap:9px}
+.moneycard .mc-top>b,.bv-top>b{font-size:14.5px;line-height:1.5;overflow-wrap:anywhere;flex:1 1 120px}
+.moneycard .mc-nums,.bv-nums{gap:6px 14px;font-size:13px;line-height:1.5}
+.moneycard .mc-nums b,.bv-nums b{font-weight:850;color:var(--ink)}
+.moneycard .mc-nums>span:last-child{font-weight:650}
+.bs-bar{position:relative;height:11px;border:1px solid var(--line);border-radius:100px;
+  background:var(--surface2);overflow:hidden;direction:ltr}
+.bs-bar i{display:block;height:100%;border-radius:inherit;background:var(--ink3)}
+.bs-bar i.bs-good{background:var(--z3)}
+.bs-bar i.bs-ok,.bs-bar i.bs-due{background:var(--ink3)}
+.bs-bar i.bs-warn{background:var(--z2)}
+.bs-bar i.bs-high{background:var(--z1)}
+.bs-pace{top:0;bottom:0;width:3px;opacity:1;
+  background:var(--ink);box-shadow:0 0 0 1px var(--surface)}
+.st.bs-good,.st.bs-ok,.st.bs-warn,.st.bs-high,.st.bs-due{
+  display:inline-flex;align-items:center;gap:5px;flex:none;
+  border:1px solid var(--line);border-radius:9px;padding:5px 8px;
+  background:var(--surface2);color:var(--ink);font-size:11.5px;
+  line-height:1.35;font-weight:800;white-space:normal;max-width:100%;
+}
+.st.bs-good{background:color-mix(in srgb,var(--z3) 12%,var(--surface));border-color:color-mix(in srgb,var(--z3) 37%,var(--line))}
+.st.bs-warn{background:color-mix(in srgb,var(--z2) 13%,var(--surface));border-color:color-mix(in srgb,var(--z2) 38%,var(--line))}
+.st.bs-high{background:color-mix(in srgb,var(--z1) 13%,var(--surface));border-color:color-mix(in srgb,var(--z1) 38%,var(--line))}
+.st.bs-due{background:var(--surface2);border-style:dashed}
+.st.bs-good .ic{color:var(--z3)}
+.st.bs-ok .ic,.st.bs-due .ic{color:var(--ink3)}
+.st.bs-warn .ic{color:var(--z2)}
+.st.bs-high .ic{color:var(--z1)}
+.moneycard .mc-fx,.moneymini .mc-fx{
+  display:flex;align-items:center;gap:7px;min-height:44px;
+  width:100%;margin:9px 0 0;padding:9px 11px;
+  border-radius:11px;background:var(--surface2);border:1px solid var(--line);
+  color:var(--ink2);font-size:12.5px;line-height:1.55;text-align:start;
+  white-space:normal;overflow-wrap:anywhere
+}
+.moneycard .mc-fx:hover,.moneymini .mc-fx:hover{border-color:var(--brand)}
+.moneycard .mc-fx .ic,.moneymini .mc-fx .ic{vertical-align:-3px;color:var(--brand-ink)}
+.moneycard .mc-fx b,.moneymini .mc-fx b{font-size:inherit}
+.money-note{margin-top:15px;padding:14px 15px;border:1px solid var(--line);border-inline-start:3px solid var(--brand);
+  border-radius:13px;background:var(--surface)}
+.money-note .mn-h{font-family:var(--f-d);font-size:13px;color:var(--brand-ink);line-height:1.5}
+.money-note p{font-size:13.5px;line-height:1.7;color:var(--ink2)}
+.money-note p:last-child{margin-bottom:0}
+
+/* Today: a quiet financial glance rather than another hero card. */
+.moneymini{padding:13px 15px;border:1px solid var(--line);box-shadow:none;
+  background:var(--surface)}
+.moneymini .card-h{margin-bottom:7px;align-items:center;flex-wrap:wrap}
+.moneymini .card-h h2{font-size:15px;font-weight:800}
+.moneymini .mc-nums{display:grid;gap:6px;font-size:12.5px;line-height:1.5;color:var(--ink2)}
+.moneymini .mc-nums>span{display:flex;flex-wrap:wrap;gap:0 4px;align-items:baseline;overflow-wrap:anywhere}
+.moneymini .mc-nums>span:first-child b{font-size:19px;font-weight:850;color:var(--ink)}
+.moneymini .mc-nums>span:not(:first-child){font-size:12px;color:var(--ink3)}
+.moneymini .mc-btns{margin-top:7px}
+.moneymini .mc-btns .chipbtn{min-height:44px;border-radius:10px;padding:8px 12px;
+  background:var(--surface2);border-color:var(--line);color:var(--brand-ink);font-size:12.5px}
+.moneymini .mc-fx{margin-top:7px;padding:6px 8px;background:transparent;border-color:transparent;
+  border-top:1px solid var(--line);border-radius:0;font-size:12px;min-height:44px;color:var(--ink3)}
+.mebar{gap:10px;border:1px solid var(--line);border-inline-start:4px solid var(--brand);
+  background:linear-gradient(135deg,var(--brand-soft),var(--surface));padding:15px;border-radius:15px}
+.mebar p{font-size:13.5px;line-height:1.65;color:var(--ink2)}
+.mebar p b{display:block;font-size:14.5px;color:var(--ink);margin-bottom:3px}
+.mebar .chips{gap:9px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.mebar .chipbtn{min-width:0;white-space:normal;overflow-wrap:anywhere;border-radius:11px;
+  background:var(--surface);color:var(--brand-ink);border-color:var(--line)}
+.autorow{border:1px dashed var(--line);background:var(--surface2);box-shadow:none}
+.autorow:hover{border-color:var(--line)}
+.autorow .chk{border-style:dashed;opacity:.75}
+.autorow .meta{color:var(--ink2)}
+.row[data-act="exp"]{border-color:color-mix(in srgb,var(--brand) 22%,var(--line))}
+.row[data-act="exp"] .nm{color:var(--ink)}
+
+/* Log: one prominent action, date/day rhythm, light-weight recent days. */
+.mlog-day{display:grid;gap:0}
+.mlog-day .card-h{margin-bottom:1px}
+.mlog-nav{margin:8px 0 14px;gap:8px}
+.mlog-nav b{min-width:0;line-height:1.45;font-size:14px;overflow-wrap:anywhere}
+.mlog-nav b small{display:block;font-size:11.5px;line-height:1.45}
+.mlog-nav .chipbtn{display:grid;place-items:center;padding:9px;min-width:44px;min-height:44px;border-radius:12px;
+  background:var(--surface2)}
+.mlog-nav .chipbtn:disabled{opacity:.36;cursor:default}
+.mlog-day .exp-total{margin-bottom:3px}
+.mlog-add{min-height:53px;margin:15px 0 5px;border-radius:13px;font-size:14px;
+  box-shadow:0 5px 14px color-mix(in srgb,var(--brand) 25%,transparent)}
+.mlog-add .ic{width:20px;height:20px}
+.mlog-day .exp-lh{margin-top:18px}
+.mlog-day .exp-item{grid-template-columns:10px minmax(0,1fr) auto}
+.mlog-recent .card-h{margin-bottom:3px}
+.mlog-recent .rep-list{margin-top:0;gap:0}
+.mlog-recent .rep-row{display:block;border-bottom:1px solid var(--line)}
+.mlog-recent .rep-row:last-child{border-bottom:0}
+.mlog-day-btn{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;
+  align-items:center;gap:7px 12px;width:100%;min-height:56px;padding:9px 2px;
+  color:var(--ink);border-radius:10px}
+.mlog-day-btn>span:first-child{overflow-wrap:anywhere;font-size:13px;line-height:1.45}
+.mlog-day-btn b{font-size:14px;font-weight:800}
+.mlog-day-btn .st{max-width:100%;justify-self:end}
+.mlog-day-btn[aria-current="true"]{background:var(--brand-soft);padding-inline:8px;
+  box-shadow:inset 3px 0 0 var(--brand)}
+html[dir="rtl"] .mlog-day-btn[aria-current="true"]{box-shadow:inset -3px 0 0 var(--brand)}
+.mlog-recent>.note{padding-top:12px;font-size:12px}
+
+/* One shared total treatment on Log and in the quick-add bottom sheet. */
+.exp-total{padding:15px;border:1px solid var(--line);background:var(--surface2);border-radius:15px;gap:10px}
+.exp-total-top{align-items:center;gap:7px 13px}
+.exp-total-lbl{font-size:12px;font-weight:700;line-height:1.5;flex:1 1 130px}
+.exp-total-num{font-family:var(--f-d);font-weight:800;font-size:clamp(22px,5.3vw,30px);line-height:1.35;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.exp-total-num small{font-size:12px;color:var(--ink2)}
+.exp-bar{height:9px;border-radius:99px;background:var(--line)}
+.exp-total-foot{font-size:12px;line-height:1.5}
+.exp-total-foot .st{flex:none}
+.exp-total.over{border-color:color-mix(in srgb,var(--z1) 45%,var(--line))}
+.exp-total.over .exp-total-num{color:var(--ink)}
+.exp-subs{padding-top:7px;border-top:1px solid var(--line);gap:7px 15px}
+.exp-sub{gap:6px;overflow-wrap:anywhere}
+.exp-empty{display:block;padding:15px;margin-top:13px;text-align:center;
+  background:var(--surface2);border:1px dashed var(--line);border-radius:13px;
+  color:var(--ink2);font-size:13px;line-height:1.65}
+
+/* Expense sheet: bold amount, fast one-tap segmented/chip controls. */
+#sheet:not(.as-page) .sheet-card.exp-sheet{padding:20px 16px calc(25px + env(safe-area-inset-bottom,0px));
+  max-height:90dvh;overscroll-behavior:contain;border:1px solid var(--line);border-bottom:0}
+.exp-sheet h3{font-size:18px;line-height:1.5}
+.exp-form{gap:11px}
+.exp-form>label.f{font-size:13px}
+.exp-form #exp-amt{min-height:58px;font-family:var(--f-d);font-size:27px;font-weight:800;
+  border:2px solid var(--line);background:var(--surface);font-variant-numeric:tabular-nums}
+.exp-form #exp-amt:focus{border-color:var(--brand)}
+.exp-form .exp-lbl{font-size:12.5px;line-height:1.5;margin-top:4px;color:var(--ink2)}
+.exp-form .chipbtn,.exp-catedit .chipbtn{min-height:44px;max-width:100%;padding:9px 12px;
+  line-height:1.38;font-size:12.5px;text-align:center;white-space:normal;overflow-wrap:anywhere}
+.exp-ty{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;
+  border:1px solid var(--line);border-radius:13px;background:var(--surface2);margin-bottom:2px}
+.exp-ty button{min-width:0;min-height:47px;border-radius:9px;white-space:normal}
+.exp-ty button[aria-pressed="true"]{background:var(--brand);color:#fff}
+.exp-cur,.exp-cats,.exp-subcats,.exp-accts{gap:7px;min-width:0}
+.exp-cur .chipbtn{min-width:59px}
+.exp-conv{padding:8px 11px;border-radius:10px;background:var(--surface2);
+  color:var(--ink2);font-size:12.5px;line-height:1.55;overflow-wrap:anywhere}
+.exp-conv.bad{color:var(--z1);font-weight:700}
+.exp-editcats{color:var(--brand-ink);border-color:var(--brand);background:transparent}
+.exp-form #exp-note,.exp-form #exp-lk,.exp-form #exp-date{min-height:48px}
+.exp-form>.sticky-save{position:sticky;bottom:-20px;z-index:4;margin-top:8px;
+  padding:12px 0 10px;border-top:1px solid var(--line);
+  background:var(--surface);flex-wrap:nowrap}
+.exp-form>.sticky-save .btn:first-child{flex:1;min-width:0}
+.exp-form>.sticky-save .btn{min-height:48px;padding-inline:12px;font-size:12.5px}
+.exp-none{min-height:44px;font-size:12.5px}
+.exp-lh{color:var(--ink);font-size:14px;line-height:1.5;margin-top:20px}
+.exp-lh small{font-family:var(--f-b);font-size:11.5px;font-weight:450}
+.exp-list{margin-top:5px;gap:0}
+.exp-item{grid-template-columns:10px minmax(0,1fr) auto 44px;align-items:center;
+  gap:6px 9px;min-width:0;padding:12px 0}
+.exp-item .dot{width:10px;height:10px}
+.exp-main{min-width:0;text-align:start;overflow-wrap:anywhere}
+.exp-what{font-size:13px;line-height:1.5;overflow-wrap:anywhere;gap:4px 6px}
+.exp-what b{font-size:13px}
+.exp-time{overflow-wrap:anywhere;font-size:11px;line-height:1.5}
+.exp-amt{font-size:13px;line-height:1.5;white-space:nowrap}
+.exp-item .exp-del{width:44px;height:44px;border-color:var(--line);background:var(--surface2)}
+.exp-item.editing{padding-inline:7px;background:var(--brand-soft)}
+.tag-r,.tag-i{font-size:10.5px;line-height:1.4;padding:3px 7px;border:1px solid var(--line)}
+.tag-r{background:color-mix(in srgb,var(--z3) 12%,var(--surface));color:var(--ink)}
+.tag-i{background:var(--brand-soft);color:var(--brand-ink)}
+.exp-amt.neg{color:var(--z3)}
+.exp-amt.pos{color:var(--brand-ink)}
+.exp-catedit{gap:10px}
+.exp-catedit>.note{padding:10px 12px;background:var(--surface2);border-radius:10px}
+.exp-catedit .ce-line{font-size:12px;color:var(--ink2);text-transform:none;margin-top:12px}
+.exp-catedit .exp-cats{padding-bottom:7px;border-bottom:1px solid var(--line)}
+.exp-catedit .exp-cats .chipbtn[aria-pressed="false"]{border-style:dashed;
+  background:var(--surface2);color:var(--ink3);text-decoration:line-through}
+.exp-catedit .exp-cats .chipbtn[aria-pressed="true"]::before{content:"✓ ";font-weight:800}
+.exp-catedit .exp-addcat{padding:13px;border:1px solid var(--line);
+  border-radius:13px;background:var(--surface2);min-width:0}
+.exp-addcat .in{min-height:48px}
+
+/* Fixed payments: urgency, gentle completed states, never a wall of filled buttons. */
+.mpage-card{padding:16px!important;border:1px solid var(--line)!important;border-radius:18px!important;
+  box-shadow:var(--shadow)!important;background:var(--surface)}
+.mpage-card>h3{font-size:19px;margin-bottom:8px}
+.fx-sheet .fx-nav{margin:17px 0 12px;gap:10px}
+.fx-sheet .fx-nav h2{font-size:17px}
+.fx-sum{padding:11px 13px;border-radius:11px;background:var(--brand-soft);
+  font-size:13px;color:var(--ink);line-height:1.6;font-weight:700}
+.fx-hint{padding:10px 12px;margin:10px 0;border:1px dashed var(--line);
+  border-radius:10px;font-size:12.5px;line-height:1.6}
+.fx-group{margin-top:21px;border:1px solid var(--line);border-radius:15px;
+  background:var(--surface);padding:13px;min-width:0}
+.fx-gh{align-items:center;padding-bottom:11px;border-bottom:1px solid var(--line);gap:5px 12px}
+.fx-gh h4{color:var(--ink);font-size:14.5px;line-height:1.45}
+.fx-gsum{font-weight:700;color:var(--ink2);font-size:12px;overflow-wrap:anywhere}
+.fx-list{margin:0;gap:0}
+.fx-item{padding:13px 0;border-top:1px solid var(--line);gap:9px;min-width:0}
+.fx-item:first-child{border-top:0}
+.fx-row{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;min-width:0}
+.fx-main{gap:4px;font-size:13.5px;line-height:1.55}
+.fx-main>b{font-size:14px;overflow-wrap:anywhere}
+.fx-main small{font-size:12.5px;line-height:1.6;overflow-wrap:anywhere}
+.fx-side{display:flex;align-items:flex-start;flex-direction:column;gap:7px;min-width:0}
+.fx-st{min-width:0;max-width:100%;font-size:12px;line-height:1.45;
+  overflow-wrap:anywhere;white-space:normal}
+.fx-st .ic{flex:none;width:15px;height:15px}
+.fx-st-paid{color:var(--z3)}
+.fx-st-overdue{color:var(--z1)}
+.fx-st-soon{color:var(--z2)}
+.fx-btns{display:flex;justify-content:flex-start;flex-wrap:wrap;gap:7px;width:100%}
+.fx-btns .chipbtn{min-height:44px;padding:8px 12px;font-size:12px;line-height:1.3;
+  border-radius:10px;font-weight:750;background:var(--surface);border-color:var(--line);color:var(--ink2)}
+.fx-btns .chipbtn.sel{background:var(--surface2);border-color:var(--line);color:var(--ink)}
+.fx-item.fx-overdue .fx-btns .chipbtn.sel,.fx-item.fx-soon .fx-btns .chipbtn.sel{
+  background:var(--brand);border-color:var(--brand);color:#fff}
+.fx-btns [data-act="fxedit"]{background:transparent;color:var(--ink3)}
+.fx-paid .fx-main{opacity:.82}
+.fx-paid .fx-st{font-weight:750}
+.fx-paid .fx-btns .chipbtn{background:var(--surface2)}
+.fx-form{padding:12px;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface2);min-width:0}
+.fx-form .in{min-height:46px;background:var(--surface)}
+.fx-form .sticky-save{margin-top:3px}
+.fx-form .sticky-save .btn{min-height:44px}
+.fx-foot{padding-top:11px;margin-top:9px;border-top:1px solid var(--line);
+  font-size:12.5px;overflow-wrap:anywhere}
+
+/* Budgets: continuous monthly lines above four soft accordions. */
+.bd-sheet .bd-sec{margin-top:17px;gap:10px;min-width:0}
+.bd-sheet .bd-sec>.bd-h{align-items:flex-start;gap:8px}
+.bd-h h4{font-size:14.5px;line-height:1.5}
+.bd-total{font-weight:800;font-size:13.5px;white-space:normal;text-align:end}
+.bd-list{border-top:1px solid var(--line)}
+.bd-item{gap:9px;grid-template-columns:minmax(0,1fr) auto;
+  padding:11px 0;align-items:center}
+.bd-main{gap:2px;font-size:13px;line-height:1.45}
+.bd-main b{font-size:13.5px;overflow-wrap:anywhere}
+.bd-main small{font-size:11.5px;line-height:1.45}
+.bd-val{font-size:13.5px;font-weight:750;text-align:end;overflow-wrap:anywhere}
+.bd-val small{font-size:11px}
+.bd-in{flex:none;gap:5px}
+.bd-in .in{width:103px;min-height:45px;padding:9px 8px;text-align:end;
+  font-weight:800;font-size:14.5px;background:var(--surface)}
+.bd-in small{font-size:11px;font-weight:700;color:var(--ink3)}
+.tag-dl{display:inline-flex;width:fit-content;margin-top:4px;
+  padding:3px 7px;border-radius:7px;background:var(--brand-soft);
+  color:var(--brand-ink);font-size:10.5px;line-height:1.45}
+.bd-dlim{margin-top:10px;padding:13px;background:var(--surface2);border-radius:12px;
+  line-height:1.55;font-size:12.5px}
+.bd-dlim .in{min-height:48px;max-width:180px;background:var(--surface);
+  font-size:17px;font-weight:800;margin-top:5px}
+.bd-sheet .chk-line{font-size:12.5px;line-height:1.5;align-items:flex-start}
+.bd-sheet .chk-line input{flex:none;width:21px;height:21px;margin-top:1px}
+.bd-acc{margin-top:10px!important;padding:0!important;gap:0!important;
+  border:1px solid var(--line);border-radius:13px;background:var(--surface);
+  overflow:visible}
+.bd-acc.open{border-color:color-mix(in srgb,var(--brand) 38%,var(--line))}
+.bd-acc-h{min-height:58px;padding:10px 12px;gap:10px;text-align:start;
+  border-radius:12px;background:var(--surface);line-height:1.5}
+.bd-acc-h:hover,.bd-acc.open .bd-acc-h{background:var(--brand-soft)}
+.bd-acc-h b{font-size:13.5px;color:var(--ink)}
+.bd-acc-h small{font-size:11.5px;line-height:1.5;color:var(--ink3);overflow-wrap:anywhere}
+.bd-acc-i{display:grid;place-items:center;width:28px;height:28px;flex:none;
+  border-radius:8px;background:var(--surface2);border:1px solid var(--line);
+  color:var(--brand-ink);font-size:18px}
+.bd-acc.open .bd-acc-h{border-radius:12px 12px 0 0}
+.bd-acc-b{gap:12px;padding:13px;border-top:1px solid var(--line);min-width:0}
+.bd-rate{grid-template-columns:auto minmax(0,1fr);min-width:0;gap:8px}
+.bd-rin{min-width:0;gap:6px}
+.bd-rin .in{width:100%;max-width:140px;min-height:46px;background:var(--surface);font-weight:700}
+.bd-accts{display:flex;flex-wrap:wrap;gap:9px;min-width:0}
+.acct-chip{min-width:0;max-width:100%;min-height:44px;padding:0 0 0 12px;
+  border-radius:10px;line-height:1.5;overflow-wrap:anywhere;
+  background:var(--surface2)}
+html[dir="rtl"] .acct-chip{padding:0 12px 0 0}
+.acct-x{display:grid;place-items:center;flex:none;width:44px;height:44px;
+  margin-inline-start:4px;border-inline-start:1px solid var(--line);
+  color:var(--ink2);font-size:21px;font-weight:700}
+.bd-add{display:grid;gap:10px;min-width:0}
+.bd-add .in{min-height:48px}
+.bd-add .btn{min-height:44px;justify-self:start}
+.bd-savebar{position:sticky;bottom:calc(91px + env(safe-area-inset-bottom,0px));z-index:8;
+  margin:19px -16px -16px;padding:12px 16px 15px;
+  border-top:1px solid var(--line);background:var(--surface);
+  box-shadow:0 -10px 20px color-mix(in srgb,var(--bg) 80%,transparent)}
+.bd-savebar .btn{min-height:48px;flex:1}
+.mwrap #mpage{min-width:0;padding-bottom:30px}
+
+/* Dashboard: budget comparisons, categories and four-part reports. */
+.budgetcard .stats,.spendcat .stats,.reportcard .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:12px 0}
+.budgetcard .stat,.spendcat .stat,.reportcard .stat{
+  padding:12px 5px;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface2);min-width:0}
+.budgetcard .stat b,.spendcat .stat b,.reportcard .stat b{
+  font-size:clamp(13px,3.6vw,20px);line-height:1.45;font-weight:800;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere;word-break:break-word}
+.budgetcard .stat span,.spendcat .stat span,.reportcard .stat span{font-size:11px;line-height:1.4}
+.budgetcard .stat.bad,.spendcat .stat.bad{border-color:color-mix(in srgb,var(--z1) 45%,var(--line));
+  background:color-mix(in srgb,var(--z1) 10%,var(--surface))}
+.budgetcard .stat.bad b,.spendcat .stat.bad b{color:var(--ink)}
+.budgetcard .bv-list{margin-top:20px;gap:0}
+.bv-item{padding:13px 0;border-top:1px solid var(--line);gap:8px}
+.bv-top{align-items:center}
+.bv-nums{display:flex;justify-content:space-between;flex-wrap:wrap;
+  gap:4px 10px;color:var(--ink2);font-size:12.5px}
+.bv-key{margin-top:14px;padding:12px;background:var(--surface2);
+  border-radius:11px;font-size:12px;line-height:1.65}
+.spendcat .cat-list{gap:0;margin-top:17px}
+.cat-row{padding:12px 0;border-top:1px solid var(--line);gap:6px 8px;
+  grid-template-columns:minmax(0,1fr) auto auto;align-items:start}
+.cat-name{min-width:0;font-size:13.5px;line-height:1.5;overflow-wrap:anywhere}
+.cat-val{font-size:13px;white-space:nowrap}
+.cat-pct{font-size:11.5px}
+.cat-bar{height:9px;border-radius:100px;background:var(--surface2);grid-column:1/-1}
+.cat-bar i{background:var(--brand)}
+.cat-who{padding:13px 0 0;margin-top:14px;border-top:1px solid var(--line);gap:8px 18px}
+.cat-big,.cat-oo{font-size:12.5px;line-height:1.6;overflow-wrap:anywhere}
+.cat-big{padding:12px;background:var(--surface2);border-radius:11px;margin-top:14px}
+.cat-oo{margin:10px 0}
+.reportcard .rep-secs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:3px;width:100%;padding:4px;margin:15px 0 18px;border:1px solid var(--line);
+  border-radius:12px;background:var(--surface2)}
+.reportcard .rep-secs button{min-width:0;min-height:47px;padding:6px 2px;
+  border-radius:9px;font-size:clamp(10.5px,2.8vw,12.5px);line-height:1.35;
+  text-align:center;white-space:normal;overflow-wrap:anywhere}
+.reportcard .rep-secs button[aria-pressed="true"]{background:var(--brand);color:#fff}
+.reportcard .rep-body{min-width:0;overflow-wrap:anywhere}
+.reportcard .rep-list{margin-top:11px;gap:0}
+.reportcard .rep-row{min-width:0;grid-template-columns:minmax(0,1fr) auto auto;
+  align-items:start;gap:6px 10px;padding:12px 0;border-top:1px solid var(--line)}
+.reportcard .rep-row>span:first-child{min-width:0;overflow-wrap:anywhere;
+  font-size:12.5px;line-height:1.5}
+.reportcard .rep-row>b{font-size:13px;white-space:normal;overflow-wrap:anywhere}
+.reportcard .rep-row>small{font-size:11px;text-align:end;line-height:1.4}
+.reportcard .rep-trend{display:grid;min-width:0;
+  grid-template-columns:minmax(0,1fr) auto;gap:5px 9px;
+  align-items:center;padding:13px 0;border-top:1px solid var(--line)}
+.rep-trend .rt-name{grid-column:1;grid-row:1;font-size:13px;min-width:0;
+  overflow-wrap:anywhere;line-height:1.5;font-weight:700}
+.rep-trend .spk{grid-column:1;grid-row:2;max-width:144px;height:31px;min-width:80px}
+.rep-trend>b{grid-column:2;grid-row:1;font-size:13px;text-align:end}
+.rep-trend>small{grid-column:2;grid-row:2;text-align:end;font-size:11px}
+.rep-axis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;margin:10px 0 0}
+.rep-axis span{display:block;text-align:center;font-size:10px;line-height:1.4;overflow-wrap:anywhere}
+.reportcard .rep-dr{grid-template-columns:40px minmax(0,1fr) auto;
+  min-width:0;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.rep-dr>span:first-child{font-size:12px}
+.rep-dr .cat-bar{grid-column:auto;min-width:0}
+.rep-dr>b{font-size:12.5px}
+.reportcard .mc-btns{margin-top:16px;padding-top:13px;border-top:1px solid var(--line)}
+.reportcard [data-act="ledger"]{min-height:44px;max-width:100%;
+  border-radius:10px;color:var(--brand-ink);background:var(--surface2);
+  font-weight:750;white-space:normal;text-align:center;overflow-wrap:anywhere}
+
+/* Smaller phones: recover horizontal room without reducing touch targets. */
+@media(max-width:420px){
+  .mwrap{gap:12px}
+  .mwrap>.grid{gap:12px}
+  .mwrap .card{padding:14px}
+  .mwrap .mnav{gap:3px;padding:4px}
+  .mwrap .mnav button{min-height:54px;padding:7px 2px;font-size:11px}
+  .mwrap .pill-seg:not(.mnav):not(.rep-secs){max-width:100%;display:flex;flex-wrap:wrap;gap:3px}
+  .mwrap .pill-seg:not(.mnav):not(.rep-secs) button{min-height:44px;flex:1 1 auto;padding:7px 8px;
+    font-size:11.5px;white-space:normal}
+  .mwrap .card-h:has(.pill-seg){flex-wrap:wrap}
+  .mlog-day-btn{grid-template-columns:minmax(0,1fr) auto;gap:2px 10px}
+  .mlog-day-btn>span:first-child{grid-column:1;grid-row:1}
+  .mlog-day-btn>b{grid-column:2;grid-row:1}
+  .mlog-day-btn>small{grid-column:1;grid-row:2;font-size:11px}
+  .mlog-day-btn>.st{grid-column:2;grid-row:2}
+  .moneycard .mc-top,.bv-top{align-items:flex-start}
+  .moneycard .mc-top b,.bv-top b{min-width:0}
+  .fx-sheet .fx-group{padding:12px}
+  .bd-sheet .bd-item{gap:6px}
+  .bd-savebar{margin-inline:-14px;padding-inline:14px}
+  .exp-item{gap:5px 7px}
+}
+@media(max-width:375px){
+  .mwrap .mnav button{font-size:10.7px;line-height:1.26}
+  .mwrap .card{padding:12px}
+  .mwrap .card-h h2{font-size:17px}
+  .moneymini{padding:12px}
+  .mlog-nav{gap:5px}
+  .mlog-nav .chipbtn{padding:7px;min-width:44px}
+  .mlog-nav b{font-size:12px}
+  .bd-savebar{margin-inline:-12px;padding-inline:12px}
+  .rep-row{gap:5px}
+}
+@media(min-width:600px){
+  .fx-row{grid-template-columns:minmax(0,1fr) minmax(195px,auto);align-items:center}
+  .fx-side{align-items:flex-end}
+  .fx-btns{justify-content:flex-end}
+  .mwrap .mnav{max-width:740px}
+  .mwrap .mnav button{font-size:13px}
+  .bd-in .in{width:130px}
+  .mlog-day-btn{gap:12px}
+}
+/* English and Arabic share logical alignment, but numerals stay consistent. */
+html[dir="rtl"] .mwrap,html[dir="rtl"] .moneymini,
+html[dir="rtl"] .exp-sheet{overflow-wrap:anywhere}
+html[dir="rtl"] .exp-total-num,html[dir="rtl"] .bd-in .in,
+html[dir="rtl"] .bd-rin .in{direction:ltr;unicode-bidi:isolate}
+html[dir="rtl"] .rep-axis,html[dir="rtl"] .spk{direction:ltr}
+html[dir="rtl"] .fx-gh,html[dir="rtl"] .bd-acc-h{text-align:start}
+html[dir="rtl"] .mnav button,html[dir="rtl"] .rep-secs button{letter-spacing:0}
+/* Clear and comfortably bright type on all violet dark surfaces. */
+:root[data-theme="dark"] .mwrap .mnav button:not([aria-pressed="true"]),
+:root[data-theme="dark"] .moneymini .mc-fx,
+:root[data-theme="dark"] .moneycard .mc-fx,
+:root[data-theme="dark"] .bd-acc-h small{color:var(--ink2)}
+:root[data-theme="dark"] .mwrap .mnav button[aria-pressed="true"],
+:root[data-theme="dark"] .exp-ty button[aria-pressed="true"],
+:root[data-theme="dark"] .reportcard .rep-secs button[aria-pressed="true"],
+:root[data-theme="dark"] .fx-item.fx-overdue .fx-btns .chipbtn.sel,
+:root[data-theme="dark"] .fx-item.fx-soon .fx-btns .chipbtn.sel{background:var(--brand);color:#FFFFFF}
+:root[data-theme="dark"] .moneymini .mc-btns .chipbtn,
+:root[data-theme="dark"] .reportcard [data-act="ledger"],
+:root[data-theme="dark"] .tag-dl,
+:root[data-theme="dark"] .tag-i{color:var(--ink)}
+:root[data-theme="dark"] .fx-st-overdue{color:var(--z1)}
+:root[data-theme="dark"] .fx-st-soon{color:var(--z2)}
+:root[data-theme="dark"] .fx-st-paid{color:var(--z3)}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .mwrap .mnav button[aria-pressed="true"],
+  :root:not([data-theme="light"]) .exp-ty button[aria-pressed="true"],
+  :root:not([data-theme="light"]) .reportcard .rep-secs button[aria-pressed="true"],
+  :root:not([data-theme="light"]) .fx-item.fx-overdue .fx-btns .chipbtn.sel,
+  :root:not([data-theme="light"]) .fx-item.fx-soon .fx-btns .chipbtn.sel{background:var(--brand);color:#FFFFFF}
+  :root:not([data-theme="light"]) .moneymini .mc-btns .chipbtn,
+  :root:not([data-theme="light"]) .reportcard [data-act="ledger"],
+  :root:not([data-theme="light"]) .tag-dl,
+  :root:not([data-theme="light"]) .tag-i{color:var(--ink)}
+}
+@media(prefers-reduced-motion:reduce){.mwrap .mnav button{transition:none}}
+/* The longest sixth-tab caption should not split in the middle of a word. */
+@media(max-width:420px){
+  .tabs button[data-t="dash"]{font-size:9px;letter-spacing:-.035em;white-space:nowrap;overflow-wrap:normal}
+  html[dir="rtl"] .tabs button[data-t="dash"]{font-size:10px;letter-spacing:0}
+}
+@media(max-width:335px){
+  .bd-item{grid-template-columns:1fr;gap:7px}
+  .bd-in{justify-self:start}
+  .bd-in .in{width:130px}
+  .bd-val{text-align:start}
+}
+/* Spending increases are adverse; decreases are favourable. */
+.reportcard .neg{color:var(--z1)}
+.reportcard .pos{color:var(--z3)}
+/* === END MONEY STUDIO === */
 </style>
 </head>
 <body>
@@ -2756,7 +3249,7 @@ function renderExpSheet(el,sh,h){
     if(ty!=='i'){
       const vis=expCats();const all=vis.slice();
       if(sh.cat&&!all.some(c=>c.k===sh.cat)&&catOf(sh.cat))all.push(catOf(sh.cat));
-      cats='<div class="exp-lbl">'+T2('Category','الفئة')+'</div><div class="chips exp-cats" role="group" aria-label="'+esc(T2('Category','الفئة'))+'">'+all.map(c=>{const l=lineOf(c.bl);const out=!(l&&l.dl)||(c.oo&&!bud().ooin);return chipBtn('expcat',c.k,catName(c.k),sh.cat===c.k,out?'out':'')}).join('')+'<button type="button" class="chipbtn exp-editcats" data-act="expcatsedit">'+T2('Edit categories','عدّل الفئات')+'</button></div>';
+      cats='<div class="exp-lbl">'+T2('Category','الفئة')+'</div><div class="chips exp-cats" role="group" aria-label="'+esc(T2('Category','الفئة'))+'">'+all.map(c=>{const l=lineOf(c.bl);const out=!(l&&l.dl)||(c.oo&&!bud().ooin);return chipBtn('expcat',c.k,catName(c.k)+(c.oo?' · '+T2('one-off','لمرة واحدة'):''),sh.cat===c.k,out?'out':'')}).join('')+'<button type="button" class="chipbtn exp-editcats" data-act="expcatsedit">'+T2('Edit categories','عدّل الفئات')+'</button></div>';
       const c0=catOf(sh.cat);
       if(c0&&(c0.sub||[]).length>1)subRow='<div class="exp-lbl">'+T2('Sub-category','الفئة الفرعية')+'</div><div class="chips exp-subcats" role="group">'+c0.sub.map(s=>chipBtn('expsc',s.k,(ui.lang==='ar'&&s.ar)?s.ar:s.en,sh.sc===s.k)).join('')+'</div>';
     }
@@ -2786,9 +3279,8 @@ function renderExpSheet(el,sh,h){
         +'<button type="button" class="iconbtn exp-del" data-act="expdel" data-p="'+x.pid+'" data-id="'+esc(x.id)+'" aria-label="'+esc(T2('Delete this entry','احذف هذا المصروف'))+'">'+svgi('minus','',3)+'</button></li>';
     }).join('');
     const none=(isToday&&!list.some(x=>x.ty!=='i'))?'<button type="button" class="btn alt exp-none" data-act="expnone">'+T2('Nothing spent today','لم أصرف شيئًا اليوم')+'</button>':'';
-    body='<div class="exp-form">'+tySeg
-      +'<label class="f">'+T2('Amount','المبلغ')+'<input class="in" id="exp-amt" data-sf="amt" type="number" inputmode="decimal" step="any" min="0" value="'+esc(f('amt'))+'" placeholder="0"></label>'
-      +'<div class="exp-lbl">'+T2('Paid in','العملة')+'</div>'+curSeg+conv
+    body='<div class="exp-form"><label class="f">'+T2('Amount','المبلغ')+'<input class="in" id="exp-amt" data-sf="amt" type="number" inputmode="decimal" step="any" min="0" value="'+esc(f('amt'))+'" placeholder="0"></label>'
+      +tySeg+'<div class="exp-lbl">'+T2('Paid in','العملة')+'</div>'+curSeg+conv
       +lk+cats+subRow+acs
       +'<label class="f">'+lbl+'<input class="in" id="exp-note" data-sf="note" type="text" maxlength="60" value="'+esc(f('note'))+'" placeholder="'+esc(ty==='i'?T2('e.g. client payment','مثلًا دفعة عميل'):T2('e.g. Spinneys, taxi','مثلًا: سوبرماركت، تاكسي'))+'" autocomplete="off"></label>'
       +ds0
@@ -2860,7 +3352,7 @@ function catEditorHtml(sh){
   const can=canEditBud();
   const byLine=bud().lines.map(l=>{
     const cs=bud().cats.filter(c=>c.bl===l.k);if(!cs.length)return '';
-    return '<div class="ce-line" data-notr="1">'+esc(lname(l))+'</div><div class="chips exp-cats" role="group">'+cs.map(c=>chipBtn(can?'expcattoggle':'noop',c.k,catName(c.k)+((c.sub||[]).length>1?' ('+c.sub.length+')':''),c.on!==false)).join('')+'</div>';
+    return '<div class="ce-line" data-notr="1">'+esc(lname(l))+'</div><div class="chips exp-cats" role="group">'+cs.map(c=>chipBtn(can?'expcattoggle':'noop',c.k,catName(c.k)+((c.sub||[]).length>1?' ('+c.sub.length+')':'')+(c.oo?' · '+T2('one-off','لمرة واحدة'):''),c.on!==false)).join('')+'</div>';
   }).join('');
   if(!can)return '<div class="exp-catedit"><div class="note">'+T2('Only Muhammed changes the categories.','محمد هو من يعدّل الفئات.')+'</div>'+byLine+'</div>';
   const lineOpts=bud().lines.map(l=>'<option value="'+esc(l.k)+'"'+(f('cl')===l.k||(!f('cl')&&l.k==='living')?' selected':'')+' data-notr="1">'+esc(lname(l))+'</option>').join('');
@@ -3039,6 +3531,10 @@ function moneyNoteHtml(){
   const m=COACHNOTE.money,txt=String((ui.lang==='ar'?m.ar:m.en)||'').trim();if(!txt)return '';
   return '<div class="money-note" lang="'+LG()+'" dir="'+DIR()+'"><div class="mn-h">'+T2('Sunday money note','ملاحظة الأحد عن المصاريف')+'</div>'+txt.split(/\n+/).filter(Boolean).map(x=>'<p>'+esc(x)+'</p>').join('')+'</div>';
 }
+function fxLine(ym){
+  const sm=fxSummary(ym);
+  return '<button type="button" class="mc-fx" data-act="mtab" data-v="fix"><span>'+svgi('t_week')+T2('Fixed payments: '+sm.paid+' of '+sm.n+' paid','المدفوعات الثابتة: '+sm.paid+' من '+sm.n+' مدفوعة')+(sm.over?'<b class="fx-over"> · '+T2(sm.over+' overdue',sm.over+' متأخرة')+'</b>':'')+(sm.soon?'<b class="fx-soon"> · '+T2(sm.soon+' due soon',sm.soon+' مستحقة قريب')+'</b>':'')+'</span></button>';
+}
 function moneyCard(){
   const sp=spendHabit();if(!sp)return '';
   const t=today(),ym=ymOf(ds(t)),act=monthAct(ym);
@@ -3053,7 +3549,7 @@ function moneyCard(){
   const v=getVal(repOf(sp,sp.who[0]),dstr,sp.id),has=v!=null&&typeof v!=='object',lim=spLim(dstr);
   const todayRow='<div class="mc-today">'+T2('Today ','اليوم ')+(has?'<b class="num">'+nf(v)+'</b>':'<b class="num">0</b>')+' / <span class="num">'+nf(lim)+'</span> EGP '+(has?stBadge(Number(v)<=lim,T2('Within the limit','ضمن الحد'),T2('Over the limit','فوق الحد')):'')+'</div>';
   const sm=fxSummary(ym);
-  const fx='<button type="button" class="mc-fx" data-act="mtab" data-v="fix"><span>'+svgi('t_week')+T2('Fixed payments: '+sm.paid+' of '+sm.n+' paid','المدفوعات الثابتة: '+sm.paid+' من '+sm.n+' مدفوعة')+(sm.over?'<b class="fx-over"> · '+T2(sm.over+' overdue',sm.over+' متأخرة')+'</b>':'')+(sm.soon?'<b class="fx-soon"> · '+T2(sm.soon+' due soon',sm.soon+' مستحقة قريب')+'</b>':'')+'</span></button>';
+  const fx=fxLine(ym);
   return '<div class="grid"><section class="card moneycard"><div class="card-h"><h2>'+T2('Money this month','مالية هذا الشهر')+'</h2><span class="sub">'+esc(fmtMonLong.format(t))+'</span></div>'+rows+fx+moneyNoteHtml()
     +'</section></div>';
 }
@@ -3067,7 +3563,7 @@ function moneyMini(){
   return '<div class="grid"><section class="card moneymini"><div class="card-h"><h2>'+T2('Money','المال')+'</h2>'+(s?bsBadge(s.st):'')+'</div>'
     +'<div class="mc-nums">'+(s?'<span>'+(s.rem>=0?T2('Left this month ','المتبقي هذا الشهر '):T2('Over this month by ','التجاوز هذا الشهر '))+'<b class="num">'+nf(Math.abs(s.rem))+'</b> EGP</span>':'')
     +'<span>'+T2('Today ','اليوم ')+'<b class="num">'+nf(has?v:0)+'</b> / <span class="num">'+nf(lim)+'</span></span></div>'
-    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="mtab" data-v="log">'+T2('Open Money','افتح المال')+'</button></div></section></div>';
+    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="mtab" data-v="log">'+T2('Open Money','افتح المال')+'</button></div>'+fxLine(ym)+'</section></div>';
 }
 function mtabInit(){
   const m=ui.mtab||'log';
@@ -3124,7 +3620,7 @@ function moneyLog(){
       +'<b class="num">'+(x.n?nf(x.p.day):'–')+'</b><small class="muted num">'+(x.n?x.n+' '+T2(x.n===1?'entry':'entries',x.n===1?'مسجّل':'مسجّلة'):T2('nothing logged','لا شيء'))+'</small>'
       +(x.n?'<span class="st '+(ok?'ok':'bad')+'">'+(ok?T2('Within','ضمن'):T2('Over','فوق'))+'</span>':'')+'</button></li>';
   }).join('')+'</ul>'+(emptyN?'<div class="note">'+T2(emptyN+(emptyN===1?' day':' days')+' with nothing logged in the last 7.','لا مصاريف مسجّلة في '+emptyN+(emptyN===1?' يوم':' أيام')+' من آخر 7.')+'</div>':'')+'</section>';
-  return meBanner()+'<div class="grid">'+dayCard+'</div>'+moneyCard()+(rec?'<div class="grid">'+rec+'</div>':'');
+  return meBanner()+'<div class="grid">'+dayCard+'</div>'+(rec?'<div class="grid">'+rec+'</div>':'');
 }
 /* ---------- Dashboard: budget vs actual ---------- */
 function budgetCard(){
@@ -3217,7 +3713,7 @@ function reportCard(){
         +'<ul class="rep-list">'
         +'<li class="rep-row"><span>'+T2('Fixed payments paid (Egypt)','المدفوعات الثابتة المدفوعة (مصر)')+'</span><b class="num">'+nf(fixedPaid)+'</b></li>'
         +(T.oo?'<li class="rep-row"><span>'+T2('One-offs (inside the spent figure)','مصاريف لمرة واحدة (داخل المصروف)')+'</span><b class="num">'+nf(T.oo)+'</b></li>':'')
-        +'<li class="rep-row"><span>'+T2('vs last month'+(per==='cur'?' (same days)':''),'مقارنة بالشهر الماضي'+(per==='cur'?' (نفس الأيام)':''))+'</span><b class="num">'+pctTxt(mine,prev)+'</b><small class="muted num">'+nf(mine)+' / '+nf(prev)+'</small></li>'
+        +'<li class="rep-row"><span>'+T2('vs last month'+(per==='cur'?' (same days)':''),'مقارنة بالشهر الماضي'+(per==='cur'?' (نفس الأيام)':''))+'</span><b class="num'+(prev>0?(mine>prev?' neg':mine<prev?' pos':''):'')+'">'+pctTxt(mine,prev)+'</b><small class="muted num">'+nf(mine)+' / '+nf(prev)+'</small></li>'
         +'<li class="rep-row"><span>'+(hist.length?T2('vs the average of the last '+hist.length+(hist.length===1?' month':' months'),'مقارنة بمتوسط آخر '+hist.length+(hist.length===1?' شهر':' شهور')):T2('vs the average of earlier months','مقارنة بمتوسط الشهور السابقة'))+'</span><b class="num">'+(avg3==null?'–':nf(avg3))+'</b><small class="muted">'+T2('a month','في الشهر')+'</small></li>'
         +'</ul><div class="note">'+(mine!==T.tot?T2('Comparisons leave out one-offs.','المقارنات بدون المصاريف لمرة واحدة.')+' ':'')+secTxt(T.tot)+'</div>';
     }

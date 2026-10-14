@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:habits-d86b0-default-rtdb.firebaseio.com)"
+    ]
+  }
+}

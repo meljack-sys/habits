@@ -1,0 +1,71 @@
+a) firebase:000 (curl: (56) CONNECT tunnel failed, response 403)
+b) github:200
+c) proxy status:
+{
+  "enabled": true,
+  "port": 37081,
+  "caBundlePath": "/root/.ccr/ca-bundle.crt",
+  "hasSystemCa": true,
+  "bundleCoversEveryHost": true,
+  "noProxy": "localhost,127.0.0.1,::1,127.0.0.0/8,0.0.0.0/8,::,169.254.0.0/16,api.anthropic.com,api-staging.anthropic.com,api-pr-preview.anthropic.com,mcp-proxy.anthropic.com,mcp-proxy-staging.anthropic.com,registry.npmjs.org,jsr.io,npm.jsr.io,pypi.org,files.pythonhosted.org,index.crates.io,proxy.golang.org,host.docker.internal,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.64.0.0/10,.svc.cluster.local,*.svc.cluster.local",
+  "selective": false,
+  "standalone": false,
+  "toolScoped": false,
+  "installedProxyPreconfiguredClis": [
+    "bq",
+    "gcloud",
+    "gh",
+    "gsutil"
+  ],
+  "javaTrustStorePath": "/etc/ssl/certs/java/cacerts",
+  "javaTrustStoreType": "JKS",
+  "readmePath": "/root/.ccr/README.md",
+  "gitConfigInjection": true,
+  "gitSshRewrite": true,
+  "recentRelayFailures": [
+    {
+      "ts": "2026-10-14T18:09:25.208Z",
+      "kind": "connect_rejected",
+      "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+      "host": "habits-d86b0-default-rtdb.firebaseio.com:443"
+    }
+  ],
+  "downloadQueuedBytes": 0,
+  "downloadQueuedPeakBytes": 0,
+  "downloadReceivePauseSupported": true,
+  "downloadReceiveGateEnabled": true,
+  "uploadPausedClients": 0,
+  "uploadPauses": 0,
+  "uploadPauseSupported": true,
+  "uploadGateEnabled": true,
+  "bufferedAmountTrusted": true
+}
+
+env:
+CCR_AGENT_PROXY_ENABLED=1
+no_proxy=localhost,127.0.0.1,::1,127.0.0.0/8,0.0.0.0/8,::,169.254.0.0/16,api.anthropic.com,api-staging.anthropic.com,api-pr-preview.anthropic.com,mcp-proxy.anthropic.com,mcp-proxy-staging.anthropic.com,registry.npmjs.org,jsr.io,npm.jsr.io,pypi.org,files.pythonhosted.org,index.crates.io,proxy.golang.org,host.docker.internal,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.64.0.0/10,.svc.cluster.local,*.svc.cluster.local
+GH_TOKEN=proxy-injected
+CCR_UPSTREAM_PROXY_ENABLED=1
+CLOUDSDK_PROXY_TYPE=http
+GITHUB_TOKEN=proxy-injected
+CLOUDSDK_AUTH_ACCESS_TOKEN=proxy-injected
+CLOUDSDK_PROXY_PORT=37081
+CLAUDE_CODE_PROXY_RESOLVES_HOSTS=true
+AWS_SECRET_ACCESS_KEY=proxy-injected
+YARN_NETWORK_CONCURRENCY=16
+https_proxy=http://127.0.0.1:37081
+GLOBAL_AGENT_NO_PROXY=localhost,127.0.0.1,::1,127.0.0.0/8,0.0.0.0/8,::,169.254.0.0/16,api.anthropic.com,api-staging.anthropic.com,api-pr-preview.anthropic.com,mcp-proxy.anthropic.com,mcp-proxy-staging.anthropic.com,registry.npmjs.org,jsr.io,npm.jsr.io,pypi.org,files.pythonhosted.org,index.crates.io,proxy.golang.org,host.docker.internal,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.64.0.0/10,.svc.cluster.local,*.svc.cluster.local
+CLAUDE_CODE_WEBSEARCH_USE_CCR_PROXY=1
+CLAUDE_CODE_WEBFETCH_USE_CCR_PROXY=1
+ELECTRON_GET_USE_PROXY=1
+JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37081 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+CCR_AGENT_PROXY_CA_WATCH_ENABLED=1
+NO_PROXY=localhost,127.0.0.1,::1,127.0.0.0/8,0.0.0.0/8,::,169.254.0.0/16,api.anthropic.com,api-staging.anthropic.com,api-pr-preview.anthropic.com,mcp-proxy.anthropic.com,mcp-proxy-staging.anthropic.com,registry.npmjs.org,jsr.io,npm.jsr.io,pypi.org,files.pythonhosted.org,index.crates.io,proxy.golang.org,host.docker.internal,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.64.0.0/10,.svc.cluster.local,*.svc.cluster.local
+AWS_ACCESS_KEY_ID=proxy-injected
+HTTPS_PROXY=http://127.0.0.1:37081
+npm_config_noproxy=localhost,127.0.0.1,::1,127.0.0.0/8,0.0.0.0/8,::,169.254.0.0/16,api.anthropic.com,api-staging.anthropic.com,api-pr-preview.anthropic.com,mcp-proxy.anthropic.com,mcp-proxy-staging.anthropic.com,registry.npmjs.org,jsr.io,npm.jsr.io,pypi.org,files.pythonhosted.org,index.crates.io,proxy.golang.org,host.docker.internal,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,100.64.0.0/10,.svc.cluster.local,*.svc.cluster.local
+YARN_HTTPS_PROXY=http://127.0.0.1:37081
+CLOUDSDK_PROXY_ADDRESS=127.0.0.1
+npm_config_https_proxy=http://127.0.0.1:37081
+DOCKER_HTTPS_PROXY=http://127.0.0.1:37081
+GLOBAL_AGENT_HTTPS_PROXY=http://127.0.0.1:37081

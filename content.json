@@ -1,6 +1,6 @@
 {
  "v": 2,
- "updated": "2026-10-12",
+ "updated": "2026-10-15",
  "pools": {
   "today": [
    {
@@ -326,6 +326,67 @@
     "en": "Start where you are. Use what you have. Do what you can.",
     "ar": "ابدأ من حيث أنت. استخدم ما معك. افعل ما تستطيع.",
     "by": "Attributed to Arthur Ashe"
+   },
+   {
+    "id": "t46",
+    "c": "faith",
+    "en": "O you who believe, seek help through patience and prayer. Truly, Allah is with the patient.",
+    "ar": "يا أيها الذين آمنوا استعينوا بالصبر والصلاة، إن الله مع الصابرين.",
+    "by": "Qur’an 2:153",
+    "byAr": "القرآن 2:153",
+    "orig": "يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ ۚ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ"
+   },
+   {
+    "id": "t47",
+    "c": "life",
+    "en": "If there is no struggle, there is no progress.",
+    "ar": "إذا لم يكن هناك كفاح، فلا يوجد تقدّم.",
+    "by": "Frederick Douglass · speech on West India Emancipation, 1857",
+    "moreEn": "Douglass, who escaped slavery and became a leading writer and speaker, said progress never comes without effort and demand.",
+    "moreAr": "دوغلاس هرب من العبودية وأصبح كاتبًا وخطيبًا بارزًا، وقال إن التقدّم لا يأتي من دون جهد ومطالبة."
+   },
+   {
+    "id": "t48",
+    "c": "faith",
+    "en": "Say: My Lord, increase me in knowledge.",
+    "ar": "وقل: ربّ زدني علمًا.",
+    "by": "Qur’an 20:114",
+    "byAr": "القرآن 20:114",
+    "orig": "وَقُل رَّبِّ زِدْنِي عِلْمًا"
+   },
+   {
+    "id": "t49",
+    "c": "faith",
+    "en": "Whoever believes in Allah and the Last Day, let him speak good or keep silent.",
+    "ar": "من كان يؤمن بالله واليوم الآخر فليقل خيرًا أو ليصمت.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 6018",
+    "byAr": "النبي ﷺ · صحيح البخاري 6018",
+    "orig": "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الْآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ"
+   },
+   {
+    "id": "t50",
+    "c": "life",
+    "en": "Success is to be measured not so much by the position one has reached in life as by the obstacles one has overcome while trying to succeed.",
+    "ar": "لا يُقاس النجاح بالمكانة التي بلغها الإنسان في الحياة بقدر ما يُقاس بالعقبات التي تجاوزها أثناء سعيه إلى النجاح.",
+    "by": "Booker T. Washington · Up From Slavery, 1901"
+   },
+   {
+    "id": "t51",
+    "c": "faith",
+    "en": "Those who strive for Us, We will surely guide them to Our ways. And Allah is with those who do good.",
+    "ar": "والذين جاهدوا فينا لنهدينّهم سبلنا، وإن الله لمع المحسنين.",
+    "by": "Qur’an 29:69",
+    "byAr": "القرآن 29:69",
+    "orig": "وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا ۚ وَإِنَّ اللَّهَ لَمَعَ الْمُحْسِنِينَ"
+   },
+   {
+    "id": "t52",
+    "c": "faith",
+    "en": "The strong person is not the one who overpowers others, but the one who controls himself in anger.",
+    "ar": "ليس القوي من يغلب الناس، إنما القوي من يملك نفسه عند الغضب.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 6114",
+    "byAr": "النبي ﷺ · صحيح البخاري 6114",
+    "orig": "لَيْسَ الشَّدِيدُ بِالصُّرَعَةِ، إِنَّمَا الشَّدِيدُ الَّذِي يَمْلِكُ نَفْسَهُ عِنْدَ الْغَضَبِ"
    }
   ],
   "week": [
@@ -546,6 +607,55 @@
     "en": "Time alone to rest and recharge is linked with lower stress. Putting it in the calendar first protects it from what is left over.",
     "ar": "الوقت الخاص للراحة وإعادة الشحن مرتبط بتوتر أقل. وضعه في الجدول أولًا يحميه من أن يكون ما تبقّى.",
     "by": "Recovery from stress research (Sonnentag and colleagues)"
+   },
+   {
+    "id": "w31",
+    "c": "family",
+    "en": "In John Gottman’s research, couples who stayed together had about five positive moments for every negative one during conflict. Kind words and small warm gestures act as a buffer.",
+    "ar": "في أبحاث جون غوتمان، كان لدى الأزواج الذين استمروا معًا نحو خمس لحظات إيجابية مقابل كل لحظة سلبية أثناء الخلاف. الكلمات اللطيفة والإشارات الدافئة الصغيرة تعمل كحاجز واقٍ.",
+    "by": "John Gottman, Why Marriages Succeed or Fail, 1994"
+   },
+   {
+    "id": "w32",
+    "c": "health",
+    "en": "Adults need seven or more hours of sleep a night for good health, according to a consensus statement from the American Academy of Sleep Medicine and the Sleep Research Society.",
+    "ar": "يحتاج البالغون إلى سبع ساعات نوم أو أكثر كل ليلة لصحة جيدة، بحسب بيان توافق صادر عن الأكاديمية الأمريكية لطب النوم وجمعية أبحاث النوم.",
+    "by": "Watson et al., Sleep and Journal of Clinical Sleep Medicine, 2015"
+   },
+   {
+    "id": "w33",
+    "c": "mind",
+    "en": "In a Stanford experiment, people came up with more creative ideas while walking than while sitting, on average about 60% more on one test.",
+    "ar": "في تجربة بجامعة ستانفورد، توصّل المشاركون إلى أفكار أكثر إبداعًا أثناء المشي مقارنة بالجلوس، بمتوسط نحو 60% أكثر في أحد الاختبارات.",
+    "by": "Oppezzo and Schwartz, Journal of Experimental Psychology: Learning, Memory, and Cognition, 2014"
+   },
+   {
+    "id": "w34",
+    "c": "family",
+    "en": "A review of 148 studies covering more than 300,000 people found that those with stronger social relationships had about a 50% higher chance of survival over the follow-up period.",
+    "ar": "وجدت مراجعة لـ148 دراسة شملت أكثر من 300 ألف شخص أن أصحاب العلاقات الاجتماعية الأقوى كان لديهم احتمال بقاء على قيد الحياة أعلى بنحو 50% خلال فترة المتابعة.",
+    "by": "Holt-Lunstad, Smith and Layton, PLoS Medicine, 2010"
+   },
+   {
+    "id": "w35",
+    "c": "heart",
+    "en": "When one partner felt thankful for the other’s everyday kindness, both felt closer the next day. Saying thank you out loud for small things strengthens the bond.",
+    "ar": "عندما شعر أحد الشريكين بالامتنان للطف الآخر في حياتهما اليومية، شعر الاثنان بقرب أكبر في اليوم التالي. قول شكرًا بصوت عالٍ على الأمور الصغيرة يقوّي الرابطة.",
+    "by": "Algoe, Gable and Maisel, Personal Relationships, 2010"
+   },
+   {
+    "id": "w36",
+    "c": "mind",
+    "en": "A 90-minute walk in a natural setting lowered self-focused negative thinking and calmed a brain region linked to it, while a walk beside a busy road did not.",
+    "ar": "مشي لمدة 90 دقيقة في بيئة طبيعية قلّل التفكير السلبي المتمحور حول الذات وهدّأ منطقة في الدماغ مرتبطة به، بينما لم يفعل ذلك المشي بجانب طريق مزدحم.",
+    "by": "Bratman et al., PNAS, 2015"
+   },
+   {
+    "id": "w37",
+    "c": "heart",
+    "en": "Friendship takes time. One study estimated about 50 hours together to move from acquaintance to casual friend and more than 200 hours to become close friends. Time together is the investment.",
+    "ar": "الصداقة تحتاج إلى وقت. قدّرت دراسة أن الانتقال من معرفة عابرة إلى صداقة عادية يتطلب نحو 50 ساعة معًا، والوصول إلى صداقة قريبة يتطلب أكثر من 200 ساعة. الوقت المشترك هو الاستثمار.",
+    "by": "Jeffrey Hall, Journal of Social and Personal Relationships, 2018"
    }
   ],
   "dash": [
@@ -791,6 +901,57 @@
     "by": "Ibn Sa‘d, al-Tabaqat",
     "moreEn": "Steadiness is a form of courage.",
     "moreAr": "الثبات شكل من أشكال الشجاعة."
+   },
+   {
+    "id": "d29",
+    "c": "science",
+    "en": "In 1843 Ada Lovelace published notes on Charles Babbage’s Analytical Engine that were longer than the article they explained. They included a step-by-step method to calculate Bernoulli numbers, often called the first computer program.",
+    "ar": "نشرت آدا لوفلايس عام 1843 ملاحظات عن آلة تشارلز بابّاج التحليلية كانت أطول من المقال الذي تشرحه. تضمنت طريقة خطوة بخطوة لحساب أعداد برنولي، وتُعد غالبًا أول برنامج حاسوبي.",
+    "by": "Ada Lovelace, Notes on Menabrea’s Sketch of the Analytical Engine, 1843",
+    "moreEn": "She also imagined that such machines could one day work with music and symbols, not only numbers.",
+    "moreAr": "وتخيّلت أيضًا أن مثل هذه الآلات قد تعمل يومًا مع الموسيقى والرموز، لا مع الأرقام فقط."
+   },
+   {
+    "id": "d30",
+    "c": "life",
+    "en": "Wangari Maathai began the Green Belt Movement in Kenya in 1977 by encouraging women to plant trees. In 2004 she became the first African woman to win the Nobel Peace Prize.",
+    "ar": "بدأت وانغاري ماثاي حركة الحزام الأخضر في كينيا عام 1977 بتشجيع النساء على زراعة الأشجار. وفي عام 2004 أصبحت أول امرأة أفريقية تفوز بجائزة نوبل للسلام.",
+    "by": "Nobel Prize organisation · Green Belt Movement"
+   },
+   {
+    "id": "d31",
+    "c": "science",
+    "en": "Mary Anning was a child when she and her brother uncovered a nearly complete ichthyosaur skeleton at Lyme Regis in England around 1811-1812. She went on to make major fossil finds, though she was rarely credited in her lifetime.",
+    "ar": "كانت ماري أنينغ طفلة عندما اكتشفت هي وأخوها هيكلًا شبه كامل لإكثيوصور في لايم ريجيس بإنجلترا نحو عامي 1811 و1812. ثم قامت باكتشافات أحفورية كبرى، رغم أنها نادرًا ما نالت التقدير في حياتها.",
+    "by": "Natural History Museum, London · Mary Anning"
+   },
+   {
+    "id": "d32",
+    "c": "science",
+    "en": "Katalin Karikó spent years on mRNA research with little funding and was demoted at her university in 1995. In 2023 she shared the Nobel Prize in Physiology or Medicine with Drew Weissman for work that made mRNA vaccines possible.",
+    "ar": "أمضت كاتالين كاريكو سنوات في أبحاث الحمض النووي الريبي المرسال بتمويل قليل، وتم خفض منصبها في جامعتها عام 1995. وفي عام 2023 تقاسمت جائزة نوبل في الفسيولوجيا أو الطب مع درو وايسمان عن عمل جعل لقاحات الحمض النووي الريبي المرسال ممكنة.",
+    "by": "Nobel Prize organisation, 2023"
+   },
+   {
+    "id": "d33",
+    "c": "business",
+    "en": "James Dyson built 5,127 prototypes of his bagless vacuum cleaner over about fifteen years before the design worked well enough to sell. He says each failure taught him something.",
+    "ar": "صنع جيمس دايسون 5127 نموذجًا أوليًا لمكنسته الكهربائية بلا كيس خلال نحو خمس عشرة سنة قبل أن ينجح التصميم بما يكفي للبيع. ويقول إن كل فشل علّمه شيئًا.",
+    "by": "James Dyson, interviews and the James Dyson Foundation"
+   },
+   {
+    "id": "d34",
+    "c": "history",
+    "en": "Al-Zahrawi, a physician in Córdoba around the year 1000, wrote Al-Tasrif, a 30-volume medical work. Its surgery section illustrated many instruments and was studied in Europe for centuries.",
+    "ar": "ألّف الزهراوي، وهو طبيب في قرطبة نحو عام 1000، كتاب التصريف وهو عمل طبي من 30 جزءًا. يحتوي قسم الجراحة فيه على رسوم لكثير من الأدوات، ودُرس في أوروبا قرونًا.",
+    "by": "Al-Zahrawi, Al-Tasrif li-man ajiza ‘an al-ta’lif"
+   },
+   {
+    "id": "d35",
+    "c": "science",
+    "en": "In 2014 the Iranian mathematician Maryam Mirzakhani became the first woman to win the Fields Medal, the highest honour in mathematics, for her work on the geometry of curved surfaces.",
+    "ar": "في عام 2014 أصبحت عالمة الرياضيات الإيرانية مريم ميرزاخاني أول امرأة تفوز بميدالية فيلدز، أعلى تكريم في الرياضيات، عن عملها في هندسة الأسطح المنحنية.",
+    "by": "International Mathematical Union, Fields Medal 2014"
    }
   ],
   "impact": [
@@ -1041,6 +1202,57 @@
     "en": "Small, smart choices repeated for long enough add up to big results. The same is true of small, careless choices.",
     "ar": "الاختيارات الصغيرة الذكية، حين تتكرر طويلًا، تصنع نتائج كبيرة. والأمر نفسه ينطبق على الاختيارات الصغيرة المهملة.",
     "by": "The Compound Effect · Darren Hardy"
+   },
+   {
+    "id": "b35",
+    "c": "book",
+    "en": "You do not rise to the level of your goals; you fall to the level of your systems. A goal sets direction, but a daily routine is what moves you.",
+    "ar": "لا ترتفع إلى مستوى أهدافك، بل تهبط إلى مستوى أنظمتك. الهدف يحدد الاتجاه، لكن الروتين اليومي هو ما يحرّكك.",
+    "by": "Atomic Habits · James Clear",
+    "moreEn": "Ask less “What do we want to reach?” and more “What do we do every day?”",
+    "moreAr": "اسأل أقل: «ماذا نريد أن نبلغ؟» وأكثر: «ماذا نفعل كل يوم؟»"
+   },
+   {
+    "id": "b36",
+    "c": "book",
+    "en": "Willpower works like a muscle that tires with use. Build routines for the important things so they do not depend on how much energy you have left.",
+    "ar": "قوة الإرادة تعمل مثل عضلة تتعب بالاستخدام. ابنِ روتينًا للأمور المهمة حتى لا تعتمد على ما بقي لديك من طاقة.",
+    "by": "The Power of Habit · Charles Duhigg"
+   },
+   {
+    "id": "b37",
+    "c": "book",
+    "en": "Decide where you will work, for how long, and what you need nearby before you begin. A clear ritual makes deep focus easier to start.",
+    "ar": "قرّر أين ستعمل ولكم من الوقت وما الذي تحتاجه قريبًا منك قبل أن تبدأ. الطقس الواضح يجعل بدء التركيز العميق أسهل.",
+    "by": "Deep Work · Cal Newport"
+   },
+   {
+    "id": "b38",
+    "c": "book",
+    "en": "Enough is a powerful idea. If your wants keep rising with your income, you never feel you have enough. Decide what is enough and enjoy it.",
+    "ar": "فكرة «الكفاية» قوية. إذا ظلّت رغباتك ترتفع مع دخلك فلن تشعر أبدًا بأن لديك ما يكفي. حدّد ما يكفيك واستمتع به.",
+    "by": "The Psychology of Money · Morgan Housel"
+   },
+   {
+    "id": "b39",
+    "c": "book",
+    "en": "Accept influence from your partner. Marriages last when each person is willing to listen, give way sometimes and share decisions.",
+    "ar": "تقبّل تأثير شريكك. تدوم الزيجات عندما يكون كل طرف مستعدًا للاستماع والتنازل أحيانًا وتقاسم القرارات.",
+    "by": "The Seven Principles for Making Marriage Work · John Gottman and Nan Silver"
+   },
+   {
+    "id": "b40",
+    "c": "book",
+    "en": "When something bothers you, say what you saw, how you feel, what you need and a clear request. Blame closes the door; a request opens it.",
+    "ar": "عندما يزعجك أمر ما، قل ما رأيته وما تشعر به وما تحتاجه واطلب طلبًا واضحًا. اللوم يغلق الباب والطلب يفتحه.",
+    "by": "Nonviolent Communication · Marshall Rosenberg"
+   },
+   {
+    "id": "b41",
+    "c": "book",
+    "en": "People do their best work when they have some choice over what they do, a chance to get better at it, and a reason that matters to them.",
+    "ar": "يقدّم الناس أفضل ما عندهم عندما يكون لهم بعض الاختيار فيما يفعلون، وفرصة للتحسن فيه، وسبب يهمهم.",
+    "by": "Drive · Daniel H. Pink"
    }
   ],
   "money": [
@@ -1278,6 +1490,65 @@
     "by": "Qur’an · Al-Baqarah 2:268",
     "byAr": "القرآن · البقرة 2:268",
     "orig": "الشَّيْطَانُ يَعِدُكُمُ الْفَقْرَ وَيَأْمُرُكُم بِالْفَحْشَاءِ ۖ وَاللَّهُ يَعِدُكُم مَّغْفِرَةً مِّنْهُ وَفَضْلًا"
+   },
+   {
+    "id": "m29",
+    "c": "faith",
+    "en": "Allah dislikes for you three things: idle talk, asking too many questions, and wasting wealth.",
+    "ar": "إن الله كره لكم ثلاثًا: قيل وقال، وكثرة السؤال، وإضاعة المال.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 1477, Sahih Muslim 593",
+    "byAr": "النبي ﷺ · صحيح البخاري 1477، صحيح مسلم 593",
+    "orig": "إِنَّ اللَّهَ كَرِهَ لَكُمْ ثَلَاثًا: قِيلَ وَقَالَ، وَكَثْرَةَ السُّؤَالِ، وَإِضَاعَةَ الْمَالِ"
+   },
+   {
+    "id": "m30",
+    "c": "money",
+    "en": "Make a shopping list and stick to it. Eating before you shop also helps, because hunger makes extra items look necessary.",
+    "ar": "اكتب قائمة للتسوق والتزم بها. وتناول طعامك قبل الذهاب أيضًا، لأن الجوع يجعل الأغراض الإضافية تبدو ضرورية.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m31",
+    "c": "faith",
+    "en": "No one has ever eaten better food than that which he earns by the work of his own hands.",
+    "ar": "ما أكل أحد طعامًا قط خيرًا من أن يأكل من عمل يده.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 2072",
+    "byAr": "النبي ﷺ · صحيح البخاري 2072",
+    "orig": "مَا أَكَلَ أَحَدٌ طَعَامًا قَطُّ خَيْرًا مِنْ أَنْ يَأْكُلَ مِنْ عَمَلِ يَدِهِ"
+   },
+   {
+    "id": "m32",
+    "c": "money",
+    "en": "Talk about money at a regular, calm time, such as once a week, never in the middle of an argument. Look at the log together and agree on one small change.",
+    "ar": "تحدثا عن المال في وقت منتظم وهادئ، مثل مرة كل أسبوع، وليس أثناء الخلاف. انظرا إلى السجل معًا واتفقا على تغيير صغير واحد.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m33",
+    "c": "faith",
+    "en": "Do not spend wastefully. Indeed, the wasteful are brothers of the devils.",
+    "ar": "ولا تبذّر تبذيرًا، إن المبذّرين كانوا إخوان الشياطين.",
+    "by": "Qur’an · Al-Isra 17:26-27",
+    "byAr": "القرآن · الإسراء 17:26-27",
+    "orig": "وَلَا تُبَذِّرْ تَبْذِيرًا ۝ إِنَّ الْمُبَذِّرِينَ كَانُوا إِخْوَانَ الشَّيَاطِينِ"
+   },
+   {
+    "id": "m34",
+    "c": "money",
+    "en": "Plan for birthdays, holidays and gifts ahead of time. Expenses you can see coming should never feel like surprises.",
+    "ar": "خطّطا مسبقًا لأعياد الميلاد والمناسبات والهدايا. النفقات التي يمكنكما توقعها يجب ألا تبدو مفاجآت.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m35",
+    "c": "money",
+    "en": "Before a big weekly shop, look at what is already in the kitchen. Using what you have first cuts waste and often means a shorter list.",
+    "ar": "قبل التسوق الأسبوعي الكبير، انظرا إلى ما هو موجود في المطبخ. استخدام ما لديكما أولًا يقلل الهدر وغالبًا يجعل القائمة أقصر.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
    }
   ]
  },

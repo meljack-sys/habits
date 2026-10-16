@@ -20,8 +20,14 @@ try:
     old = coach_tool.read(CODE, 'snapshot.json')
 except Exception:
     old = {}
-if old.get('docs') is not None and old.get('h') == h:
-    print('no change'); sys.exit(0)
 now = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+fresh = False
+try:
+    age = datetime.datetime.now(datetime.timezone.utc) - datetime.datetime.strptime(old.get('fetched', ''), '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc)
+    fresh = age < datetime.timedelta(hours=5)
+except Exception:
+    pass
+if old.get('docs') is not None and old.get('h') == h and fresh:
+    print('no change'); sys.exit(0)
 coach_tool.write(CODE, {'h': h, 'fetched': now, 'updated': now, 'docs': docs}, 'snapshot.json')
 print('written', now)

@@ -3,6 +3,9 @@ on:
   schedule:
     - cron: '17 */2 * * *'
   workflow_dispatch:
+  push:
+    paths:
+      - 'snapshot-request.txt'
 permissions:
   contents: write
 concurrency:
@@ -17,6 +20,7 @@ jobs:
       - run: python3 snapshot.py
         env:
           FAMILY_CODE: ${{ secrets.FAMILY_CODE }}
+          FORCE: ${{ github.event_name == 'push' && '1' || '' }}
       - name: Commit if changed
         run: |
           if [ -n "$(git status --porcelain snapshot.json)" ]; then

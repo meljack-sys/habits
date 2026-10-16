@@ -27,7 +27,7 @@ try:
     fresh = age < datetime.timedelta(hours=5)
 except Exception:
     pass
-if old.get('docs') is not None and old.get('h') == h and fresh:
+if old.get('docs') is not None and old.get('h') == h and fresh and not os.environ.get('FORCE'):
     print('no change'); sys.exit(0)
 coach_tool.write(CODE, {'h': h, 'fetched': now, 'updated': now, 'docs': docs}, 'snapshot.json')
 print('written', now)

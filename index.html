@@ -22,7 +22,7 @@ img{max-width:100%}[hidden]{display:none!important}
   --brand:#0B8A68;--brand-ink:#05503C;--brand-soft:#D9F1E7;
   --p1:#2C6BB4;--p1t:#235A9C;--p1s:#DCE8F6;
   --p2:#D2591F;--p2t:#B04314;--p2s:#FBE4D8;
-  --z1:#D8664F;--z2:#E2A63B;--z3:#2DAA80;
+  --z1:#D32F2F;--z2:#E2A63B;--z3:#2DAA80;
   --shadow:0 1px 2px rgba(18,33,27,.06),0 10px 28px rgba(18,33,27,.07);
   --f-d:'Sora','Segoe UI',system-ui,sans-serif;--f-b:'Figtree','Segoe UI',system-ui,sans-serif;
 }
@@ -33,7 +33,7 @@ img{max-width:100%}[hidden]{display:none!important}
     --brand:#35C79B;--brand-ink:#9BE8CE;--brand-soft:#123629;
     --p1:#5C8FD8;--p1t:#8DB4EE;--p1s:#1B2D45;
     --p2:#D96A30;--p2t:#F0955F;--p2s:#47291A;
-    --z1:#E5806B;--z2:#EBB656;--z3:#3CC596;--shadow:none;color-scheme:dark;
+    --z1:#FF6B6B;--z2:#EBB656;--z3:#3CC596;--shadow:none;color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
@@ -42,7 +42,7 @@ img{max-width:100%}[hidden]{display:none!important}
   --brand:#35C79B;--brand-ink:#9BE8CE;--brand-soft:#123629;
   --p1:#5C8FD8;--p1t:#8DB4EE;--p1s:#1B2D45;
   --p2:#D96A30;--p2t:#F0955F;--p2s:#47291A;
-  --z1:#E5806B;--z2:#EBB656;--z3:#3CC596;--shadow:none;color-scheme:dark;
+  --z1:#FF6B6B;--z2:#EBB656;--z3:#3CC596;--shadow:none;color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -86,7 +86,7 @@ main{padding-block:14px 120px;display:grid;gap:14px}
 .banner p{flex:1 1 240px;font-size:14px;color:var(--ink2)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand);color:#fff;font-weight:700;border-radius:12px;padding:11px 18px}
 .btn.alt{background:var(--surface2);color:var(--ink)}
-.btn.danger{background:#B83A2E;color:#fff}
+.btn.danger{background:#C62828;color:#fff}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 
 /* date nav */
@@ -164,7 +164,7 @@ main{padding-block:14px 120px;display:grid;gap:14px}
 .delta b{display:flex;align-items:center;gap:6px;font-family:var(--f-d);font-size:24px;margin-top:6px;font-variant-numeric:tabular-nums}
 .delta b .ic{width:20px;height:20px}
 .delta .from{font-size:12px;color:var(--ink3);margin-top:3px}
-.delta.up b{color:var(--brand-ink)}.delta.down b{color:#B83A2E}
+.delta.up b{color:var(--brand-ink)}.delta.down b{color:#C62828}
 :root[data-theme="dark"] .delta.down b{color:#F09A8B}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .delta.down b{color:#F09A8B}}
 .pname{display:flex;align-items:center;gap:8px;font-weight:700;margin:2px 0 10px}
@@ -282,11 +282,11 @@ textarea.in{min-height:70px;resize:vertical}
 .st{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:12.5px;padding:2px 8px;border-radius:99px}
 .st .ic{width:13px;height:13px}
 .st.ok{background:var(--brand-soft);color:var(--brand-ink)}
-.st.bad{background:#FBE3DF;color:#8F2A20}
-:root[data-theme="dark"] .st.bad{background:#4A2420;color:#F6B3A8}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .st.bad{background:#4A2420;color:#F6B3A8}}
+.st.bad{background:#FDE0E0;color:#A31616}
+:root[data-theme="dark"] .st.bad{background:#4F2226;color:#FFB4B4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .st.bad{background:#4F2226;color:#FFB4B4}}
 .caprow.ok .capchk{background:var(--brand);border-color:var(--brand);color:#fff}
-.caprow.over .capchk{background:#B83A2E;border-color:#B83A2E;color:#fff}
+.caprow.over .capchk{background:#C62828;border-color:#C62828;color:#fff}
 .capline{margin:6px 0}
 .cell.numc .cn{font-size:13px;font-weight:700;color:var(--ink);line-height:1}
 .cell.numc.on .cn{color:#fff}
@@ -369,7 +369,7 @@ html[dir="rtl"] #toast{direction:rtl}
   --brand:#7635BD;--brand-ink:#69319E;--brand-soft:#F1E5FA;
   --p1:#276FD5;--p1t:#1E579F;--p1s:#E4F0FF;
   --p2:#C8327A;--p2t:#A72461;--p2s:#FFE8F2;
-  --z1:#DC6D52;--z2:#B97918;--z3:#09875F;
+  --z1:#D32F2F;--z2:#B97918;--z3:#09875F;
   --shadow:0 3px 8px rgba(43,17,75,.045),0 14px 35px rgba(51,22,86,.085);
   --f-d:'Sora','Segoe UI',system-ui,sans-serif;--f-b:'Figtree','Segoe UI',system-ui,sans-serif;
   color-scheme:light;
@@ -380,7 +380,7 @@ html[dir="rtl"] #toast{direction:rtl}
   --brand:#7A38B9;--brand-ink:#EDCDFF;--brand-soft:#492D61;
   --p1:#72BDFF;--p1t:#BEDFFF;--p1s:#283954;
   --p2:#FF81BB;--p2t:#FFD0E6;--p2s:#48273E;
-  --z1:#FFAA93;--z2:#FFD082;--z3:#87EABD;
+  --z1:#FF6B6B;--z2:#FFD082;--z3:#87EABD;
   --shadow:0 8px 22px rgba(0,0,0,.18);color-scheme:dark;
 }}
 :root[data-theme="dark"]{
@@ -389,7 +389,7 @@ html[dir="rtl"] #toast{direction:rtl}
   --brand:#7A38B9;--brand-ink:#EDCDFF;--brand-soft:#492D61;
   --p1:#72BDFF;--p1t:#BEDFFF;--p1s:#283954;
   --p2:#FF81BB;--p2t:#FFD0E6;--p2s:#48273E;
-  --z1:#FFAA93;--z2:#FFD082;--z3:#87EABD;
+  --z1:#FF6B6B;--z2:#FFD082;--z3:#87EABD;
   --shadow:0 8px 22px rgba(0,0,0,.18);color-scheme:dark;
 }
 *{min-width:0}
@@ -458,11 +458,11 @@ main{padding-top:15px;gap:14px}
 .row:not(.on) .chk svg{opacity:.3}
 .cntrow .chk,.caprow .chk{pointer-events:none}
 .caprow.ok .capchk{color:#FFFFFF;background:#078E67;border-color:#078E67}
-.caprow.over .capchk{color:#FFFFFF;background:#AD3834;border-color:#AD3834}
+.caprow.over .capchk{color:#FFFFFF;background:#C62828;border-color:#C62828}
 .stepper{gap:5px}.stepper .iconbtn{width:44px;height:44px}
 .st{font-size:11px;font-weight:800;line-height:1.4;padding:4px 8px;white-space:normal}
 .st.ok{background:#D9F4E8;color:#075C41;border:1px solid #9DD8BA}
-.st.bad{background:#FEE1DB;color:#932F24;border:1px solid #EAB0A5}
+.st.bad{background:#FDE0E0;color:#A31616;border:1px solid #EFA3A3}
 .gl{border-color:var(--cat,#8B55C8)}.gl.f{background:#0E9D73;border-color:#0E9D73}
 /* The selected Week page: jewel cards, exactly seven circular buttons. */
 .wdays,.wcells{grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
@@ -603,7 +603,7 @@ main{padding-top:15px;gap:14px}
   :root:not([data-theme="light"]) .daily .dk{color:#E8C4FF}
   :root:not([data-theme="light"]) .daily .dcat{background:#583A73;color:#F4DEFF}
   :root:not([data-theme="light"]) .done-banner,:root:not([data-theme="light"]) .st.ok{background:#254D3A;color:#D7FFEB;border-color:#5DB68F}
-  :root:not([data-theme="light"]) .st.bad{background:#57312F;color:#FFD8CE;border-color:#A76B65}
+  :root:not([data-theme="light"]) .st.bad{background:#4F2226;color:#FFB4B4;border-color:#B06067}
   :root:not([data-theme="light"]) .delta.up b{color:#97F1C8}
   :root:not([data-theme="light"]) .delta.down b{color:#FFB8A8}
   :root:not([data-theme="light"]) .wh .tot.met{background:#26523C;color:#D6FFE7;border-color:#62B18D}
@@ -617,7 +617,7 @@ main{padding-top:15px;gap:14px}
 :root[data-theme="dark"] .daily .dk{color:#E8C4FF}
 :root[data-theme="dark"] .daily .dcat{background:#583A73;color:#F4DEFF}
 :root[data-theme="dark"] .done-banner,:root[data-theme="dark"] .st.ok{background:#254D3A;color:#D7FFEB;border-color:#5DB68F}
-:root[data-theme="dark"] .st.bad{background:#57312F;color:#FFD8CE;border-color:#A76B65}
+:root[data-theme="dark"] .st.bad{background:#4F2226;color:#FFB4B4;border-color:#B06067}
 :root[data-theme="dark"] .delta.up b{color:#97F1C8}
 :root[data-theme="dark"] .delta.down b{color:#FFB8A8}
 :root[data-theme="dark"] .wh .tot.met{background:#26523C;color:#D6FFE7;border-color:#62B18D}
@@ -850,7 +850,7 @@ select.in{width:100%}
 .bs-bar i{display:block;height:100%;border-radius:99px;background:var(--ink3)}
 .bs-bar i.bs-good{background:var(--z3)}.bs-bar i.bs-warn{background:var(--z2)}.bs-bar i.bs-high{background:var(--z1)}
 .bs-pace{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.55}
-.st.bs-good{background:#D9F4E8;color:#075C41}.st.bs-ok{background:var(--surface2);color:var(--ink2)}.st.bs-warn{background:#FCEBC8;color:#7A4B00}.st.bs-high{background:#FEE1DB;color:#932F24}.st.bs-due{background:var(--surface2);color:var(--ink2)}
+.st.bs-good{background:#D9F4E8;color:#075C41}.st.bs-ok{background:var(--surface2);color:var(--ink2)}.st.bs-warn{background:#FCEBC8;color:#7A4B00}.st.bs-high{background:#FDE0E0;color:#A31616}.st.bs-due{background:var(--surface2);color:var(--ink2)}
 .bv-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:14px}
 .bv-item{display:grid;gap:6px}
 .bv-key{margin-top:12px}
@@ -1466,7 +1466,7 @@ html[dir="rtl"] .mnav button,html[dir="rtl"] .rep-secs button{letter-spacing:0}
 .spc i{font-style:normal;font-size:10px;color:var(--ink3);line-height:1}
 .spc b{font-size:11px;font-weight:700;line-height:1.1;max-width:100%;overflow:hidden;text-overflow:clip}
 .spc.ok{background:color-mix(in srgb,var(--z3) 18%,var(--surface));border-color:color-mix(in srgb,var(--z3) 45%,var(--line))}
-.spc.bad{background:color-mix(in srgb,#B83A2E 14%,var(--surface));border-color:color-mix(in srgb,#B83A2E 45%,var(--line))}
+.spc.bad{background:color-mix(in srgb,#C62828 14%,var(--surface));border-color:color-mix(in srgb,#C62828 45%,var(--line))}
 .spc.off{opacity:.45;background:transparent;border-style:dashed}
 .spc.none b{color:var(--ink3)}
 .spc.today{box-shadow:0 0 0 2px var(--brand)}
@@ -1601,7 +1601,7 @@ q.ayah{display:block;quotes:none;margin:8px 0;padding:8px 14px;background:var(--
 .bd-totals{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}.bd-totals span{display:grid;justify-items:end}.bd-totals small{font-size:11px;font-weight:700;color:var(--ink3)}.bd-totals b{font-size:15px}
 .fx-trow{grid-template-columns:minmax(0,1fr) auto}.fx-trow>b,.fx-trow>span.num{justify-self:end}
 .fx-gbal{display:block}
-.fx-bar.over>i{background:#B83A2E}.fx-bar.saved>i{background:var(--z3,#1F8A4C)}
+.fx-bar.over>i{background:#C62828}.fx-bar.saved>i{background:var(--z3,#1F8A4C)}
 .fx-st b{font-weight:800}
 .bd-sheet .bd-sec>.bd-h{display:grid;grid-template-columns:1fr;gap:6px}
 .bd-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;justify-content:stretch}
@@ -1669,6 +1669,18 @@ body.is-sample .budgetcard .card-h h2::after,body.is-sample .spendcat .card-h h2
   content:var(--sample-lbl);display:inline-block;margin-inline-start:8px;vertical-align:middle;padding:2px 8px;border-radius:99px;
   border:1px dashed var(--ink3);color:var(--ink3);font:600 10.5px/1.5 var(--f-b,inherit);letter-spacing:0}
 
+/* sweets: a daily maximum. Portions are raspberry rounds; going over turns red. */
+.sweetrow,.week-jewel.sw{--cat:#C93C97;--cat2:#FF8FD0;--tint:#FFEAF6}
+.gl.sw{width:18px;height:18px;border-radius:50%;border:2px solid #C93C97;background:transparent}
+.gl.sw.f{background:radial-gradient(circle at 35% 35%,#FFFFFF66 0 2px,transparent 3px),#C93C97;border-color:#C93C97}
+.gl.sw.bad{background:radial-gradient(circle at 35% 35%,#FFFFFF66 0 2px,transparent 3px),#D32F2F;border-color:#D32F2F}
+.cntrow.over .chk{background:#C62828;border-color:#C62828;color:#fff}
+.cntrow.over .chk svg{opacity:1}
+.cell.lim-over{background:#C62828;border-color:#C62828;color:#fff}.cell.lim-over .cn{color:#fff}
+:root[data-theme="dark"] .sweetrow,:root[data-theme="dark"] .week-jewel.sw{--cat:#FF8FD0;--cat2:#FFB5E1}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sweetrow,:root:not([data-theme="light"]) .week-jewel.sw{--cat:#FF8FD0;--cat2:#FFB5E1}}
+:root[data-theme="dark"] .gl.sw{border-color:#FF8FD0}:root[data-theme="dark"] .gl.sw.f{background-color:#E05DB2;border-color:#E05DB2}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .gl.sw{border-color:#FF8FD0}:root:not([data-theme="light"]) .gl.sw.f{background-color:#E05DB2;border-color:#E05DB2}}
 </style>
 </head>
 <body>
@@ -1738,6 +1750,7 @@ const KINDS={
   jobhunt:{label:'Job and income hunt',unit:'min'},
   bizfocus:{label:'Business focus',unit:'min'},
   water:{label:'Water',unit:'glasses'},
+  sweets:{label:'Sweets and sugar (a maximum)',unit:'portions'},
   spend:{label:'Daily spending',unit:'cur'},
   underlimit:{label:'Within the daily limit (automatic)',unit:''},
   weight:{label:'Weight',unit:'kg'},
@@ -1759,6 +1772,7 @@ const LIB=[
   H('fast','Fast Monday or Thursday','صيام الاثنين أو الخميس','faith','practice',{target:2,per:'month'}),
   H('workout','Workout, 30 min','تمرين 30 دقيقة','body','exercise',{target:5,amount:30}),
   H('water','Drink 6 glasses of water','اشرب 6 أكواب ماء','body','water',{type:'count',goal:6,amount:1}),
+  H('sweets','Sweets and sugar: stay under the daily maximum','حلويات وسكر: التزم بالحد الأقصى اليومي','body','sweets',{type:'count',lim:1,goal:4,target:7,amount:1,on:false}),
   H('weigh','Weigh in','قياس الوزن','body','weight',{type:'num',target:1}),
   H('steps','Steps','المشي (الخطوات)','body','steps',{type:'num',target:5,goal:7000,on:false}),
   H('learn','Learning, 20 min','تعلّم 20 دقيقة','mind','study',{target:5,amount:20}),
@@ -1778,7 +1792,7 @@ const LIB=[
   H('gratitude','Gratitude, 3 things','الشكر: 3 أشياء','heart','general',{target:5}),
   H('give','Give: make someone smile or help them','عطاء: أسعد أحدًا أو ساعده','heart','general',{target:4})
 ];
-const mkHabit=x=>({id:x.key||x.id,name:x.name,ar:x.ar||'',area:AREA_MAP[x.area]||x.area,kind:x.kind,type:x.type||'tick',target:+x.target||1,per:x.per||'week',amount:Number(x.amount)||0,goal:Number(x.goal)||0,who:(x.who&&x.who.length?x.who.slice():['p1','p2']),joint:!!x.joint,tags:x.tags||null});
+const mkHabit=x=>({id:x.key||x.id,name:x.name,ar:x.ar||'',area:AREA_MAP[x.area]||x.area,kind:x.kind,type:x.type||'tick',target:+x.target||1,per:x.per||'week',amount:Number(x.amount)||0,goal:Number(x.goal)||0,who:(x.who&&x.who.length?x.who.slice():['p1','p2']),joint:!!x.joint,tags:x.tags||null,lim:x.lim?1:0});
 function ensureUnder(c){
   if(!c||!c.setup||c.underDone||!Array.isArray(c.habits))return false;
   c.underDone=true;
@@ -2752,6 +2766,7 @@ function applyNum(h,pid,dstr,val){
   const tg=hTargets(h,pid);
   if(val==null||isNaN(val)){valSet(tg,dstr,h.id);tickSet(tg,dstr,h.id,false);return}
   if(h.type==='cap'){valSet(tg,dstr,h.id,val>0?val:undefined);return}
+  if(h.type==='count'&&h.lim){valSet(tg,dstr,h.id,val);tickSet(tg,dstr,h.id,val<=(h.goal||1));return}
   if(h.type==='count'){valSet(tg,dstr,h.id,val>0?val:undefined);tickSet(tg,dstr,h.id,val>=(h.goal||1));return}
   valSet(tg,dstr,h.id,val);tickSet(tg,dstr,h.id,true);
 }
@@ -3101,6 +3116,7 @@ function impact(pid,from,to,area){
   const days=daysIn(from,to),nd=days.length,log=L[pid]||{};
   const o={nd:nd,exMin:0,pages:0,tafsirPages:0,studyMin:0,readPages:0,connMin:0,connDays:0,saved:0,practice:0,checks:0,
     glasses:0,waterDays:0,underDays:0,spendTotal:0,spendDays:0,spendUnder:0,spendLimit:0,wFirst:null,wLast:null,wN:0,steps:0,
+    sweetN:0,sweetFree:0,sweetOver:0,sweetLogged:0,
     jobMin:0,jobDays:0,bizMin:0,bizDays:0,orders:0,capGoal:0,outputs:0,tags:{}};
   ALLH(pid).forEach(h=>{
     if(area&&h.area!==area)return;
@@ -3120,6 +3136,7 @@ function impact(pid,from,to,area){
       case 'jobhunt':o.jobMin+=done*amt;o.jobDays+=done;break;
       case 'bizfocus':o.bizMin+=done*amt;o.bizDays+=done;break;
       case 'water':days.forEach(d=>{const v=Number(getVal(rp,ds(d),h.id))||0;o.glasses+=v;if(h.goal>0&&v>=h.goal)o.waterDays++});break;
+      case 'sweets':days.forEach(d=>{const v=getVal(rp,ds(d),h.id);if(v!=null&&typeof v!=='object'){const n=Number(v)||0;o.sweetLogged++;o.sweetN+=n;if(n===0)o.sweetFree++;if(h.goal>0&&n>h.goal)o.sweetOver++}});break;
       case 'spend':{o.spendLimit=spLim(ds(to));const arr=[];days.forEach(d=>{const v=getVal(rp,ds(d),h.id);if(v!=null&&typeof v!=='object')arr.push({k:ds(d),v:Number(v)})});
         /* today is still running: leave it out of the average while there are finished days */
         if(arr.length>1&&arr[arr.length-1].k===ds(today()))arr.pop();
@@ -3170,6 +3187,12 @@ function metricRows(pids,kinds,area){
     R('Water ('+per_lbl+')',x=>nf(pick(x).glasses)+'<small>glasses</small>');
     R('Days at the daily goal',x=>nf(pick(x).waterDays)+'<small>days</small>');
     R('Roughly in litres',x=>nf1(pick(x).glasses*0.25)+'<small>litres</small>','A glass is taken as 250 ml');
+  }
+  if(kinds.sweets){
+    R('Sweet portions ('+per_lbl+')',x=>nf(pick(x).sweetN)+'<small>portions</small>');
+    R('Average on logged days',x=>{const p=pick(x);return p.sweetLogged?nf1(p.sweetN/p.sweetLogged)+'<small>a day</small>':'<small>nothing logged yet</small>'});
+    R('Sweet-free days',x=>nf(pick(x).sweetFree)+'<small>days</small>','Aim for 2 to 3 a week');
+    R('Days over your maximum',x=>nf(pick(x).sweetOver)+'<small>days</small>');
   }
   if(kinds.weight){
     R('Latest weight',x=>pick(x).wLast==null?'–':nf1(pick(x).wLast)+'<small>kg</small>');
@@ -3513,6 +3536,20 @@ function habitRow(h,pid,d,dstr){
   const data='data-p="'+pid+'" data-h="'+esc(h.id)+'" data-d="'+dstr+'"';
   const areaCls=' area-'+esc(h.area)+(h.joint?' joint-habit':'');
   const perTxt=h.per==='month'?'<span>'+h.target+' a month</span>':'';
+  if(h.type==='count'&&h.lim){
+    const raw=getVal(rp,dstr,h.id),has=raw!=null&&typeof raw!=='object',v=has?(Number(raw)||0):0,goal=h.goal||1,over=has&&v>goal;
+    const gl=Array.from({length:Math.max(goal,v)},(_,i)=>'<i class="gl sw'+(i<v?(i>=goal?' bad':' f'):'')+'"></i>').join('');
+    const w0=wkStart(d);let free=0;
+    for(let i=0;i<7;i++){const x=addDays(w0,i);if(x>d)break;const r2=getVal(rp,ds(x),h.id);if(r2!=null&&typeof r2!=='object'&&Number(r2)===0)free++}
+    let st;
+    if(!has)st='<span>'+T2('Tap + for each portion. Tap − if you had none today.','اضغط + مع كل حصّة. اضغط − إن لم تأكل شيئًا حلوًا اليوم.')+'</span>';
+    else if(v===0)st=stBadge(true,T2('Sweet-free day','يوم بلا سكر'),'');
+    else st=stBadge(!over,T2(v+' of max '+goal+' today',v+' من أقصى '+goal+' اليوم'),T2('Over the limit by '+(v-goal),'فوق الحد بمقدار '+(v-goal)));
+    return '<div class="row cntrow sweetrow'+areaCls+(on?' on':'')+(over?' over':'')+'"><span class="chk">'+svgi(over?'warn':'check','',3)+'</span>'
+      +'<span style="min-width:0"><span class="nm">'+hn+'</span><span class="meta">'+tagA+'</span><span class="meta">'+st+'</span>'
+      +'<span class="meta"><span>'+T2('Sweet-free days this week: '+free+' (aim for 2 to 3)','أيام بلا سكر هذا الأسبوع: '+free+' (الهدف 2 إلى 3)')+'</span></span><span class="glasses" aria-hidden="true">'+gl+'</span></span>'
+      +'<span class="stepper"><button class="iconbtn" data-act="minus" '+data+' aria-label="One less">'+svgi('minus','',3)+'</button><button class="iconbtn" data-act="plus" '+data+' aria-label="One more">'+svgi('plus','',3)+'</button></span></div>';
+  }
   if(h.type==='count'){
     const v=Number(getVal(rp,dstr,h.id))||0,goal=h.goal||1;
     const gl=Array.from({length:Math.max(goal,v)},(_,i)=>'<i class="gl'+(i<v?' f':'')+'"></i>').join('');
@@ -3568,7 +3605,7 @@ function viewToday(){
   const dstr=ds(d),isToday=sameDay(d,t);
   const nav='<div class="datenav"><button class="iconbtn" data-act="day" data-n="-1" aria-label="Previous day"'+(d<=fl?' disabled':'')+'>'+svgi('chl')+'</button><div style="flex:1;min-width:0;text-align:center"><h2>'+(isToday?'Today':fmtDay.format(d))+'</h2><small>'+fmtLong.format(d)+'</small></div><button class="iconbtn" data-act="day" data-n="1" aria-label="Next day"'+(isToday?' disabled':'')+'>'+svgi('chr')+'</button></div>';
   const both=ui.who==='both';
-  const leftOf=(rows,pid)=>rows.filter(h=>h.type!=='cap'&&!isTicked(h,pid,dstr)&&!weekDone(h,pid,d)).length;
+  const leftOf=(rows,pid)=>rows.filter(h=>h.type!=='cap'&&!isTicked(h,pid,dstr)&&!weekDone(h,pid,d)&&!(h.lim&&getVal(repOf(h,pid),dstr,h.id)!=null)).length;
   let blocks='';
   const joint=both?S.habits.filter(h=>h.joint):[];
   if(joint.length){
@@ -3603,8 +3640,8 @@ function weekCell(h,pid,d,t,s){
   const nm=esc(hname(h))+' '+fmtShort.format(d);
   if(h.type==='cap'||h.type==='count'){
     const n=Number(getVal(rp,dstr,h.id))||0;
-    const over=h.type==='cap'&&n>0;
-    return '<button class="cell numc'+(on?' on':'')+(isT?' today':'')+'" data-act="num" '+base+' aria-label="'+nm+'"'+(dis?' disabled':'')+'>'+(n?'<span class="cn">'+n+'</span>':svgi('check','',3))+'</button>';
+    const rawW=getVal(rp,dstr,h.id),limOver=!!h.lim&&rawW!=null&&typeof rawW!=='object'&&n>(h.goal||1);
+    return '<button class="cell numc'+(on?' on':'')+(limOver?' lim-over':'')+(isT?' today':'')+'" data-act="num" '+base+' aria-label="'+nm+'"'+(dis?' disabled':'')+'>'+(n?'<span class="cn">'+n+'</span>':svgi('check','',3))+'</button>';
   }
   if(h.type==='num')return '<button class="cell numc'+(on?' on':'')+(isT?' today':'')+'" data-act="num" '+base+' aria-label="'+nm+'"'+(dis?' disabled':'')+'>'+svgi('check','',3)+'</button>';
   if(h.type==='tag')return '<button class="cell'+(on?' on':'')+(isT?' today':'')+'" data-act="tag" '+base+' aria-label="'+nm+'"'+(dis?' disabled':'')+'>'+svgi('check','',3)+'</button>';
@@ -3622,7 +3659,7 @@ function weekCard(pid,hs,title,pctVal,ringCol,days,r){
       if(h.type==='cap'){const n=capSum(pid,h,r[0],r[1]);tot='<div class="tot'+(n<=h.goal?' met':'')+'">'+n+' of max '+h.goal+'</div>'}
       else if(h.per==='month'){const m=[new Date(r[0].getFullYear(),r[0].getMonth(),1),new Date(r[0].getFullYear(),r[0].getMonth()+1,0)];const x=stats(rp,m[0],m[1]).byHabit[h.id]||{done:0};tot='<div class="tot'+(x.done>=h.target?' met':'')+'">'+x.done+' of '+h.target+' this month</div>'}
       else{let full=0;days.forEach(d=>{if(d<=t&&d>=s&&isTicked(h,pid,ds(d)))full++});tot='<div class="tot'+(full>=h.target?' met':'')+'">'+full+' of '+h.target+'</div>'}
-      return '<div class="week-jewel area-'+esc(h.area)+'"><div class="wh"><div class="hn"><span class="week-jicon">'+svgi(h.area)+'</span>'+esc(hname(h))+'</div>'+tot+'</div><div class="wcells">'+days.map(d=>weekCell(h,pid,d,t,s)).join('')+'</div></div>';
+      return '<div class="week-jewel area-'+esc(h.area)+(h.lim?' sw':'')+'"><div class="wh"><div class="hn"><span class="week-jicon">'+svgi(h.area)+'</span>'+esc(hname(h))+'</div>'+tot+'</div><div class="wcells">'+days.map(d=>weekCell(h,pid,d,t,s)).join('')+'</div></div>';
     }).join('');
   }).join('');
   return '<section class="card"><div class="ph">'+ring(pctVal,ringCol,56)+'<h3>'+esc(title)+'<small>'+zone(pctVal)+'</small></h3></div>'+head+rows+'</section>';
@@ -4332,6 +4369,12 @@ function stepVal(pid,hid,dstr,delta){
   const h=S.habits.find(x=>x.id===hid);if(!h)return;
   const cur=Number(getVal(repOf(h,pid),dstr,hid))||0;
   const max=h.type==='count'?Math.max(20,(h.goal||1)*3):20;
+  if(h.lim){
+    const raw=getVal(repOf(h,pid),dstr,hid),has=raw!=null&&typeof raw!=='object';
+    const nv=has?Math.max(0,Math.min(max,cur+delta)):(delta<0?0:1);
+    if(has&&nv===cur)return;
+    applyNum(h,pid,dstr,nv);rerender();return;
+  }
   const nv=Math.max(0,Math.min(max,cur+delta));
   if(nv===cur)return;
   applyNum(h,pid,dstr,nv);rerender();
@@ -4583,7 +4626,7 @@ function spendCard(){
       const bx=pl+i*bw+bw*0.14,w=bw*0.72,cx=(bx+w/2).toFixed(1);
       if(x.v!=null){
         const hh=Math.max(2,ch*x.v/mx);
-        g+='<path d="'+barPath(bx,y(x.v),w,hh,4)+'" fill="'+(x.ok?'var(--z3)':'#B83A2E')+'"/>';
+        g+='<path d="'+barPath(bx,y(x.v),w,hh,4)+'" fill="'+(x.ok?'var(--z3)':'#C62828')+'"/>';
         g+='<text x="'+cx+'" y="'+(y(x.v)-5).toFixed(1)+'" text-anchor="middle" class="axis spnum" font-weight="700">'+nf(x.v)+'</text>';
       }else{
         g+='<rect x="'+bx.toFixed(1)+'" y="'+(pt+ch-2)+'" width="'+w.toFixed(1)+'" height="2" fill="var(--line)"/>';
@@ -4613,7 +4656,7 @@ function spendCard(){
         +'<div class="note" style="margin-top:6px">'+T2('Average = total spent ÷ days that were recorded. Days with nothing recorded, and today until it is over, are left out. ','المتوسط = إجمالي المصروف ÷ الأيام المسجّلة. الأيام غير المسجّلة واليوم الحالي لا تُحسب. ')
         +(per==='week'?T2('This week: ','هذا الأسبوع: '):T2('This month: ','هذا الشهر: '))+'<b class="num">'+nf(total)+'</b> '+esc(S.currency)+' · '+under+'/'+logged.length+' '+T2('days within the limit','أيام ضمن الحد')+'</div>'})()
     +chart
-    +'<div class="legend"><span><i style="background:transparent;border-top:2px dashed var(--ink3);height:0;border-radius:0"></i>'+T2('limit ','الحد ')+nf(gl)+'</span><span><i style="background:var(--z3)"></i>'+T2('within the limit','ضمن الحد')+'</span><span><i style="background:#B83A2E"></i>'+T2('over the limit','فوق الحد')+'</span></div>'
+    +'<div class="legend"><span><i style="background:transparent;border-top:2px dashed var(--ink3);height:0;border-radius:0"></i>'+T2('limit ','الحد ')+nf(gl)+'</span><span><i style="background:var(--z3)"></i>'+T2('within the limit','ضمن الحد')+'</span><span><i style="background:#C62828"></i>'+T2('over the limit','فوق الحد')+'</span></div>'
     +(per==='month'?'<div class="note" style="margin-top:6px">'+T2('Tap a day to open its log. Best run of days within the limit: ','اضغط على أي يوم لفتح سجله. أطول سلسلة أيام ضمن الحد: ')+'<b class="num">'+bestRun+'</b></div>':'')+'</section>';
 }
 function weightCard(pids){
@@ -4803,7 +4846,7 @@ function settingRow(h,D){
   const id=esc(h.id),monthly=h.per==='month',maxT=monthly?31:7;
   const needsAmt=h.type==='tick'&&!!u;
   const needsGoal=h.type==='count'||h.type==='num'||h.type==='cap';
-  const goalLbl=h.type==='cap'?'Maximum a week':h.type==='count'?'Goal per day':'Daily limit or goal';
+  const goalLbl=h.type==='cap'?'Maximum a week':(h.type==='count'&&h.lim)?'Maximum per day':h.type==='count'?'Goal per day':'Daily limit or goal';
   const rng=[];for(let n=1;n<=maxT;n++)rng.push(n);
   return '<div class="hset area-'+esc(h.area)+(h.on?'':' off')+'" data-row="'+id+'"><div class="top2"><input type="checkbox" id="on-'+id+'" data-f="habit" data-h="'+id+'" data-k="on"'+(h.on?' checked':'')+' aria-label="Track '+esc(hname(h))+'">'
     +(custom?'<input class="in" id="hn-'+id+'" data-f="habit" data-h="'+id+'" data-k="name" value="'+esc(h.name)+'">':'<label for="on-'+id+'" style="flex:1;min-width:0;overflow-wrap:anywhere">'+esc(hname(h))+'</label>')+'</div>'
@@ -4853,7 +4896,7 @@ function viewSetup(){
     +'<div class="sticky-save"><button class="btn" data-act="copylink">Copy link</button>'+(navigator.share?'<button class="btn alt" data-act="sharelink">Send...</button>':'')+'</div></section>'
     :'';
   const reset=ui.confirmReset
-    ?'<div class="card form" style="border-color:#B83A2E"><p><b>Erase all check-ins and settings?</b> This removes your profiles, habits and history from this page and cannot be undone.</p><div class="sticky-save"><button class="btn danger" data-act="reset2">Yes, erase everything</button><button class="btn alt" data-act="reset0">Cancel</button></div></div>'
+    ?'<div class="card form" style="border-color:#C62828"><p><b>Erase all check-ins and settings?</b> This removes your profiles, habits and history from this page and cannot be undone.</p><div class="sticky-save"><button class="btn danger" data-act="reset2">Yes, erase everything</button><button class="btn alt" data-act="reset0">Cancel</button></div></div>'
     :(mode!=='sample'?'<div class="sticky-save"><button class="btn alt" data-act="csv">Download check-ins (CSV)</button><button class="btn alt" data-act="reset1">Start over</button></div>':'');
   return '<div><h2>'+(mode==='sample'?'Set up your profiles and habits':'Profiles, habits and settings')+'</h2><p class="note" style="margin-top:6px">'+(mode==='sample'?'Names are filled in for you. Choose the habits you want and who each one is for, then save.':'Changes apply from now on. Past check-ins stay as they are.')+'</p></div>'
     +'<div class="grid two">'+people+'</div>'
@@ -4889,7 +4932,7 @@ function onSetupInput(el){
 function saveSetup(){
   const D=draft;
   if(!D.people.every(p=>String(p.name).trim())){toast('Please enter both names.');return}
-  const habits=D.habits.filter(h=>h.on&&String(h.name).trim()).map(h=>({id:h.id,name:String(h.name).trim(),ar:h.ar||'',area:h.area,kind:h.kind,type:h.type||'tick',target:+h.target||1,per:h.per||'week',amount:Number(h.amount)||0,goal:Number(h.goal)||0,who:h.who.length?h.who:['p1','p2'],joint:!!h.joint,tags:h.tags||null}));
+  const habits=D.habits.filter(h=>h.on&&String(h.name).trim()).map(h=>({id:h.id,name:String(h.name).trim(),ar:h.ar||'',area:h.area,kind:h.kind,type:h.type||'tick',target:+h.target||1,per:h.per||'week',amount:Number(h.amount)||0,goal:Number(h.goal)||0,who:h.who.length?h.who:['p1','p2'],joint:!!h.joint,tags:h.tags||null,lim:h.lim?1:0}));
   if(!habits.length){toast('Choose at least one habit.');return}
   const first=mode==='sample';
   const cfg={v:2,setup:true,underDone:true,currency:D.currency,rate:Number(D.rate)||0,weekStart:+D.weekStart,start:first?ds(today()):S.start,

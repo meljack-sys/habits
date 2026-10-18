@@ -1,6 +1,6 @@
 {
  "v": 2,
- "updated": "2026-10-15",
+ "updated": "2026-10-18",
  "pools": {
   "today": [
    {
@@ -387,6 +387,65 @@
     "by": "The Prophet ﷺ · Sahih al-Bukhari 6114",
     "byAr": "النبي ﷺ · صحيح البخاري 6114",
     "orig": "لَيْسَ الشَّدِيدُ بِالصُّرَعَةِ، إِنَّمَا الشَّدِيدُ الَّذِي يَمْلِكُ نَفْسَهُ عِنْدَ الْغَضَبِ"
+   },
+   {
+    "id": "t53",
+    "c": "faith",
+    "en": "When you have decided on something, put your trust in Allah. Allah loves those who rely on Him.",
+    "ar": "إذا عزمت على أمر فتوكل على الله، فإن الله يحب المتوكلين.",
+    "by": "Qur’an 3:159",
+    "orig": "فَإِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللَّهِ ۚ إِنَّ اللَّهَ يُحِبُّ الْمُتَوَكِّلِينَ",
+    "byAr": "القرآن 3:159"
+   },
+   {
+    "id": "t54",
+    "c": "faith",
+    "en": "Is the reward for good anything but good?",
+    "ar": "هل جزاء الإحسان إلا الإحسان؟",
+    "by": "Qur’an 55:60",
+    "orig": "هَلْ جَزَاءُ الْإِحْسَانِ إِلَّا الْإِحْسَانُ",
+    "byAr": "القرآن 55:60"
+   },
+   {
+    "id": "t55",
+    "c": "family",
+    "en": "Whoever does not show mercy will not be shown mercy.",
+    "ar": "من لا يرحم لا يُرحم.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 5997",
+    "orig": "مَنْ لَا يَرْحَمْ لَا يُرْحَمْ",
+    "byAr": "النبي ﷺ · صحيح البخاري 5997"
+   },
+   {
+    "id": "t56",
+    "c": "faith",
+    "en": "Actions are judged by intentions, and each person will have what they intended.",
+    "ar": "الأعمال بالنيات، ولكل إنسان ما نوى.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 1",
+    "orig": "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى",
+    "byAr": "النبي ﷺ · صحيح البخاري 1"
+   },
+   {
+    "id": "t57",
+    "c": "heart",
+    "en": "A good word is charity.",
+    "ar": "الكلمة الطيبة صدقة.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 2989",
+    "orig": "وَالْكَلِمَةُ الطَّيِّبَةُ صَدَقَةٌ",
+    "byAr": "النبي ﷺ · صحيح البخاري 2989"
+   },
+   {
+    "id": "t58",
+    "c": "life",
+    "en": "First say to yourself what you would be; then do what you have to do.",
+    "ar": "قل لنفسك أولًا ما تريد أن تكون، ثم افعل ما يجب عليك فعله.",
+    "by": "Epictetus · Discourses 3.23"
+   },
+   {
+    "id": "t59",
+    "c": "life",
+    "en": "If a person does not know to which port they are sailing, no wind is favourable.",
+    "ar": "من لا يعرف إلى أي ميناء يبحر، فليست أي ريح في صالحه.",
+    "by": "Seneca · Letters to Lucilius 71"
    }
   ],
   "week": [
@@ -656,6 +715,59 @@
     "en": "Friendship takes time. One study estimated about 50 hours together to move from acquaintance to casual friend and more than 200 hours to become close friends. Time together is the investment.",
     "ar": "الصداقة تحتاج إلى وقت. قدّرت دراسة أن الانتقال من معرفة عابرة إلى صداقة عادية يتطلب نحو 50 ساعة معًا، والوصول إلى صداقة قريبة يتطلب أكثر من 200 ساعة. الوقت المشترك هو الاستثمار.",
     "by": "Jeffrey Hall, Journal of Social and Personal Relationships, 2018"
+   },
+   {
+    "id": "w38",
+    "c": "family",
+    "en": "Gottman's research on couples found four habits that signal trouble: criticism, contempt, defensiveness and stonewalling. Of the four, contempt was the most damaging.",
+    "ar": "وجد بحث جوتمان على الأزواج أربع عادات تنذر بالمشاكل: النقد، والازدراء، والدفاع عن النفس، والانسحاب الصامت. وكان الازدراء أشدها ضررًا.",
+    "by": "John Gottman, The Seven Principles for Making Marriage Work, 1999"
+   },
+   {
+    "id": "w39",
+    "c": "heart",
+    "en": "In a trial, people who wrote a letter thanking someone and delivered it in person felt happier for about a month afterwards.",
+    "ar": "في تجربة، شعر الأشخاص الذين كتبوا رسالة شكر لأحد وسلّموها له وجهًا لوجه بسعادة أكبر لمدة شهر تقريبًا بعد ذلك.",
+    "by": "Seligman, Steen, Park and Peterson, American Psychologist, 2005"
+   },
+   {
+    "id": "w40",
+    "c": "family",
+    "en": "Pairs of strangers who spent 45 minutes sharing increasingly personal answers felt closer afterwards than pairs who made small talk.",
+    "ar": "الأشخاص الغرباء الذين قضوا 45 دقيقة يتبادلون إجابات شخصية أكثر فأكثر شعروا بقرب أكبر من الذين اكتفوا بالحديث العابر.",
+    "by": "Aron et al., Personality and Social Psychology Bulletin, 1997"
+   },
+   {
+    "id": "w41",
+    "c": "science",
+    "en": "Temptation bundling means pairing something you need to do with something you enjoy. In a study, people who could hear gripping audiobooks only at the gym went to the gym more often.",
+    "ar": "ربط العادة بمتعة يعني أن تجمع ما يجب عليك فعله مع ما تحبه. في دراسة، ذهب الناس إلى النادي الرياضي أكثر عندما لم يُسمح لهم بسماع كتب صوتية مشوقة إلا هناك.",
+    "by": "Milkman, Minson and Volpp, Management Science, 2014"
+   },
+   {
+    "id": "w42",
+    "c": "science",
+    "en": "People are more likely to start new goals after “fresh start” dates such as a new week, a new month or a birthday. Use the start of the week for a new habit.",
+    "ar": "يزداد احتمال أن يبدأ الناس أهدافًا جديدة بعد تواريخ “البداية الجديدة” مثل الأسبوع الجديد أو الشهر الجديد أو عيد الميلاد. اجعل بداية الأسبوع موعدًا لعادة جديدة.",
+    "by": "Dai, Milkman and Riis, Management Science, 2014"
+   },
+   {
+    "id": "w43",
+    "c": "faith",
+    "en": "Among His signs is that He created for you spouses from among yourselves, so that you may find comfort in them, and He placed between you love and mercy.",
+    "ar": "ومن آياته أن خلق لكم من أنفسكم أزواجًا لتسكنوا إليها، وجعل بينكم مودة ورحمة.",
+    "by": "Qur’an 30:21",
+    "orig": "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً",
+    "byAr": "القرآن 30:21"
+   },
+   {
+    "id": "w44",
+    "c": "family",
+    "en": "Live with them in kindness.",
+    "ar": "عاشروهن بالمعروف.",
+    "by": "Qur’an 4:19",
+    "orig": "وَعَاشِرُوهُنَّ بِالْمَعْرُوفِ",
+    "byAr": "القرآن 4:19"
    }
   ],
   "dash": [
@@ -952,6 +1064,55 @@
     "en": "In 2014 the Iranian mathematician Maryam Mirzakhani became the first woman to win the Fields Medal, the highest honour in mathematics, for her work on the geometry of curved surfaces.",
     "ar": "في عام 2014 أصبحت عالمة الرياضيات الإيرانية مريم ميرزاخاني أول امرأة تفوز بميدالية فيلدز، أعلى تكريم في الرياضيات، عن عملها في هندسة الأسطح المنحنية.",
     "by": "International Mathematical Union, Fields Medal 2014"
+   },
+   {
+    "id": "d36",
+    "c": "science",
+    "en": "In 1952 Grace Hopper developed the A-0 system, an early compiler that turned symbolic instructions into machine code. Her later work helped shape COBOL, a language made to be read like English.",
+    "ar": "في عام 1952 طورت جريس هوبر نظام A-0، وهو من أوائل المترجمات التي حوّلت التعليمات الرمزية إلى لغة الآلة. وساعد عملها اللاحق في تشكيل لغة كوبول التي صُممت لتُقرأ كالإنجليزية.",
+    "by": "IEEE Milestone: Grace Hopper’s Compiler and Programming Language Work, 1952-1959"
+   },
+   {
+    "id": "d37",
+    "c": "science",
+    "en": "In 1965 the chemist Stephanie Kwolek at DuPont noticed a cloudy, runny polymer solution that others might have thrown away. She asked for it to be spun, and the fibre was surprisingly strong. It became Kevlar.",
+    "ar": "في عام 1965 لاحظت الكيميائية ستيفاني كولاك في شركة دوبونت محلولًا بوليمريًا عكرًا وسائلًا كان يمكن للآخرين التخلص منه. طلبت غزله، فجاءت الألياف قوية بشكل مدهش، وأصبحت مادة كيفلار.",
+    "by": "Stephanie Kwolek, obituary coverage, PBS NewsHour, 2014"
+   },
+   {
+    "id": "d38",
+    "c": "science",
+    "en": "The engineer Fazlur Rahman Khan, born in Dhaka, developed the tube structural system that let skyscrapers such as the John Hancock Center and the Willis Tower rise higher with less steel.",
+    "ar": "طوّر المهندس فضل الرحمن خان، المولود في دكا، نظام الأنبوب الإنشائي الذي سمح لناطحات السحاب مثل مركز جون هانكوك وبرج ويليس بأن ترتفع أكثر باستخدام فولاذ أقل.",
+    "by": "Encyclopaedia Britannica, Fazlur R. Khan"
+   },
+   {
+    "id": "d39",
+    "c": "history",
+    "en": "In 1206 the engineer al-Jazari finished his Book of Knowledge of Ingenious Mechanical Devices, describing dozens of machines, from water-raising pumps to the famous elephant clock, with drawings and building instructions.",
+    "ar": "في عام 1206 أنهى المهندس الجزري كتابه في معرفة الحيل الهندسية، ووصف فيه عشرات الآلات، من مضخات رفع الماء إلى ساعة الفيل الشهيرة، مع رسومات وتعليمات للصنع.",
+    "by": "Al-Jazari, Kitab fi Ma‘rifat al-Hiyal al-Handasiyya, 1206"
+   },
+   {
+    "id": "d40",
+    "c": "science",
+    "en": "Tu Youyou led a Chinese team in the 1970s that searched old medical texts and tested many plants to find a malaria treatment. They found artemisinin in sweet wormwood, and she shared the 2015 Nobel Prize in Physiology or Medicine.",
+    "ar": "قادت تو يويو في السبعينيات فريقًا صينيًا بحث في كتب الطب القديمة واختبر نباتات كثيرة لإيجاد علاج للملاريا. وجدوا الأرتيميسينين في نبات الشيح الحلو، ونالت عام 2015 جزءًا من جائزة نوبل في الفيزيولوجيا أو الطب.",
+    "by": "Nobel Prize organisation, 2015"
+   },
+   {
+    "id": "d41",
+    "c": "history",
+    "en": "In the 13th century the physician Ibn al-Nafis wrote that blood passes from the right side of the heart through the lungs to the left side, challenging the older view that it crossed through the wall of the heart.",
+    "ar": "في القرن الثالث عشر كتب الطبيب ابن النفيس أن الدم ينتقل من الجانب الأيمن للقلب عبر الرئتين إلى الجانب الأيسر، مخالفًا الرأي القديم بأنه يعبر من خلال جدار القلب.",
+    "by": "Ibn al-Nafis (1210-1288): the first description of the pulmonary circulation, The American Surgeon, 2008"
+   },
+   {
+    "id": "d42",
+    "c": "science",
+    "en": "In 1992 Mae Jemison, a physician and engineer, flew on the space shuttle Endeavour and became the first African American woman in space.",
+    "ar": "في عام 1992 سافرت مي جيميسون، وهي طبيبة ومهندسة، على متن مكوك الفضاء إنديفور، وأصبحت أول امرأة أمريكية من أصل أفريقي في الفضاء.",
+    "by": "NASA biography, Mae C. Jemison"
    }
   ],
   "impact": [
@@ -1253,6 +1414,55 @@
     "en": "People do their best work when they have some choice over what they do, a chance to get better at it, and a reason that matters to them.",
     "ar": "يقدّم الناس أفضل ما عندهم عندما يكون لهم بعض الاختيار فيما يفعلون، وفرصة للتحسن فيه، وسبب يهمهم.",
     "by": "Drive · Daniel H. Pink"
+   },
+   {
+    "id": "b42",
+    "c": "book",
+    "en": "Work on tasks that sit just at the edge of your ability: not too easy, not too hard. Clear calls this the Goldilocks Rule, and says it keeps us motivated.",
+    "ar": "اعمل على مهام تقع عند حدود قدرتك: ليست سهلة جدًا ولا صعبة جدًا. يسمي كلير هذا قاعدة غولديلوكس، ويرى أنها تُبقي الحافز حيًّا.",
+    "by": "Atomic Habits · James Clear"
+   },
+   {
+    "id": "b43",
+    "c": "book",
+    "en": "End each workday with a fixed shutdown routine: check what is open, make tomorrow's plan, then say a closing phrase. Once it is done, you can really rest.",
+    "ar": "أنهِ كل يوم عمل بروتين إغلاق ثابت: راجع ما بقي مفتوحًا، وضع خطة الغد، ثم قل عبارة ختام. وعندما ينتهي ذلك تستطيع أن ترتاح فعلًا.",
+    "by": "Deep Work · Cal Newport (the shutdown ritual)"
+   },
+   {
+    "id": "b44",
+    "c": "book",
+    "en": "Febreze flopped until its makers added a reward: a pleasant scent that marks the end of cleaning. A habit sticks when it ends with something you look forward to.",
+    "ar": "فشل منتج فيبريز حتى أضاف صانعوه مكافأة: رائحة لطيفة تعلن نهاية التنظيف. تثبت العادة عندما تنتهي بشيء تتطلع إليه.",
+    "by": "The Power of Habit · Charles Duhigg (the Febreze story)"
+   },
+   {
+    "id": "b45",
+    "c": "book",
+    "en": "Build “love maps”: learn the inner world of your partner, their worries, hopes and small joys. Ask one real question each week and listen to the whole answer.",
+    "ar": "ابنِ “خرائط الحب”: تعرّف على العالم الداخلي لشريك حياتك، همومه وآماله وأفراحه الصغيرة. اسأل سؤالًا حقيقيًا كل أسبوع واستمع إلى الجواب كاملًا.",
+    "by": "The Seven Principles for Making Marriage Work · John Gottman and Nan Silver"
+   },
+   {
+    "id": "b46",
+    "c": "book",
+    "en": "When you buy something to impress people, they usually admire the car and not the driver. They imagine themselves owning it, and think little of you.",
+    "ar": "عندما تشتري شيئًا لتبهر الناس، فإنهم غالبًا يعجبون بالسيارة لا بالسائق. يتخيلون أنفسهم يملكونها، ولا يفكرون فيك كثيرًا.",
+    "by": "The Psychology of Money · Morgan Housel (the man in the car)"
+   },
+   {
+    "id": "b47",
+    "c": "book",
+    "en": "Plan your time on a calendar. Distraction only has a meaning when you know what you planned to do, so you cannot be distracted from a plan you never made.",
+    "ar": "خطط لوقتك في تقويم. لا يكون للتشتت معنى إلا إذا عرفت ما خططت لفعله، فلا يمكن أن تتشتت عن خطة لم تضعها.",
+    "by": "Indistractable · Nir Eyal"
+   },
+   {
+    "id": "b48",
+    "c": "book",
+    "en": "Become genuinely interested in other people. Remember a small detail they told you, and ask about it later. People feel close to those who listen.",
+    "ar": "كن مهتمًا بالآخرين اهتمامًا صادقًا. تذكر تفصيلًا صغيرًا أخبروك به واسأل عنه لاحقًا. يشعر الناس بالقرب ممن يصغي إليهم.",
+    "by": "How to Win Friends and Influence People · Dale Carnegie"
    }
   ],
   "money": [
@@ -1547,6 +1757,65 @@
     "c": "money",
     "en": "Before a big weekly shop, look at what is already in the kitchen. Using what you have first cuts waste and often means a shorter list.",
     "ar": "قبل التسوق الأسبوعي الكبير، انظرا إلى ما هو موجود في المطبخ. استخدام ما لديكما أولًا يقلل الهدر وغالبًا يجعل القائمة أقصر.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m36",
+    "c": "money",
+    "en": "Compare the price per kilo or per litre, not the price on the package. The bigger pack is not always the cheaper one.",
+    "ar": "قارن السعر لكل كيلوغرام أو لكل لتر، وليس السعر المكتوب على العبوة. العبوة الأكبر ليست دائمًا الأرخص.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m37",
+    "c": "faith",
+    "en": "If the buyer and seller are truthful and make things clear, their deal is blessed. If they hide and lie, the blessing of their deal is erased.",
+    "ar": "إذا صدق البائع والمشتري وبيّنا، بورك لهما في بيعهما، وإن كتما وكذبا مُحقت بركة بيعهما.",
+    "by": "The Prophet ﷺ · Sahih al-Bukhari 2079",
+    "orig": "فَإِنْ صَدَقَا وَبَيَّنَا بُورِكَ لَهُمَا فِي بَيْعِهِمَا، وَإِنْ كَتَمَا وَكَذَبَا مُحِقَتْ بَرَكَةُ بَيْعِهِمَا",
+    "byAr": "النبي ﷺ · صحيح البخاري 2079"
+   },
+   {
+    "id": "m38",
+    "c": "money",
+    "en": "Check the receipt before you leave the shop. Mistakes in price or quantity happen, and a minute at the counter is cheaper than a return trip.",
+    "ar": "تحقق من الإيصال قبل أن تغادر المتجر. تحدث أخطاء في السعر أو الكمية، ودقيقة عند الصندوق أوفر من رحلة عودة.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m39",
+    "c": "faith",
+    "en": "Charity never decreases wealth.",
+    "ar": "ما نقصت صدقة من مال.",
+    "by": "The Prophet ﷺ · Sahih Muslim 2588",
+    "orig": "مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ",
+    "byAr": "النبي ﷺ · صحيح مسلم 2588"
+   },
+   {
+    "id": "m40",
+    "c": "money",
+    "en": "Give each of you a small amount you can spend without asking the other. It protects trust and ends arguments about little things.",
+    "ar": "خصصا لكل منكما مبلغًا صغيرًا يمكنه إنفاقه دون أن يستأذن الآخر. هذا يحمي الثقة وينهي الجدال حول الأمور الصغيرة.",
+    "by": "Habits, Together",
+    "byAr": "عادات معًا"
+   },
+   {
+    "id": "m41",
+    "c": "faith",
+    "en": "Seek the home of the Hereafter through what Allah has given you, and do not forget your share of this world. And do good as Allah has done good to you.",
+    "ar": "وابتغ فيما آتاك الله الدار الآخرة، ولا تنس نصيبك من الدنيا، وأحسن كما أحسن الله إليك.",
+    "by": "Qur’an · Al-Qasas 28:77",
+    "orig": "وَابْتَغِ فِيمَا آتَاكَ اللَّهُ الدَّارَ الْآخِرَةَ ۖ وَلَا تَنسَ نَصِيبَكَ مِنَ الدُّنْيَا ۖ وَأَحْسِن كَمَا أَحْسَنَ اللَّهُ إِلَيْكَ",
+    "byAr": "القرآن 28:77"
+   },
+   {
+    "id": "m42",
+    "c": "money",
+    "en": "Before replacing something that broke, ask if it can be repaired. A small repair often costs far less than a new one.",
+    "ar": "قبل أن تستبدل شيئًا تعطل، اسأل هل يمكن إصلاحه. غالبًا ما يكلف الإصلاح الصغير أقل بكثير من شراء جديد.",
     "by": "Habits, Together",
     "byAr": "عادات معًا"
    }

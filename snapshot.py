@@ -29,13 +29,13 @@ except Exception:
     pass
 if old.get('docs') is not None and old.get('h') == h and fresh and not os.environ.get('FORCE'):
     print('no change'); sys.exit(0)
-# cash withdrawals / transfers (ty 'w') are money moved, never spending: keep them out of what the coach reads
+# cash withdrawals, transfers and loans (ty 'w', 'l', 'p') are money moved, never spending: keep them out of what the coach reads
 for d in ('exp-p1', 'exp-p2'):
     items = (docs.get(d) or {}).get('items')
     if isinstance(items, dict):
         for day in list(items):
             if isinstance(items[day], dict):
-                items[day] = {k: v for k, v in items[day].items() if not (isinstance(v, dict) and v.get('ty') == 'w')}
+                items[day] = {k: v for k, v in items[day].items() if not (isinstance(v, dict) and v.get('ty') in ('w', 'l', 'p'))}
                 if not items[day]:
                     del items[day]
 coach_tool.write(CODE, {'h': h, 'fetched': now, 'updated': now, 'docs': docs}, 'snapshot.json')

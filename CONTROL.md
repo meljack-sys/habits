@@ -2,7 +2,7 @@
 
 ## Status (as of 2026-10-28)
 - Live: https://meljack-sys.github.io/habits/ (GitHub Pages, repo meljack-sys/habits, public)
-- App is split into index.html, styles.css, app.js (commit b17b325). Live check on phone after the split: PENDING.
+- App is split into index.html, styles.css, app.js (commit b17b325). Live check on phone after the split: DONE 2026-10-28, works. Snapshot job checked on sample data: OK.
 - Weekly review removed. Impact is month-to-date. Only the monthly coach review remains.
 - Domain: NOT bought yet. Habits is not private yet (family code in the URL is the only lock).
 
@@ -16,7 +16,7 @@
 | Old weekly content refresh | | Off |
 
 ## Roadmap
-1. Confirm the live app works after the split.
+1. Done 2026-10-28: live app works after the split.
 2. Finish any features wanted before the move.
 3. Buy domain at Cloudflare (personal account).
 4. Move habits to habits.[domain], private repo, Cloudflare Access login, Firebase sign-in and rules.

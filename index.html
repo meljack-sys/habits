@@ -2255,33 +2255,6 @@ function coachJointCard(){
   return '<section class="card coach"><div class="coach-h"><span class="dot" style="background:var(--brand)"></span><div><h2>'+T2('Together','معًا')+'</h2><small>'+T2('What you built as a couple','ما بنيتماه كزوجين')+'</small></div></div><div class="cs"><ul>'
     +j.items.map(a=>'<li lang="'+LG()+'" dir="'+DIR()+'">'+esc(ar?a.ar:a.en)+'</li>').join('')+'</ul></div><div class="cthanks" lang="'+LG()+'" dir="'+DIR()+'">'+esc(ar?j.ar:j.en)+'</div></section>';
 }
-function weekSummaryText(){
-  const w=coachWin(7),lines=[];
-  lines.push('Habits, Together — summary '+ds(w[0])+' to '+ds(w[1]));
-  S.people.forEach(p=>{
-    const st=stats(p.id,w[0],w[1]),o=impact(p.id,w[0],w[1]);
-    lines.push('');lines.push(p.name+': '+pct(st.pct)+' of plan, '+checkIns(p.id,w[0],w[1])+' check-ins, streak '+streaks(p.id).cur);
-    habitsFor(p.id).forEach(h=>{const x=st.byHabit[h.id];if(x)lines.push('  - '+h.name+': '+x.done+' done, target '+h.target+(h.per==='month'?' a month':' a week'))});
-    if(o.spendDays)lines.push('  - spending: avg '+nf(o.spendTotal/o.spendDays)+' '+S.currency+' over '+o.spendDays+' days, '+o.spendUnder+' within limit');
-    if(o.capGoal)lines.push('  - delivery orders: '+o.orders+' (cap '+o.capGoal+' a week)');
-    if(o.outputs)lines.push('  - business outputs: '+o.outputs);
-  });
-  (function(){
-    const h=spendHabit();if(!h)return;
-    const A=ds(w[0]),Bd=ds(w[1]),bc={};let tot=0;
-    eachEntry((x,d)=>{if(d<A||d>Bd||eSkip(x))return;const v=eNet(x);const k=(x.c&&catName(x.c))?x.c:'_none';bc[k]=(bc[k]||0)+v;tot+=v});
-    if(tot>0){lines.push('');lines.push('Spending by category ('+S.currency+', '+nf(tot)+' total, net of refunds): '+Object.keys(bc).filter(k=>bc[k]>0).sort((a,b)=>bc[b]-bc[a]).map(k=>(k==='_none'?'not categorised':catName(k))+' '+nf(bc[k])).join(', '))}
-    const ym=ymOf(ds(w[1])),act=monthAct(ym);
-    lines.push('Budgets this month so far: '+bud().lines.filter(l=>!(l.from&&ym<l.from)).map(l=>{const s=lineStatus(l,ym,act);return lname(l)+' '+nf(s.counted)+' of '+nf(s.budget)+(s.st==='none'?'':' ('+ST_TXT[s.st][0].toLowerCase()+')')}).join('; '));
-    const dd=daysIn(w[0],w[1]);let within=0,logged=0;
-    dd.forEach(d=>{const v=getVal(repOf(h,h.who[0]),ds(d),h.id);if(v!=null&&typeof v!=='object'){logged++;if(Number(v)<=spLim(ds(d)))within++}});
-    lines.push('Daily limit: within on '+within+' of '+dd.length+' days; logged on '+logged+' of '+dd.length+' days.');
-    const sm=fxSummary(ymOf(ds(today())));lines.push('Bills this month: '+sm.paid+' of '+sm.n+' settled'+(sm.part?', '+sm.part+' partly paid':'')+(sm.over?', '+sm.over+' overdue':'')+'.');
-  })();
-  lines.push('');lines.push('Please give us a short review: what went well, what to fix, and the plan for next week.');
-  return lines.join('\n');
-}
-
 /* ---------- language helpers (labels follow the chosen language; interface text is translated in the design step) ---------- */
 const LG=()=>ui.lang==='ar'?'ar':'en';
 const DIR=()=>ui.lang==='ar'?'rtl':'ltr';
@@ -4227,11 +4200,6 @@ function meBanner(){
   if(mode==='sample'||meKnown())return '';
   return '<div class="banner mebar"><p><b>'+T2('Whose phone is this?','لمن هذا الهاتف؟')+'</b> '+T2('The app opens on this person’s page.','يفتح التطبيق على صفحة هذا الشخص.')+'</p><div class="chips">'+S.people.map(p=>'<button type="button" class="chipbtn" data-act="setme" data-p="'+p.id+'" data-notr="1">'+esc(pname(p.id))+'</button>').join('')+'</div></div>';
 }
-function moneyNoteHtml(){
-  if(mode==='sample'||!COACHNOTE||!COACHNOTE.money)return '';
-  const m=COACHNOTE.money,txt=String((ui.lang==='ar'?m.ar:m.en)||'').trim();if(!txt)return '';
-  return '<div class="money-note" lang="'+LG()+'" dir="'+DIR()+'"><div class="mn-h">'+T2('Sunday money note','ملاحظة الأحد عن المصاريف')+'</div>'+txt.split(/\n+/).filter(Boolean).map(x=>'<p>'+esc(x)+'</p>').join('')+'</div>';
-}
 function fxLine(ym){
   const sm=fxSummary(ym),fb=fxBalance(ym);
   return '<button type="button" class="mc-fx" data-act="mtab" data-v="fix"><span>'+svgi('t_week')+T2('Bills: '+sm.paid+' of '+sm.n+' settled','الفواتير: '+sm.paid+' من '+sm.n+' مسدّدة')+(sm.over?'<b class="fx-over"> · '+T2(sm.over+' overdue',sm.over+' متأخرة')+'</b>':'')+(sm.soon?'<b class="fx-soon"> · '+T2(sm.soon+' due soon',sm.soon+' مستحقة قريب')+'</b>':'')+(fb.saved>0.5?'<b class="fx-good"> · '+T2('saved ','وفّرتم ')+nf(fb.saved)+'</b>':'')+(fb.over>0.5?'<b class="fx-bad"> · '+T2('over ','زادت ')+nf(fb.over)+'</b>':'')+'</span></button>';
@@ -4252,7 +4220,7 @@ function moneyCard(){
   const todayRow='<div class="mc-today">'+T2('Today ','اليوم ')+(has?'<b class="num">'+nf(v)+'</b>':'<b class="num">0</b>')+' / <span class="num">'+nf(lim)+'</span> EGP '+(has?stBadge(Number(v)<=lim,T2('Within the limit','ضمن الحد'),T2('Over the limit','فوق الحد')):'')+'</div>';
   const sm=fxSummary(ym);
   const fx=fxLine(ym);
-  return '<div class="grid"><section class="card moneycard"><div class="card-h"><h2>'+T2('Money this month','مالية هذا الشهر')+'</h2><span class="sub">'+esc(fmtMonLong.format(t))+'</span></div>'+rows+fx+moneyNoteHtml()
+  return '<div class="grid"><section class="card moneycard"><div class="card-h"><h2>'+T2('Money this month','مالية هذا الشهر')+'</h2><span class="sub">'+esc(fmtMonLong.format(t))+'</span></div>'+rows+fx
     +'</section></div>';
 }
 /* ---------- Money tab: its own pages (Log, Dashboard, Fixed payments, Budgets) ---------- */
@@ -4355,7 +4323,7 @@ function budgetCard(){
     +'<div class="bt-key"><span class="bt-good">'+T2('More than 5% under','أقل من الميزانية بأكثر من 5%')+'</span><span class="bt-ok">'+T2('Within 5%','ضمن 5%')+'</span><span class="bt-warn">'+T2('Over by 5% or more','أعلى بأكثر من 5%')+'</span><span class="bt-high">'+T2('Over by 20% or more','أعلى بأكثر من 20%')+'</span></div>'
     +'<div class="note bv-key">'+T2('Day-by-day lines are compared with the pace of the month so far, not the full month.','تُقارن البنود اليومية بوتيرة الصرف في الشهر حتى الآن وليس بالشهر كاملًا.')+'</div>'
     +'<details class="bt-cur"><summary>'+T2('Other currencies','عملات أخرى')+'</summary><ul>'+cur.join('')+'</ul></details>'
-    +moneyNoteHtml()+'</section>';
+    +'</section>';
 }
 /* ---------- Dashboard: where the money goes (net of refunds, income left out) ---------- */
 function spendCatCard(){
@@ -4893,7 +4861,7 @@ const cPair=(a,b)=>(a||b)?'<div class="cdpair">'+a+b+'</div>':'';
 const cSec=(l,body)=>body?'<div class="cds"><div class="lbl">'+l+'</div>'+body+'</div>':'';
 function cName(k){return k==='together'?T2('Together','معًا'):pname(k)}
 function cLifeCard(k,L,kind,when){
-  const kt=kind==='monthly'?T2('Monthly review','المراجعة الشهرية'):T2('Life coach, this week','مدرّب الحياة، هذا الأسبوع');
+  const kt=T2('Monthly review','المراجعة الشهرية');
   const P=t=>t?'<p>'+cx(t)+'</p>':'';
   const pc=k==='together'?'var(--brand)':pcol(k);
   const ini=(cName(k)||'?').trim().charAt(0).toUpperCase();
@@ -4904,7 +4872,7 @@ function cLifeCard(k,L,kind,when){
     +cSec(T2('What I see in you','ما أراه فيك'),P(L.psych))
     +cPair(cSec(T2('Your strengths','نقاط قوتك'),cUl(L.strengths)),cSec(T2('Watch out','انتبه'),cUl(L.watch)))
     +cPair(cSec(T2('Discipline','الانضباط'),cUl(L.discipline)),(L.changes&&L.changes.length?cSec(T2('Habits to change','عادات للتغيير'),cUl(L.changes)):''))
-    +cSec(kind==='monthly'?T2('Next month','الشهر القادم'):T2('This week','هذا الأسبوع'),cUl(L.steps))
+    +cSec(T2('Next month','الشهر القادم'),cUl(L.steps))
     +(L.message?'<div class="cdq">'+cx(L.message)+'</div>':'')
     +'</div></section>';
 }
@@ -4917,21 +4885,8 @@ function deepCoach(pids){
     if(rows.length)h+='<section class="card cdeep cdday span2" lang="'+LG()+'" dir="'+DIR()+'" data-notr="1"><div class="cdh cdhd"><span class="cic big">'+svgi('sun','',2.2)+'</span><span class="cdn"><b>'+T2('Today','اليوم')+'</b><small>'+T2('Daily note','ملاحظة اليوم')+(D.daily.date?' · '+esc(D.daily.date):'')+'</small></span></div>'
       +rows.map(k=>'<div class="cds cdperson" style="--pc:'+(k==='together'?'var(--brand)':pcol(k))+'">'+(rows.length>1?'<div class="lbl"><span class="dot" style="background:var(--pc)"></span><span>'+esc(cName(k))+'</span></div>':'')+String(cpick(D.daily[k])).split(/\n+/).filter(Boolean).map(x=>'<p>'+cx(x)+'</p>').join('')+'</div>').join('')+'</section>';
   }
-  if(D.weekly)keys.forEach(k=>{const n=D.weekly[k],L=n&&cpick(n.life);if(L)h+=cLifeCard(k,L,'weekly',D.weekly.week?fmtShort.format(pd(D.weekly.week)):'')});
   if(D.monthly)keys.forEach(k=>{const n=D.monthly[k],L=n&&cpick(n.life);if(L)h+=cLifeCard(k,L,'monthly',D.monthly.month||'')});
   return h;
-}
-function coachArea(pids,aid){
-  const D=COACHNOTE&&COACHNOTE.deep&&COACHNOTE.deep.weekly;if(mode==='sample'||!D)return '';
-  return pids.map(pid=>{
-    const n=D[pid]&&D[pid].areas&&D[pid].areas[aid],A=cpick(n);if(!A)return '';
-    const P=t=>t?'<p>'+cx(t)+'</p>':'';
-    return '<div class="cda" style="--pc:'+pcol(pid)+'" lang="'+LG()+'" dir="'+DIR()+'" data-notr="1">'+(pids.length>1?'<div class="cdperson-h"><span class="dot" style="background:'+pcol(pid)+'"></span>'+esc(pname(pid))+'</div>':'')
-      +cSec(T2('Why this matters for you','لماذا يهمّك هذا'),P(A.why))
-      +cPair(cSec(T2('Where you are','أين أنت الآن'),P(A.read)),cSec(T2('Next steps','الخطوات القادمة'),cUl(A.next)))
-      +(A.warn?cSec(T2('Watch out','انتبه'),P(A.warn)):'')
-      +(A.msg?'<div class="cdq">'+cx(A.msg)+'</div>':'')+'</div>';
-  }).join('');
 }
 function pfNudge(pids){
   const low=pids.filter(p=>pfCount(p).n<20);if(mode==='sample'||!low.length)return '';
@@ -4940,21 +4895,12 @@ function pfNudge(pids){
 function viewImpact(){
   const pids=activePids();
   if(!pids.some(p=>habitsFor(p).length))return noHabits();
-  const RGI=perRange(),mo=RGI.r;
-  const head='<div class="datenav"><div style="flex:1"><h2>Impact on our lives</h2><small>'+RGI.lbl+' · '+T2('every habit counts the same','كل عادة لها الوزن نفسه')+'</small></div>'+perSeg()+'</div>';
+  const mo=P.mo(0);
+  const head='<div class="datenav"><div style="flex:1"><h2>Impact on our lives</h2><small>'+T2('This month so far · as of ','هذا الشهر حتى الآن · بتاريخ ')+fmtShort.format(today())+' · '+T2('every habit counts the same','كل عادة لها الوزن نفسه')+'</small></div></div>';
   const intro='<p class="disc">'+T2('Your numbers come from your own check-ins. Coaching is guidance, not medical or financial advice.','أرقامك من تسجيلك أنت. التوجيه إرشاد وليس نصيحة طبية أو مالية.')+'</p>';
   const hasDeep=!!(COACHNOTE&&COACHNOTE.deep&&mode!=='sample');
   const coaches='<div class="grid two">'+impactTop(pids,mo).replace('<section class="itiles"','<section class="itiles span2"')+(hasDeep?deepCoach(pids):claudeNote(pids))+pfNudge(pids)+(hasDeep?'':(pids.length>1&&coachJointCard()?coachJointCard().replace('class="card coach"','class="card coach span2"'):'')+pids.map(coachCard).join(''))+'</div>';
-  let folds='';
-  if(hasDeep)folds=AREAS.map(a=>{
-    if(!pids.some(p=>habitsFor(p).some(x=>x.area===a.id)))return '';
-    const c=coachArea(pids,a.id);if(!c)return '';
-    const sc=pids.map(p=>{const s=stats(p,mo[0],mo[1]).byArea[a.id];return s&&s.exp>0?'<span class="chip" style="gap:6px"><span class="dot" style="background:'+pcol(p)+'"></span>'+pct(s.eq)+'</span>':''}).join(' ');
-    return '<details class="card cfold area-'+a.id+'"><summary><span class="areaico">'+svgi(a.id)+'</span><b>'+esc(areaName(a.id))+'</b><span class="cfs">'+sc+'</span></summary>'+c+'</details>';
-  }).join('');
-  if(folds)folds='<div class="lbl" style="margin:16px 4px 8px">'+T2('Coaching by area','التوجيه حسب المجال')+'</div><div class="cfolds">'+folds+'</div>';
-  const sumBtn='<div style="margin-top:16px;display:flex;justify-content:center"><button class="btn alt" data-act="copysum">'+T2('Copy my week for Claude','انسخ أسبوعي لـ Claude')+'</button></div>';
-  return head+intro+coaches+folds+sumBtn;
+  return head+intro+coaches;
 }
 
 /* setup */
@@ -5217,11 +5163,6 @@ document.addEventListener('click',e=>{
   else if(a==='sheetsave')sheetSave();
   else if(a==='sheetclear')sheetClear();
   else if(a==='sheetclose')closeSheet();
-  else if(a==='copysum'){
-    const txt=weekSummaryText();
-    const done=()=>toast('Copied. Paste it to Claude.');
-    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,()=>{window.prompt('Copy:',txt)})}else{window.prompt('Copy:',txt)}
-  }
   else if(a==='lang'){ui.lang=ui.lang==='ar'?'en':'ar';try{localStorage.setItem('istiqama.lang',ui.lang)}catch(e){}render()}
   else if(a==='tab'){ui.tab=t.dataset.t;ui.confirmReset=false;render();window.scrollTo(0,0)}
   else if(a==='who'){ui.who=t.dataset.w;if((ui.who==='p1'||ui.who==='p2')&&!meKnown())meSet(ui.who);render()}

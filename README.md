@@ -10,6 +10,7 @@ A shared habit tracker for two people. Static site (GitHub Pages) with a small F
 - `coach.json`: encrypted monthly coach review.
 - `snapshot.json`, `snapshot.py`, `.github/workflows/snapshot.yml`: encrypted copy of the data that the coach task reads.
 - `coach_tool.py`: encrypt and decrypt helper for `coach.json` and `snapshot.json`.
+- `CONTROL.md`: status, scheduled tasks, roadmap, decisions and rules. Read it first in every chat; update it at the end.
 
 ## Working on it
 - Find the function with a search, then read only that part. Do not open whole files.

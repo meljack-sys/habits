@@ -4,6 +4,7 @@
 - Live: https://meljack-sys.github.io/habits/ (GitHub Pages, repo meljack-sys/habits, public)
 - App is split into index.html, styles.css, app.js (commit b17b325). Live check on phone after the split: DONE 2026-10-28, works. Snapshot job checked on sample data: OK.
 - Weekly review removed. Impact is month-to-date. Only the monthly coach review remains.
+- Test runs on 2026-10-25 (content refresh) and 2026-10-28 (coach catch-up) failed with "usage limit reached". Watch the real runs on Nov 1 and Nov 3.
 - Domain: NOT bought yet. Habits is not private yet (family code in the URL is the only lock).
 
 ## Scheduled tasks

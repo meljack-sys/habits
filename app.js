@@ -1070,6 +1070,66 @@ async function exportLedger(per){
     document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
   }catch(e){toast(T2('Could not save the file.','تعذّر حفظ الملف.'))}
 }
+/* ---------- Full money export for the CFO chat: every money record, all time, one JSON file ---------- */
+function fullMoneyExport(){
+  try{
+    const b=bud(),pn=id=>(person(id)&&person(id).name)||id;
+    const fe=s=>String(s||'').replace(/\{p1\}/g,pn('p1')).replace(/\{p2\}/g,pn('p2'));
+    const TY={x:'expense',r:'refund',i:'income',w:'withdrawal_or_transfer',l:'loan_given',p:'loan_repaid_to_me'};
+    const acc=k=>{const a=b.accts.find(x=>x.k===k);return a?a.n:''};
+    const tx=[];
+    eachEntry((x,d,pid,id)=>{
+      const c=catOf(x.c),l=c?lineOf(c.bl):null,cur=x.cur||'EGP',a=r2(Number(x.a)||0);
+      const sub=(x.sc&&c)?((c.sub||[]).find(s=>s.k===x.sc)||{}).en||'':'';
+      tx.push({id:id,date:d,logged_by:pn(pid),type:TY[x.ty||'x']||'expense',
+        amount_egp:a,original_amount:x.cur?r2(Number(x.oa)||0):a,currency:cur,
+        account:acc(x.ac),merchant_or_note:x.n==='Earlier total'?'':(x.n||''),is_earlier_total:x.n==='Earlier total',
+        category:c?fe(c.en):'',subcategory:sub,budget_line:l?fe(l.en):'',one_off:!!(c&&c.oo),
+        counts_as_spending:!eSkip(x),spending_effect_egp:r2(eNet(x)),
+        loan_person:x.ln||'',refund_of_entry_id:x.lk||'',refund_of_entry_date:x.ld||'',
+        logged_at:x.t?new Date(Number(x.t)).toISOString():''});
+    });
+    tx.sort((p,q)=>p.date<q.date?-1:p.date>q.date?1:(p.logged_at<q.logged_at?-1:1));
+    const yms={};['p1','p2'].forEach(p=>Object.keys(F[p]||{}).forEach(y=>{yms[y]=1}));
+    const ymList=Object.keys(yms).sort(),bills=[],pays=[],months=[];
+    b.fixed.forEach(f=>{
+      const l=f.bl?lineOf(f.bl):null,cur=fxCur(f),name=f.bl?fe(l.en):fe(f.en);
+      bills.push({key:f.k,name:name,group:(GRP[f.g]||[f.g])[0],planned_amount:Number(fxAmt(f))||0,currency:cur,due_day:Number(f.day)||null,budget_line:l?fe(l.en):'',starts_from:(l&&l.from)||'',note:f.note||''});
+      ymList.forEach(ym=>{
+        const list=fxPays(ym,f.k),closed=fxClosed(ym,f.k);
+        if(!list.length&&!closed)return;
+        const s=fxState(f,ym);
+        months.push({bill:name,month:ym,currency:cur,planned:s.exp,paid:s.paid,difference_planned_minus_paid:s.diff,status:s.st,closed_by_user:closed});
+        list.forEach(q=>pays.push({bill:name,month:ym,date:q.d,paid_by:pn(q.pid),amount:q.a,currency:cur,amount_egp:toEgp(q.a,cur),note:q.n}));
+      });
+    });
+    pays.sort((p,q)=>p.date<q.date?-1:p.date>q.date?1:0);
+    const byType={};tx.forEach(t=>{const o=byType[t.type]||(byType[t.type]={count:0,total_egp:0});o.count++;o.total_egp=r2(o.total_egp+t.amount_egp)});
+    const out={
+      about:'Money export from the Habits, Together app (two people, one household). Base currency is EGP. Every record is listed, all time.',
+      how_to_read:[
+        'transactions: every logged entry. amount_egp is the value in EGP; original_amount and currency show what was really paid when it was not EGP.',
+        'type: expense, refund (reduces spending), income (never counted as spending), withdrawal_or_transfer (money moved between accounts, not spending), loan_given and loan_repaid_to_me (money moving, not spending or income).',
+        'counts_as_spending and spending_effect_egp show exactly how each entry is counted. Refunds are negative.',
+        'fixed_bill_payments: every payment made against a fixed bill (rent, phones, internet, school, UAE house, loans). A bill can be paid in several parts.',
+        'fixed_bill_months: planned vs paid per bill and month (status: paid, partial, closed, overdue, soon, later, noday).',
+        'budget: monthly budget lines, categories, accounts and the exchange rates used (rate = EGP per 1 unit of currency).',
+        'is_earlier_total marks an opening total entered for the days before detailed logging started.'],
+      exported_on:ds(today()),data_mode:mode,
+      control_totals:{transactions:tx.length,first_date:tx.length?tx[0].date:'',last_date:tx.length?tx[tx.length-1].date:'',by_type:byType,bill_payments:pays.length,bill_payments_total_egp:r2(pays.reduce((t,q)=>t+q.amount_egp,0))},
+      transactions:tx,fixed_bills:bills,fixed_bill_months:months,fixed_bill_payments:pays,
+      budget:{
+        lines:b.lines.map(l=>({key:l.k,name:fe(l.en),monthly_amount_egp:Number(l.amt)||0,kind:l.kd==='f'?'fixed monthly':'logged day by day',counts_toward_daily_limit:!!l.dl,starts_from:l.from||''})),
+        categories:b.cats.map(c=>({key:c.k,name:fe(c.en),budget_line:(lineOf(c.bl)||{}).en?fe(lineOf(c.bl).en):c.bl,active:c.on!==false,one_off:!!c.oo,subcategories:(c.sub||[]).map(s=>s.en)})),
+        accounts:b.accts.map(a=>a.n),
+        exchange_rates_to_egp:b.rates,daily_spending_limit_egp:Number(b.dlim)||0,one_offs_count_in_daily_limit:!!b.ooin,uae_house_fund_aed:Number((b.uae||{}).fund)||0}
+    };
+    const blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='money-full-export-'+ds(today())+'.json';
+    document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+    toast(T2('Saved. Send this file to your CFO chat.','تم الحفظ. أرسل الملف إلى المدير المالي.'));
+  }catch(e){toast(T2('Could not save the file.','تعذّر حفظ الملف.'))}
+}
 function weekDone(h,pid,d){
   if(h.per!=='week'||+h.target!==1||h.type==='cap'||h.type==='count'||h.kind==='underlimit')return false;
   const a=wkStart(d);for(let i=0;i<7;i++){const x=addDays(a,i);if(x>d)break;if(isTicked(h,pid,ds(x)))return true}return false;
@@ -2714,7 +2774,7 @@ function reportCard(){
     body=list.length?'<ul class="rep-list">'+list.map(o=>'<li class="rep-row"><span data-notr="1">'+esc(o.n)+'</span><b class="num">'+nf(o.v)+'</b><small class="muted num">'+o.c+'×</small></li>').join('')+'</ul>':'<div class="note">'+T2('Add a merchant or note to your expenses and the top ones show here.','اكتب اسم المحل أو ملاحظة مع المصاريف وسيظهر هنا الأعلى.')+'</div>';
   }
   return '<section class="card span2 reportcard"><div class="card-h"><div><h2>'+T2('Money report','تقرير المال')+'</h2><span class="sub">'+esc(R.label)+' · EGP</span></div>'+segP+'</div>'+segS+'<div class="rep-body">'+body+'</div>'
-    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="ledger" data-v="'+per+'">'+T2('Export CSV for the ledger','صدّر ملف CSV للدفتر')+'</button></div></section>';
+    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="ledger" data-v="'+per+'">'+T2('Export CSV for the ledger','صدّر ملف CSV للدفتر')+'</button><button type="button" class="chipbtn" data-act="fullexp">'+T2('Export all money details (CFO)','صدّر كل بيانات المال (للمدير المالي)')+'</button></div></section>';
 }
 function sheetSave(){
   const sh=ui.sheet;if(!sh)return;const h=S.habits.find(x=>x.id===sh.hid);if(!h)return;
@@ -3395,6 +3455,7 @@ document.addEventListener('click',e=>{
   else if(a==='repper'){ui.repPer=t.dataset.v;render()}
   else if(a==='repsec'){ui.repSec=t.dataset.v;render()}
   else if(a==='ledger')exportLedger(t.dataset.v);
+  else if(a==='fullexp')fullMoneyExport();
   else if(a==='setme'){meSet(t.dataset.p);render()}
   else if(a==='pfopen'){ui.pf=t.dataset.p;ui.tab='profile';render();window.scrollTo(0,0)}
   else if(a==='pfnext'){const pid=ui.pf==='p2'?'p2':'p1',n=pfFirstTodo(pid);if(!n){toast('Everything is answered. Thank you.');return}

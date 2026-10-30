@@ -1,6 +1,7 @@
 # Habits, Together: Control
 
-## Status (as of 2026-10-28)
+## Status (as of 2026-10-30)
+- Full money export added (commit 826e9c7): Money > Dashboard > Money report > "Export all money details (CFO)". One JSON file, all time. Live check on phone: PENDING.
 - Live: https://meljack-sys.github.io/habits/ (GitHub Pages, repo meljack-sys/habits, public)
 - App is split into index.html, styles.css, app.js (commit b17b325). Live check on phone after the split: DONE 2026-10-28, works. Snapshot job checked on sample data: OK.
 - Weekly review removed. Impact is month-to-date. Only the monthly coach review remains.
@@ -35,6 +36,7 @@
 - Anything over budget or bad is true red, not orange.
 - Arabic is plain white Arabic. Qur'an and hadith are always Arabic.
 - Coach content is written automatically and retried on failure, without asking.
+- The CFO export is one JSON file with every entry, bill payment, bill month and the budget setup. Field names are always English. The older "Export CSV for the ledger" stays as it is (September import format).
 - Move order keeps the old GitHub Pages site live until both phones work on the new address. The repo goes private only after that, because a private repo stops the old site.
 - Sign-in code goes into the app and is tested on both phones before the database rules are locked. Locking first would stop sync and the snapshot.
 - A new address means fresh phone storage: each phone opens the full link with #f=code once. The coach key comes from that code.

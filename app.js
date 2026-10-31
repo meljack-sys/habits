@@ -166,14 +166,18 @@ const activePids=()=>ui.who==='both'?['p1','p2']:[ui.who];
 const unitOf=k=>{const u=KINDS[k]?KINDS[k].unit:'';return u==='cur'?S.currency:u};
 const wkStart=d=>{const k=(d.getDay()-S.weekStart+7)%7;return addDays(d,-k)};
 function perRange(){
-  const k=ui.period==='week'||ui.period==='life'?ui.period:'month';
+  const k=['lweek','week','month','lmonth','life'].indexOf(ui.period)>=0?ui.period:'month';
+  if(k==='lweek')return {k:k,r:P.wk(-1),p:P.wk(-2),lbl:T2('Last week','الأسبوع الماضي'),pl:T2('the week before','الأسبوع الذي قبله')};
+  if(k==='lmonth')return {k:k,r:P.mo(-1),p:P.mo(-2),lbl:T2('Last month','الشهر الماضي'),pl:T2('the month before','الشهر الذي قبله')};
   if(k==='week')return {k:k,r:P.wk(0),p:P.wk(-1),lbl:T2('This week','هذا الأسبوع'),pl:T2('last week','الأسبوع الماضي')};
   if(k==='life')return {k:k,r:[pd(S.start),today()],p:null,lbl:T2('All time','كل الفترة'),pl:''};
   return {k:k,r:P.mo(0),p:P.mo(-1),lbl:T2('This month','هذا الشهر'),pl:T2('last month','الشهر الماضي')};
 }
+/* 'this month' for the usual view; the chosen period's own words otherwise */
+function perWord(){const k=perRange().k;return k==='month'?'this month':k==='life'?'since you started':perRange().lbl.toLowerCase()}
 function perSeg(){
   const k=perRange().k;
-  return '<div class="pill-seg" role="group" aria-label="Period">'+[['week','This week'],['month','This month'],['life','All time']].map(x=>'<button data-act="period" data-v="'+x[0]+'" aria-pressed="'+(k===x[0])+'">'+T2(x[1],{week:'هذا الأسبوع',month:'هذا الشهر',life:'كل الفترة'}[x[0]])+'</button>').join('')+'</div>';
+  return '<div class="pill-seg" role="group" aria-label="Period">'+[['lweek','Last week'],['week','This week'],['month','This month'],['lmonth','Last month'],['life','All time']].map(x=>'<button data-act="period" data-v="'+x[0]+'" aria-pressed="'+(k===x[0])+'">'+T2(x[1],{lweek:'الأسبوع الماضي',week:'هذا الأسبوع',month:'هذا الشهر',lmonth:'الشهر الماضي',life:'كل الفترة'}[x[0]])+'</button>').join('')+'</div>';
 }
 const P={
   wk:off=>{const a=addDays(wkStart(today()),7*off);return [a,addDays(a,6)]},
@@ -1638,7 +1642,7 @@ function metricRows(pids,kinds,area){
   const R=(label,fn,note)=>rows.push({label:label,note:note||'',vals:per.map(x=>fn(x))});
   const useMonth=perRange().k!=='life';
   const pick=x=>useMonth?x.all:x.life;
-  const per_lbl=perRange().k==='week'?'this week':useMonth?'this month':'since you started';
+  const per_lbl={lweek:'last week',week:'this week',month:'this month',lmonth:'last month'}[perRange().k]||'since you started';
   const cur=esc(S.currency);
   if(kinds.exercise){
     R('Exercise ('+per_lbl+')',x=>nf(pick(x).exMin)+'<small>min</small>');
@@ -3233,11 +3237,11 @@ function habitsMonthCard(pids,mo){
         if(h.type==='cap'){
           const n=capSum(pid,h,mo[0],mo[1]),weeks=Math.max(1,Math.ceil(Math.min(daysIn(mo[0],mo[1]).length,31)/7));
           const ok=n<=h.goal*weeks;
-          return '<div class="capline">'+stBadge(ok,n+' orders this month, within '+h.goal+' a week',n+' orders this month, over '+h.goal+' a week')+'</div>';
+          return '<div class="capline">'+stBadge(ok,n+' orders '+perWord()+', within '+h.goal+' a week',n+' orders '+perWord()+', over '+h.goal+' a week')+'</div>';
         }
         const x=stats(pid,mo[0],mo[1]).byHabit[h.id];if(!x)return '';
         const v=x.exp>0?x.cred/x.exp:null;
-        return '<div class="hb thin" style="height:20px" data-tip="'+esc('<b>'+hname(h)+'</b><br>'+(h.joint?'Together':pname(pid))+': '+x.done+' done this month')+'"><i style="width:'+(v==null?0:Math.round(v*100))+'%;background:'+col+'"></i><b>'+pct(v)+'</b></div>';
+        return '<div class="hb thin" style="height:20px" data-tip="'+esc('<b>'+hname(h)+'</b><br>'+(h.joint?'Together':pname(pid))+': '+x.done+' done '+perWord())+'"><i style="width:'+(v==null?0:Math.round(v*100))+'%;background:'+col+'"></i><b>'+pct(v)+'</b></div>';
       }).join('');
       const freq=h.type==='cap'?'max '+h.goal+' a week':h.per==='month'?h.target+' a month':h.target+' days a week';
       return '<div class="hrow"><div class="hn2">'+esc(hname(h))+'<small>'+freq+(h.joint?' · together':'')+'</small></div>'+bars+'</div>';
@@ -3455,8 +3459,8 @@ function pfNudge(pids){
 function viewImpact(){
   const pids=activePids();
   if(!pids.some(p=>habitsFor(p).length))return noHabits();
-  const mo=P.mo(0);
-  const head='<div class="datenav"><div style="flex:1"><h2>Impact on our lives</h2><small>'+T2('This month so far · as of ','هذا الشهر حتى الآن · بتاريخ ')+fmtShort.format(today())+' · '+T2('every habit counts the same','كل عادة لها الوزن نفسه')+'</small></div></div>';
+  const RGI=perRange(),mo=RGI.r;
+  const head='<div class="datenav" style="flex-wrap:wrap;gap:10px"><div style="flex:1 1 220px;min-width:0"><h2>Impact on our lives</h2><small>'+RGI.lbl+(RGI.k==='month'||RGI.k==='week'?T2(' so far · as of ',' حتى الآن · بتاريخ ')+fmtShort.format(today()):'')+' · '+T2('every habit counts the same','كل عادة لها الوزن نفسه')+'</small></div><div style="flex:1 1 100%">'+perSeg()+'</div></div>';
   const intro='<p class="disc">'+T2('Your numbers come from your own check-ins. Coaching is guidance, not medical or financial advice.','أرقامك من تسجيلك أنت. التوجيه إرشاد وليس نصيحة طبية أو مالية.')+'</p>';
   const hasDeep=!!(COACHNOTE&&COACHNOTE.deep&&mode!=='sample');
   const coaches='<div class="grid two">'+impactTop(pids,mo).replace('<section class="itiles"','<section class="itiles span2"')+(hasDeep?deepCoach(pids):claudeNote(pids))+pfNudge(pids)+(hasDeep?'':(pids.length>1&&coachJointCard()?coachJointCard().replace('class="card coach"','class="card coach span2"'):'')+pids.map(coachCard).join(''))+'</div>';

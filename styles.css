@@ -1738,3 +1738,10 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .bd-rate input::placeholder{opacity:.4}
 .bd-rhist{margin-top:8px}
 .bd-rhist summary{cursor:pointer;font-size:13px;color:var(--ink2);font-weight:600;min-height:32px;display:flex;align-items:center}
+
+/* ---------- Period tabs (last week, this week, this month, last month, all time) ---------- */
+.pill-seg[aria-label="Period"] button{padding-inline:8px;font-size:12.5px;line-height:1.25}
+@media (max-width:760px){
+  .datenav:has(>.pill-seg[aria-label="Period"]),.card-h:has(>.pill-seg[aria-label="Period"]){flex-wrap:wrap;gap:10px}
+  .datenav>.pill-seg[aria-label="Period"],.card-h>.pill-seg[aria-label="Period"]{flex:1 1 100%}
+}

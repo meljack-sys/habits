@@ -18,6 +18,7 @@ const fmtShort=mkFmt({day:'numeric',month:'short'});
 const fmtDay=mkFmt({weekday:'long'});
 const fmtMon=mkFmt({month:'short'});
 const fmtMonLong=mkFmt({month:'long',year:'numeric'});
+const fmtMonShortY=mkFmt({month:'short',year:'2-digit'});
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const dowTxt=(i,len)=>ui.lang==='ar'?(len===1?['ح','ن','ث','ر','خ','ج','س'][i]:['أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'][i]):DOW[i].slice(0,len);
 const pct=v=>v==null?'–':Math.round(v*100)+'%';
@@ -2109,6 +2110,7 @@ function renderSheet(){
   collectSf();
   if(ui.sheet.type==='fix'){renderFixSheet(el,ui.sheet);return}
   if(ui.sheet.type==='bud'){renderBudSheet(el,ui.sheet);return}
+  if(ui.sheet.type==='txl'){renderTxlSheet(el,ui.sheet);return}
   const sh=ui.sheet,h=S.habits.find(x=>x.id===sh.hid);if(!h){ui.sheet=null;el.hidden=true;return}
   if(sh.type==='exp'){renderExpSheet(el,sh,h);return}
   const rp=repOf(h,sh.pid),cur=getVal(rp,sh.d,h.id);
@@ -2703,6 +2705,66 @@ function budgetCard(){
     +'</section>';
 }
 /* ---------- Dashboard: where the money goes (net of refunds, income left out) ---------- */
+/* ---------- read-only list of money records (opened from the 6-month table and from Budget vs actual) ---------- */
+function txlRecords(sh){
+  const out=[],ooin=!!bud().ooin;
+  eachEntry((x,d,pid)=>{
+    if(d<sh.A||d>sh.B||eSkip(x))return;
+    const ck=(x.c&&catName(x.c))?x.c:'_none';
+    if(sh.cat!=null){if(ck!==sh.cat)return}
+    else if(blOf(x.c)!==sh.line)return;
+    const c=catOf(x.c),oo=!!(c&&c.oo),v=eNet(x);
+    out.push({d:d,pid:pid,t:Number(x.t)||0,what:(x.c&&catName(x.c))?catName(x.c)+(x.sc?' · '+subName(x.c,x.sc):''):'',note:x.n==='Earlier total'?T2('Earlier total','إجمالي سابق'):(x.n||''),
+      ac:x.ac?acctName(x.ac):'',v:v,orig:x.cur?nf2(x.oa)+' '+x.cur:'',ref:x.ty==='r',skip:(sh.line&&oo&&!ooin)});
+  });
+  if(sh.line){
+    const ym=sh.ym;
+    bud().fixed.forEach(f=>{if(f.bl!==sh.line)return;
+      fxPays(ym,f.k).forEach(q=>out.push({d:q.d,pid:q.pid,t:0,bill:true,what:fxName(f),note:q.n||'',ac:'',v:toEgp(q.a,fxCur(f)),orig:'',ref:false,skip:false}))});
+  }
+  out.sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:(b.t-a.t));
+  return out;
+}
+function renderTxlSheet(el,sh){
+  const recs=txlRecords(sh),tot=r2(recs.filter(r=>!r.skip).reduce((t,r)=>t+r.v,0));
+  const rows=recs.map(r=>'<li class="exp-item txl-item'+(r.skip?' txl-skip':'')+'"><span class="dot" style="background:'+pcol(r.pid)+'" title="'+esc(pname(r.pid))+'"></span>'
+    +'<span class="exp-main"><span class="exp-what">'+(r.bill?'<span class="tag-w">'+T2('Bill','فاتورة')+'</span>':'')+(r.what?'<b data-notr="1">'+esc(r.what)+'</b>':'')+(r.note?'<span data-notr="1">'+esc(r.note)+'</span>':'')+(!r.what&&!r.note&&!r.bill?'<span class="muted">'+T2('Expense','مصروف')+'</span>':'')+'</span>'
+    +'<small class="muted">'+esc([fmtShort.format(pd(r.d)),r.ac,r.orig,r.skip?T2('one-off, not counted','لمرة واحدة، غير محسوب'):''].filter(Boolean).join(' · '))+'</small></span>'
+    +'<span class="exp-amt num'+(r.ref?' neg':'')+'">'+(r.v<0?'−':'')+nf2(Math.abs(r.v))+'</span></li>').join('');
+  el.innerHTML=sheetShell(sh.title,'<h3 data-notr="1">'+esc(sh.title)+'</h3><div class="note" style="margin:-2px 0 12px">'+esc(sh.sub||'')+'</div>'
+    +'<div class="exp-total"><div class="exp-total-top"><span class="exp-total-lbl">'+recs.length+T2(recs.length===1?' record':' records',' سجل')+'</span><span class="exp-total-num num">'+nf2(tot)+' <small>EGP</small></span></div></div>'
+    +(rows?'<ul class="exp-list">'+rows+'</ul>':'<div class="note exp-empty">'+T2('Nothing here yet.','لا يوجد شيء هنا بعد.')+'</div>')
+    +'<div class="sticky-save"><button type="button" class="btn" data-act="sheetclose">'+T2('Close','إغلاق')+'</button></div>');
+  el.hidden=false;trDom();
+}
+const monthEnd=ym=>ym+'-'+String(dimOf(ym)).padStart(2,'0');
+function txlOpenCat(k,ym){
+  const a=ym.split('-'),d0=new Date(+a[0],+a[1]-1,1);
+  ui.sheet={type:'txl',cat:k,A:ym+'-01',B:monthEnd(ym),ym:ym,title:(k==='_none'?T2('Not categorised','بدون فئة'):catName(k)),sub:fmtMonLong.format(d0)};
+  renderSheet();
+}
+/* Where the money goes: every category by month for the last 6 months (current month last), then the average. Tap a number to list the expenses. */
+function catMonthTable(){
+  const nowYm=ymOf(ds(today())),yms=[];for(let i=5;i>=0;i--)yms.push(prevYm(nowYm,i));
+  const m={},tot={};yms.forEach(y=>{tot[y]=0});
+  eachEntry((x,d)=>{
+    const y=ymOf(d);if(yms.indexOf(y)<0||eSkip(x))return;
+    const k=(x.c&&catName(x.c))?x.c:'_none',v=eNet(x);
+    m[k]=m[k]||{};m[k][y]=(m[k][y]||0)+v;tot[y]+=v;
+  });
+  const done=yms.slice(0,-1).filter(y=>tot[y]!==0);
+  const avgOf=k=>done.length?done.reduce((s,y)=>s+((m[k]||{})[y]||0),0)/done.length:((m[k]||{})[nowYm]||0);
+  const keys=Object.keys(m).filter(k=>yms.some(y=>(m[k][y]||0)>0)).sort((a,b)=>((m[b][nowYm]||0)-(m[a][nowYm]||0))||(avgOf(b)-avgOf(a)));
+  if(!keys.length)return '';
+  const hd=yms.map(y=>{const a=y.split('-');return '<th scope="col" class="num'+(y===nowYm?' cur':'')+'">'+esc(fmtMonShortY.format(new Date(+a[0],+a[1]-1,1)))+'</th>'}).join('');
+  const rows=keys.map(k=>'<tr><th scope="row" data-notr="1">'+(k==='_none'?T2('Not categorised','بدون فئة'):esc(catName(k)))+'</th>'
+    +yms.map(y=>{const v=m[k][y]||0;return '<td class="num'+(y===nowYm?' cur':'')+'">'+(v>0?'<button type="button" class="cat-cell" data-act="catcell" data-k="'+esc(k)+'" data-ym="'+y+'">'+nf(v)+'</button>':'<span class="muted">–</span>')+'</td>'}).join('')
+    +'<td class="num avg"><b>'+(avgOf(k)>0?nf(avgOf(k)):'–')+'</b></td></tr>').join('');
+  const foot='<tr class="cat-tot"><th scope="row">'+T2('Total','الإجمالي')+'</th>'+yms.map(y=>'<td class="num'+(y===nowYm?' cur':'')+'">'+(tot[y]?nf(tot[y]):'–')+'</td>').join('')
+    +'<td class="num avg"><b>'+nf(done.length?done.reduce((s,y)=>s+tot[y],0)/done.length:tot[nowYm])+'</b></td></tr>';
+  return '<div class="cat-wrap"><table class="cat-tbl"><thead><tr><th scope="col">'+T2('Category','الفئة')+'</th>'+hd+'<th scope="col" class="num avg">'+T2('Average','المتوسط')+'</th></tr></thead><tbody>'+rows+'</tbody><tfoot>'+foot+'</tfoot></table></div>'
+    +'<div class="note cat-tnote">'+T2('Last 6 months, this month last. Sorted by this month. Tap a number to see the expenses behind it. The average is a month, over the finished months that have spending.','آخر 6 أشهر، وهذا الشهر في الآخر. مرتّبة حسب هذا الشهر. اضغط على أي رقم لعرض المصاريف. المتوسط للشهر الواحد، من الأشهر المنتهية التي فيها مصاريف.')+'</div>';
+}
 function spendCatCard(){
   if(!spendHabit())return '';
   const t=today(),pr=mdPer();
@@ -2722,7 +2784,7 @@ function spendCatCard(){
     if(x.ty!=='r'&&(!big||v>big.v))big={v:v,d:d,c:k,n:x.n||''};
   });
   const head='<div class="card-h"><div><h2>'+T2('Where the money goes','أين يذهب المال')+'</h2><span class="sub">'+esc(lbl)+' · '+esc(S.currency)+'</span></div></div>';
-  if(!n)return '<section class="card span2 spendcat">'+head+'<div class="note" style="margin-top:12px">'+T2('No expenses logged in this period yet. Add them from Today and this fills in by itself.','لم تُسجَّل مصاريف في هذه الفترة بعد. سجّلها من "اليوم" وسيمتلئ هذا تلقائيًا.')+'</div></section>';
+  if(!n)return '<section class="card span2 spendcat">'+head+catMonthTable()+'<div class="note" style="margin-top:12px">'+T2('No expenses logged in this period yet. Add them from Today and this fills in by itself.','لم تُسجَّل مصاريف في هذه الفترة بعد. سجّلها من "اليوم" وسيمتلئ هذا تلقائيًا.')+'</div></section>';
   /* average = everything spent on the days that were recorded, divided by the number of recorded days. Days nobody recorded are not counted, but their number is shown. */
   const sph=S.habits.find(x=>x.type==='num'&&x.kind==='spend');
   const tk=ds(t),from0=r[0]<pd(S.start)?pd(S.start):r[0],to0=r[1]<t?r[1]:t;
@@ -2736,16 +2798,9 @@ function spendCatCard(){
     +'<div class="stat"><b class="num">'+(avg==null?'–':nf(avg))+'</b><span>'+T2('average a day','المتوسط في اليوم')+'<br>'+T2('over '+nRec+(nRec===1?' recorded day':' recorded days'),'على '+nRec+(nRec===1?' يوم مسجّل':' أيام مسجّلة'))+'</span></div>'
     +'<div class="stat'+(miss>0?' warn':'')+'"><b class="num">'+miss+'</b><span>'+T2('days not recorded','أيام بلا تسجيل')+'<br>'+T2('left out of the average','خارج المتوسط')+'</span></div></div>'
     +'<div class="note">'+T2('This card counts everything you spent, including medical and one-off items. The Daily spending card counts only what counts toward the daily limit, so its average can be lower.','هذه البطاقة تحسب كل ما صرفتموه، ومنه الطبي والمصاريف لمرة واحدة. أما بطاقة المصروف اليومي فتحسب ما يدخل في الحد اليومي فقط، لذلك قد يكون متوسطها أقل.')+' '+secTxt(total)+'</div>';
-  const cats=Object.keys(bycat).filter(k=>bycat[k]>0).sort((a,b)=>bycat[b]-bycat[a]);
-  const mx=bycat[cats[0]]||1;
-  const rows=cats.map(k=>{
-    const v=bycat[k],pc=total>0?Math.round(v/total*100):0;
-    return '<li class="cat-row"><span class="cat-name" data-notr="1">'+(k==='_none'?T2('Not categorised','بدون فئة'):esc(catName(k)))+'</span><span class="cat-val num">'+nf(v)+'</span><span class="cat-pct num">'+pc+'%</span>'
-      +'<span class="cat-bar" role="img" aria-label="'+esc((k==='_none'?'Not categorised':catName(k))+' '+pc+'%')+'"><i style="width:'+Math.max(2,Math.round(v/mx*100))+'%"></i></span></li>';
-  }).join('');
   const who=(S.people.length>1)?'<div class="exp-subs cat-who">'+S.people.map(p=>'<span class="exp-sub"><span class="dot" style="background:'+pcol(p.id)+'"></span><span data-notr="1">'+esc(pname(p.id))+'</span> <b class="num">'+nf(bypid[p.id]||0)+'</b></span>').join('')+'</div>':'';
   const bigTxt=big?'<div class="note cat-big">'+T2('Biggest expense: ','أكبر مصروف: ')+'<b class="num">'+nf2(big.v)+' '+esc(S.currency)+'</b> · <span data-notr="1">'+(big.n?esc(expNote(big.n)):(big.c==='_none'?'':esc(catName(big.c))))+'</span> · '+fmtShort.format(pd(big.d))+'</div>':'';
-  return '<section class="card span2 spendcat">'+head+stats+'<ul class="cat-list">'+rows+'</ul>'+bigTxt+'</section>';
+  return '<section class="card span2 spendcat">'+head+stats+catMonthTable()+bigTxt+'</section>';
 }
 /* ---------- Dashboard: money report (summary, category trend, weekdays, merchants, CSV) ---------- */
 function reportCard(){
@@ -3454,6 +3509,8 @@ function render(){
   const mp=$('#mpage');
   if(sEl){if(mp&&ui.sheet&&ui.sheet.page){mp.appendChild(sEl);sEl.classList.add('as-page')}else sEl.classList.remove('as-page')}
   post();renderSheet();checkTrophies();trDom();
+  /* wide tables open at the current month (last column) */
+  document.querySelectorAll('.cat-wrap').forEach(w=>{w.scrollLeft=(document.documentElement.dir==='rtl'?-1:1)*w.scrollWidth});
   if(window.scrollY!==y0)window.scrollTo(0,y0);
 }
 function post(){
@@ -3484,6 +3541,7 @@ document.addEventListener('click',e=>{
   else if(a==='expty'){const sh=ui.sheet;if(sh){collectSf();sh.ty=t.dataset.v;if(eSkip({ty:sh.ty})){sh.cat='';sh.sc=''}renderSheet()}}
   else if(a==='exploan'){const sh=ui.sheet;if(sh){collectSf();sfSet('loan',t.dataset.v);renderSheet()}}
   else if(a==='expbill'){const sh=ui.sheet;if(sh){collectSf();sh.bill=t.dataset.v;renderSheet();const fo=$('#exp-amt');if(fo)setTimeout(()=>{try{fo.focus()}catch(e){}},30)}}
+  else if(a==='catcell')txlOpenCat(t.dataset.k,t.dataset.ym);
   else if(a==='expcur'){const sh=ui.sheet;if(sh){collectSf();sh.cur=t.dataset.v;renderSheet()}}
   else if(a==='expcat'){const sh=ui.sheet;if(sh){collectSf();sh.cat=sh.cat===t.dataset.v?'':t.dataset.v;sh.sc='';renderSheet()}}
   else if(a==='expsc'){const sh=ui.sheet;if(sh){collectSf();sh.sc=sh.sc===t.dataset.v?'':t.dataset.v;renderSheet()}}

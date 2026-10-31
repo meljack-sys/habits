@@ -1705,3 +1705,18 @@ body.is-sample .budgetcard .card-h h2::after,body.is-sample .spendcat .card-h h2
 /* ---------- Amount boxes: no up/down arrows ---------- */
 input[type=number]{-moz-appearance:textfield;appearance:textfield}
 input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+/* ---------- Where the money goes: category x 6 months table, and the record list behind a number ---------- */
+.cat-wrap{overflow-x:auto;margin:14px -4px 0;padding:0 4px;-webkit-overflow-scrolling:touch}
+.cat-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+.cat-tbl th,.cat-tbl td{padding:9px 8px;border-top:1px solid var(--line);text-align:end;white-space:nowrap}
+.cat-tbl thead th{border-top:0;color:var(--ink3);font-size:11.5px;font-weight:600;text-transform:none}
+.cat-tbl th:first-child{text-align:start;position:sticky;inset-inline-start:0;background:var(--surface);min-width:112px;white-space:normal;font-weight:600;z-index:1}
+.cat-tbl td.cur,.cat-tbl th.cur{background:var(--brand-soft)}
+.cat-tbl td.avg,.cat-tbl th.avg{border-inline-start:2px solid var(--line);color:var(--ink)}
+.cat-tbl tfoot th,.cat-tbl tfoot td{font-weight:700;border-top:2px solid var(--line)}
+.cat-cell{background:none;border:0;padding:6px 6px;margin:-6px -6px;border-radius:8px;color:inherit;font:inherit;cursor:pointer;min-height:32px}
+.cat-cell:hover,.cat-cell:focus-visible{background:var(--surface2);outline:2px solid var(--brand);outline-offset:-2px}
+.cat-tnote{margin-top:10px}
+.txl-item .exp-main{display:grid;gap:2px;text-align:start;min-width:0}
+.txl-skip{opacity:.65}

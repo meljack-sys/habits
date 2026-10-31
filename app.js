@@ -3521,16 +3521,21 @@ function settingRow(h,D){
 }
 
 function opt(v,l,sel){return '<option value="'+esc(v)+'"'+(sel?' selected':'')+'>'+esc(l)+'</option>'}
+const FOLD_DEF=['share','set','pf'];
+function isShut(k){return ui.fold&&k in ui.fold?!!ui.fold[k]:(FOLD_DEF.indexOf(k)>=0||k.slice(0,2)==='a-')}
+function foldAttr(k){return ' data-fold="'+k+'"'+(isShut(k)?' data-shut="1"':'')}
+function foldCls(k){return isShut(k)?' fold-shut':''}
+function foldBtn(k){return '<button type="button" class="foldbtn" data-act="setfold" data-v="'+k+'" aria-expanded="'+(!isShut(k))+'" aria-label="'+T2('Show or hide this section','إظهار هذا القسم أو إخفاؤه')+'">'+svgi('chr')+'</button>'}
 function pfCard(){
   if(mode==='sample')return '';
-  return '<section class="card form"><div class="card-h" style="margin:0"><h2>Deep profile</h2><span class="sub">A coach that really knows you</span></div><p class="note">A long, optional, tap-to-answer questionnaire about your mission, strengths, faith, health, family, money and how you want to be coached. Your coach uses it to talk to you personally. Each of you fills in your own.</p><div class="chips" style="margin-top:8px">'+S.people.map(p=>{const c=pfCount(p.id);return '<button type="button" class="btn alt" data-act="pfopen" data-p="'+p.id+'" data-notr="1">'+esc(pname(p.id))+' · '+c.n+' of '+c.tot+'</button>'}).join('')+'</div></section>';
+  return '<section class="card form'+foldCls('pf')+'" data-fold="pf"><div class="card-h" style="margin:0"><h2>Deep profile</h2><span class="sub">A coach that really knows you</span>'+foldBtn('pf')+'</div><p class="note">A long, optional, tap-to-answer questionnaire about your mission, strengths, faith, health, family, money and how you want to be coached. Your coach uses it to talk to you personally. Each of you fills in your own.</p><div class="chips" style="margin-top:8px">'+S.people.map(p=>{const c=pfCount(p.id);return '<button type="button" class="btn alt" data-act="pfopen" data-p="'+p.id+'" data-notr="1">'+esc(pname(p.id))+' · '+c.n+' of '+c.tot+'</button>'}).join('')+'</div></section>';
 }
 function viewSetup(){
   ensureDraft();
   const D=draft;
   const people=D.people.map(p=>{
     const f=AREAS.map(a=>'<label><input type="checkbox" data-f="focus" data-p="'+p.id+'" data-a="'+a.id+'"'+(p.focus.indexOf(a.id)>=0?' checked':'')+'>'+a.name+'</label>').join('');
-    return '<section class="card form jewel-profile person-'+p.id+'"><div class="ph"><span class="dot" style="background:'+pcol(p.id)+'"></span><h3>Profile'+(p.id==='p1'?' one':' two')+'</h3></div>'
+    return '<section class="card form jewel-profile person-'+p.id+foldCls('prof-'+p.id)+'" data-fold="prof-'+p.id+'"><div class="ph"><span class="dot" style="background:'+pcol(p.id)+'"></span><h3 style="flex:1">'+esc(p.name||('Profile'+(p.id==='p1'?' one':' two')))+'</h3>'+foldBtn('prof-'+p.id)+'</div>'
       +'<div class="fgrid"><label class="f">Name<input class="in" id="nm-'+p.id+'" data-f="person" data-p="'+p.id+'" data-k="name" value="'+esc(p.name)+'" autocomplete="off"></label>'
       +'<label class="f">Birth year<input class="in" id="yr-'+p.id+'" inputmode="numeric" data-f="person" data-p="'+p.id+'" data-k="year" value="'+esc(p.year)+'" placeholder="e.g. 1988"></label>'
       +'<label class="f">Height (cm)<input class="in" id="ht-'+p.id+'" inputmode="decimal" data-f="person" data-p="'+p.id+'" data-k="height" value="'+esc(p.height)+'"></label>'
@@ -3541,14 +3546,14 @@ function viewSetup(){
   }).join('');
   const habHtml=AREAS.map(a=>{
     const hs=D.habits.filter(h=>h.area===a.id);if(!hs.length)return '';
-    return '<div class="agh area-'+a.id+'">'+svgi(a.id)+'<span>'+esc(a.name)+'</span></div>'+hs.map(h=>settingRow(h,D)).join('');
+    return '<div class="agwrap'+foldCls('a-'+a.id)+'" data-fold="a-'+a.id+'"><div class="agh area-'+a.id+'">'+svgi(a.id)+'<span style="flex:1">'+esc(a.name)+' <small style="opacity:.7;text-transform:none;letter-spacing:0">('+hs.length+')</small></span>'+foldBtn('a-'+a.id)+'</div><div class="agbody">'+hs.map(h=>settingRow(h,D)).join('')+'</div></div>';
   }).join('');
   const add='<div class="hset" style="border-style:dashed"><div class="top2">Add your own habit</div><div class="fgrid"><label class="f">Habit<input class="in" id="new-name" placeholder="e.g. Walk after dinner"></label><label class="f">Life area<select class="in" id="new-area">'+AREAS.map(a=>opt(a.id,a.name,false)).join('')+'</select></label><label class="f">Counts as<select class="in" id="new-kind">'+Object.keys(KINDS).map(k=>opt(k,KINDS[k].label,k==='general')).join('')+'</select></label></div><div><button class="btn alt" data-act="addhabit">Add habit</button></div></div>';
-  const settings='<section class="card form"><div class="card-h" style="margin:0"><h2>Settings</h2></div><div class="fgrid">'
+  const settings='<section class="card form'+foldCls('set')+'" data-fold="set"><div class="card-h" style="margin:0"><h2>Settings</h2>'+foldBtn('set')+'</div><div class="fgrid">'
     +'<label class="f">Currency<select class="in" id="cur" data-f="set" data-k="currency">'+['AED','SAR','EGP','USD','EUR','GBP'].map(c=>opt(c,c,c===D.currency)).join('')+'</select></label>'
     +'<label class="f">Savings return assumed (% a year)<input class="in" id="rate" inputmode="decimal" data-f="set" data-k="rate" value="'+esc(D.rate)+'"></label>'
     +'<label class="f">Week starts on<select class="in" id="wks" data-f="set" data-k="weekStart">'+[[6,'Saturday'],[0,'Sunday'],[1,'Monday']].map(x=>opt(x[0],x[1],x[0]===+D.weekStart)).join('')+'</select></label></div></section>';
-  const share=DB?'<section class="card form"><div class="card-h" style="margin:0"><h2>Share with your partner</h2><span class="sub">One link for both phones</span></div>'
+  const share=DB?'<section class="card form'+foldCls('share')+'" data-fold="share"><div class="card-h" style="margin:0"><h2>Share with your partner</h2><span class="sub">One link for both phones</span>'+foldBtn('share')+'</div>'
     +'<p class="note">Send this link to your partner. When she opens it, she sees the same profiles and check-ins, and her ticks show on your phone too. Anyone who has the link can see and edit, so share it only with her.</p>'
     +'<input class="in" id="sharelink" readonly value="'+esc(shareLink())+'" onfocus="this.select()">'
     +'<div class="sticky-save"><button class="btn" data-act="copylink">Copy link</button>'+(navigator.share?'<button class="btn alt" data-act="sharelink">Send...</button>':'')+'</div></section>'
@@ -3557,8 +3562,9 @@ function viewSetup(){
     ?'<div class="card form" style="border-color:#C62828"><p><b>Erase all check-ins and settings?</b> This removes your profiles, habits and history from this page and cannot be undone.</p><div class="sticky-save"><button class="btn danger" data-act="reset2">Yes, erase everything</button><button class="btn alt" data-act="reset0">Cancel</button></div></div>'
     :(mode!=='sample'?'<div class="sticky-save"><button class="btn alt" data-act="csv">Download check-ins (CSV)</button><button class="btn alt" data-act="reset1">Start over</button></div>':'');
   return '<div><h2>'+(mode==='sample'?'Set up your profiles and habits':'Profiles, habits and settings')+'</h2><p class="note" style="margin-top:6px">'+(mode==='sample'?'Names are filled in for you. Choose the habits you want and who each one is for, then save.':'Changes apply from now on. Past check-ins stay as they are.')+'</p></div>'
+    +'<div class="foldbar"><button type="button" class="btn alt" data-act="setfoldall" data-v="open">'+T2('Expand all','فتح الكل')+'</button><button type="button" class="btn alt" data-act="setfoldall" data-v="shut">'+T2('Collapse all','طي الكل')+'</button></div>'
     +'<div class="grid two">'+people+'</div>'
-    +'<section class="card form"><div class="card-h" style="margin:0"><h2>Habits</h2><span class="sub">Tick the ones you will track</span></div>'+habHtml+add+'</section>'
+    +'<section class="card form'+foldCls('habits')+'" data-fold="habits"><div class="card-h" style="margin:0"><h2>Habits</h2><span class="sub">Tick the ones you will track</span>'+foldBtn('habits')+'</div>'+habHtml+add+'</section>'
     +pfCard()+share+settings+'<p class="note">Quotes, advice and trophies version '+CONTENT.v+' · '+esc(CONTENT.updated||'')+'</p><p class="note" style="opacity:.75">App build '+BUILD+' · today '+ds(today())+' · quote '+esc((dailyItem('today')||{}).id||'-')+' · money quote '+esc((dailyItem('money')||{}).id||'-')+' · background '+esc(String((document.querySelector('.top')||{dataset:{}}).dataset.scene||'-'))+'</p>'
     +'<div class="sticky-save"><button class="btn" data-act="savesetup">'+(mode==='sample'?'Save and start tracking':'Save changes')+'</button></div>'+reset;
 }
@@ -3760,6 +3766,16 @@ document.addEventListener('click',e=>{
   else if(a==='week'){ui.weekOff=Math.min(0,ui.weekOff+(+t.dataset.n));render()}
   else if(a==='trend'){ui.trend=t.dataset.v;render()}
   else if(a==='period'){ui.period=t.dataset.v;render()}
+  else if(a==='setfold'||a==='setfoldall'){
+    ui.fold=ui.fold||{};
+    document.querySelectorAll('[data-fold]').forEach(el=>{
+      const k=el.dataset.fold;
+      if(a==='setfold'&&k!==t.dataset.v)return;
+      const shut=a==='setfold'?!isShut(k):t.dataset.v==='shut';
+      ui.fold[k]=shut;el.classList.toggle('fold-shut',shut);
+      const b=el.querySelector(':scope > .card-h .foldbtn,:scope > .ph .foldbtn,:scope > .agh .foldbtn');if(b)b.setAttribute('aria-expanded',String(!shut));
+    });
+  }
   else if(a==='savesetup')saveSetup();
   else if(a==='addhabit')addHabit();
   else if(a==='csv')exportCsv();

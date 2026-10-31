@@ -2473,7 +2473,7 @@ function subAdd(){
 /* ---------- fixed monthly payments ---------- */
 function openFix(){ui.fxDel=null;ui.fxUndo=null;ui.sheet={type:'fix',f:{},ym:ymOf(ds(today())),mode:null,k:null};$('#sheet').innerHTML='';renderSheet()}
 const TRI=['EGP','SAR','AED'];
-function triOthers(amt,cur){const egp=toEgp(Number(amt)||0,cur);return TRI.filter(c=>c!==cur&&rateOf(c)>0).map(c=>nf(egp/rateOf(c))+' '+c).join(' · ')}
+function triOthers(amt,cur,ym){const egp=toEgp(Number(amt)||0,cur,ym);return TRI.filter(c=>c!==cur&&rateOf(c,ym)>0).map(c=>nf(egp/rateOf(c,ym))+' '+c).join(' · ')}
 function renderFixSheet(el,sh){
   const ym=sh.ym,nowYm=ymOf(ds(today()));
   const a=ym.split('-'),md=new Date(+a[0],+a[1]-1,1);
@@ -2513,7 +2513,7 @@ function renderFixSheet(el,sh){
       const pct=s.exp>0?Math.min(100,Math.round(s.paid/s.exp*100)):(s.paid>0?100:0);
       const bar=(s.paid>0&&s.exp>0)?'<span class="fx-bar'+(s.diff<-0.5?' over':(s.st==='closed'&&s.diff>0.5?' saved':''))+'" role="img" aria-label="'+esc(nf(s.paid)+' / '+nf(s.exp))+'"><i style="width:'+pct+'%"></i></span>':'';
       const cf=ui.fxDel&&ui.fxDel.k===f.k?ui.fxDel.i:null,un=ui.fxUndo&&ui.fxUndo.k===f.k&&ui.fxUndo.ym===sh.ym?ui.fxUndo:null;
-      const payRows=s.pays.map(q=>'<li'+(cf===q.i?' class="fx-confirm"':(open&&sh.mode==='pay'&&sh.pi===q.i?' class="fx-editing"':''))+'><button type="button" class="fx-pedit" data-act="fxeditpay" data-k="'+esc(f.k)+'" data-i="'+esc(q.i)+'" title="'+esc(T2('Tap to edit this payment','اضغط لتعديل هذه الدفعة'))+'" data-notr="1"><span>'+esc(fmtShort.format(pd(q.d)))+(q.n?' · '+esc(q.n):'')+'</span><small>'+T2('Edit','تعديل')+'</small></button><b class="num">'+nfc(q.a,c)+'</b>'
+      const payRows=s.pays.map(q=>'<li'+(cf===q.i?' class="fx-confirm"':(open&&sh.mode==='pay'&&sh.pi===q.i?' class="fx-editing"':''))+'><button type="button" class="fx-pedit" data-act="fxeditpay" data-k="'+esc(f.k)+'" data-i="'+esc(q.i)+'" title="'+esc(T2('Tap to edit this payment','اضغط لتعديل هذه الدفعة'))+'" data-notr="1"><span class="fx-pl"><i class="fx-pd">'+esc(fmtShort.format(pd(q.d)))+'</i>'+(q.n?'<em class="fx-pn" title="'+esc(q.n)+'">'+esc(q.n)+'</em>':'')+'</span><small>'+T2('Edit','تعديل')+'</small></button><b class="num">'+nfc(q.a,c)+'</b>'
         +(cf===q.i?'<span class="fx-conf"><button type="button" class="chipbtn fx-rm" data-act="fxdelok" data-k="'+esc(f.k)+'" data-i="'+esc(q.i)+'">'+T2('Remove it','احذفها')+'</button><button type="button" class="chipbtn" data-act="fxdelno">'+T2('Keep','أبقِها')+'</button></span>'
           :'<button type="button" class="fx-x" data-act="fxdelpay" data-k="'+esc(f.k)+'" data-i="'+esc(q.i)+'" aria-label="'+esc(T2('Remove this payment','احذف هذه الدفعة'))+'">×</button>')+'</li>');
       if(un)payRows.push('<li class="fx-undo"><span>'+T2('Removed ','تم حذف ')+un.list.map(g=>nfc(g.q.a,c)).join(' + ')+'</span><button type="button" class="chipbtn" data-act="fxundo" data-k="'+esc(f.k)+'">'+T2('Undo','تراجع')+'</button></li>');
@@ -2541,9 +2541,14 @@ function renderFixSheet(el,sh){
       }
       if(s.st==='paid'||s.st==='closed')btns+=(s.st==='paid'?'<button type="button" class="chipbtn pay1" data-act="fxopen" data-k="'+esc(f.k)+'">'+T2('Add another payment','أضف دفعة أخرى')+'</button>':'');
       if(can)btns+='<button type="button" class="chipbtn" data-act="fxedit" data-k="'+esc(f.k)+'" title="'+esc(T2('Change the due day or planned amount','غيّر يوم الاستحقاق أو المبلغ المخطط'))+'">'+T2('Edit','تعديل')+'</button>';
-      const other=triOthers(am,c);
-      return '<li class="fx-item fx-'+stCls+'"><div class="fx-row"><div class="fx-main"><b data-notr="1">'+esc(fxName(f))+'</b><small class="muted" data-notr="1">'+T2('Planned ','المخطط ')+'<bdi dir="ltr">'+nfc(am,c)+(other?' ('+other+')':'')+'</bdi>'+(f.day?' · '+T2('day '+f.day,'يوم '+f.day):'')+(note?' · '+esc(note):'')+'</small></div>'
-        +'<span class="fx-st fx-st-'+stCls+'">'+(s.st==='paid'||s.st==='closed'?svgi('check','',3):s.st==='overdue'?svgi('warn','',3):'')+esc(stTxt)+stX+'</span></div>'+bar+pays
+      const other=triOthers(am,c,ym);
+      const lft=Math.max(0,s.exp-s.paid);
+      const fig=function(lb,v,cls){return '<div class="fx-fg'+(cls?' '+cls:'')+'"><small>'+lb+'</small><b class="num" dir="ltr">'+v+'</b></div>'};
+      return '<li class="fx-item fx-'+stCls+'"><div class="fx-row"><div class="fx-main"><b class="fx-name" data-notr="1">'+esc(fxName(f))+'</b>'
+        +'<span class="fx-meta muted" data-notr="1">'+(other?'<bdi dir="ltr">'+other+'</bdi>':'')+(f.day?(other?' · ':'')+T2('day '+f.day,'يوم '+f.day):'')+'</span>'
+        +(note?'<span class="fx-bnote" title="'+esc(note)+'" data-notr="1">'+esc(note)+'</span>':'')+'</div>'
+        +'<span class="fx-st fx-st-'+stCls+'">'+(s.st==='paid'||s.st==='closed'?svgi('check','',3):s.st==='overdue'?svgi('warn','',3):'')+esc(stTxt)+stX+'</span></div>'
+        +'<div class="fx-figs">'+fig(T2('Planned','المخطط'),nfc(am,c))+fig(T2('Paid','المدفوع'),nfc(s.paid,c),s.paid>0?'ok':'')+fig(T2('Left','المتبقي'),nfc(lft,c),lft>0&&s.st==='overdue'?'bad':'')+'</div>'+bar+pays
         +'<span class="fx-btns">'+btns+'</span>'+form+'</li>';
     }).join('');
     return '<section class="fx-group fx-g-'+g+'"><div class="fx-gh"><h4><i class="fx-gdot"></i>'+T2(GRP[g][0],GRP[g][1])+'</h4><span class="fx-gsum num">'+esc(gsum)+'</span></div><div class="fx-gbar" role="img" aria-label="'+gpct+'%"><i style="width:'+gpct+'%"></i></div><div class="fx-gbal">'+gb+'</div><ul class="fx-list">'+rows+'</ul>'+foot+'</section>';

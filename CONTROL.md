@@ -1,6 +1,9 @@
 # Habits, Together: Control
 
-## Status (as of 2026-10-30)
+## Status (as of 2026-10-31)
+- Pushed 2026-10-31 (12 commits, up to 9a1efe0): Money (average-spend strip, bill payments in Log, no amount arrows, 6-month category table with drill-down, clickable budget rows, Bills grid, monthly exchange rates, Excel/CSV/JSON export) and outside Money (5 period tabs on Dashboard and Impact, denser laptop layout, new weight chart, Setup fold/unfold). Only tested on sample data. Live check on phone and laptop: PENDING.
+- First Money open after this push asks for October's exchange rates (Muhammed's phone only).
+- Week tab is still one long column on laptop (not changed, not asked).
 - Full money export added (commit 826e9c7): Money > Dashboard > Money report > "Export all money details (CFO)". One JSON file, all time. Live check on phone: PENDING.
 - Live: https://meljack-sys.github.io/habits/ (GitHub Pages, repo meljack-sys/habits, public)
 - App is split into index.html, styles.css, app.js (commit b17b325). Live check on phone after the split: DONE 2026-10-28, works. Snapshot job checked on sample data: OK.
@@ -37,6 +40,12 @@
 - Arabic is plain white Arabic. Qur'an and hadith are always Arabic.
 - Coach content is written automatically and retried on failure, without asking.
 - The CFO export is one JSON file with every entry, bill payment, bill month and the budget setup. Field names are always English. The older "Export CSV for the ledger" stays as it is (September import format).
+- Money pages show the average daily spend strip at the top. Log can record a Bill payment; it writes to the same bill records as the Bills section.
+- Exchange rates are entered every month and apply to that month only. Budget lines are kept in SAR (old lines convert on first budget save).
+- "Where the money goes" is a table: last 6 months plus an average of completed months with spending. It counts logged entries only, not bill payments.
+- Money export comes as Excel, CSV and JSON, all with the same totals.
+- Period tabs everywhere outside Money: Last week, This week, This month, Last month, All time.
+- Setup sections fold; habit areas start folded, Expand all / Collapse all on top.
 - Move order keeps the old GitHub Pages site live until both phones work on the new address. The repo goes private only after that, because a private repo stops the old site.
 - Sign-in code goes into the app and is tested on both phones before the database rules are locked. Locking first would stop sync and the snapshot.
 - A new address means fresh phone storage: each phone opens the full link with #f=code once. The coach key comes from that code.

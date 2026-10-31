@@ -2483,6 +2483,7 @@ function renderFixSheet(el,sh){
   const nav='<div class="datenav fx-nav"><button class="iconbtn" data-act="fxmo" data-n="-1" aria-label="'+esc(T2('Previous month','الشهر الماضي'))+'">'+svgi('chl')+'</button><div style="flex:1;min-width:0;text-align:center"><h2>'+esc(fmtMonLong.format(md))+'</h2></div><button class="iconbtn" data-act="fxmo" data-n="1" aria-label="'+esc(T2('Next month','الشهر القادم'))+'"'+(ym>=prevYm(nowYm,-6)?' disabled':'')+'>'+svgi('chr')+'</button></div>';
   const sm=fxSummary(ym);
   const summary='<div class="note fx-sum">'+T2(sm.paid+' of '+sm.n+' settled'+(sm.part?' · '+sm.part+' partly paid':'')+(sm.over?' · '+sm.over+' overdue':'')+(sm.soon?' · '+sm.soon+' due within a week':''),sm.paid+' من '+sm.n+' مسدّدة'+(sm.part?' · '+sm.part+' مدفوعة جزئيًا':'')+(sm.over?' · '+sm.over+' متأخرة':'')+(sm.soon?' · '+sm.soon+' مستحقة خلال أسبوع':''))+'</div>';
+  let popHtml='';
   const groups=['eg','uae','loan'].map(g=>{
     const items=bud().fixed.filter(f=>f.g===g&&fxActive(f,ym));if(!items.length)return '';
     const cur=GRP[g][2];
@@ -2542,23 +2543,37 @@ function renderFixSheet(el,sh){
           +(s.st==='partial'?'<button type="button" class="chipbtn" data-act="fxbillclose" data-k="'+esc(f.k)+'" title="'+esc(T2('Nothing more will be paid this month. The difference counts as saved.','لن يُدفع شيء آخر هذا الشهر. الفرق يُحسب توفيرًا.'))+'">'+T2('No more to pay','لا دفع آخر')+'</button>':'');
       }
       if(s.st==='paid'||s.st==='closed')btns+=(s.st==='paid'?'<button type="button" class="chipbtn pay1" data-act="fxopen" data-k="'+esc(f.k)+'">'+T2('Add another payment','أضف دفعة أخرى')+'</button>':'');
-      if(can)btns+='<button type="button" class="chipbtn" data-act="fxedit" data-k="'+esc(f.k)+'" title="'+esc(T2('Change the due day or planned amount','غيّر يوم الاستحقاق أو المبلغ المخطط'))+'">'+T2('Edit','تعديل')+'</button>';
+      const edBtn=can?'<button type="button" class="fx-lnk" data-act="fxedit" data-k="'+esc(f.k)+'" title="'+esc(T2('Change the due day or planned amount','غيّر يوم الاستحقاق أو المبلغ المخطط'))+'">'+T2('Edit','تعديل')+'</button>':'';
       const other=triOthers(am,c,ym);
       const lft=Math.max(0,s.exp-s.paid);
       const fig=function(lb,v,cls){return '<div class="fx-fg'+(cls?' '+cls:'')+'"><small>'+lb+'</small><b class="num" dir="ltr">'+v+'</b></div>'};
-      return '<li class="fx-item fx-'+stCls+'"><div class="fx-row"><div class="fx-main"><b class="fx-name" data-notr="1">'+esc(fxName(f))+'</b>'
-        +'<span class="fx-meta muted" data-notr="1">'+(other?'<bdi dir="ltr">'+other+'</bdi>':'')+(f.day?(other?' · ':'')+T2('day '+f.day,'يوم '+f.day):'')+'</span>'
-        +(note?'<span class="fx-bnote" title="'+esc(note)+'" data-notr="1">'+esc(note)+'</span>':'')+'</div>'
-        +'<span class="fx-st fx-st-'+stCls+'">'+(s.st==='paid'||s.st==='closed'?svgi('check','',3):s.st==='overdue'?svgi('warn','',3):'')+esc(stTxt)+stX+'</span></div>'
-        +'<div class="fx-figs">'+fig(T2('Planned','المخطط'),nfc(am,c))+fig(T2('Paid','المدفوع'),nfc(s.paid,c),s.paid>0?'ok':'')+fig(T2('Left','المتبقي'),nfc(lft,c),lft>0&&s.st==='overdue'?'bad':'')+'</div>'+bar+pays
-        +'<span class="fx-btns">'+btns+'</span>'+form+'</li>';
+      const figs='<div class="fx-figs">'+fig(T2('Planned','المخطط'),nf2(am))+fig(T2('Paid','المدفوع'),nf2(s.paid),s.paid>0?'ok':'')+fig(T2('Left','المتبقي'),nf2(lft),lft>0&&s.st==='overdue'?'bad':'')+'</div>';
+      const nP=s.pays.length,sp=s.pays.slice().sort((x,y)=>String(x.d).localeCompare(String(y.d)));
+      const mini='<ul class="fx-pays fx-mini">'+(nP?sp.slice(-2).map(q=>'<li><span class="fx-pd">'+esc(fmtShort.format(pd(q.d)))+'</span><b class="num">'+nf2(q.a)+'</b></li>').join(''):'<li class="fx-nopay">'+T2('No payments yet','لا دفعات بعد')+'</li>')+'</ul>';
+      const hBtn=nP?'<button type="button" class="fx-lnk" data-act="fxhist" data-k="'+esc(f.k)+'">'+T2('History','السجل')+' ('+nP+')</button>':'<span></span>';
+      const head2='<div class="fx-row"><div class="fx-main"><b class="fx-name" title="'+esc(fxName(f))+'" data-notr="1">'+esc(fxName(f))+'</b>'
+        +'<span class="fx-meta muted" data-notr="1"><bdi dir="ltr">'+c+(other?' · '+other:'')+'</bdi>'+(f.day?' · '+T2('day '+f.day,'يوم '+f.day):'')+'</span></div>'
+        +'<span class="fx-st fx-st-'+stCls+'">'+(s.st==='paid'||s.st==='closed'?svgi('check','',3):s.st==='overdue'?svgi('warn','',3):'')+esc(stTxt)+stX+'</span></div>';
+      if(open||sh.hist===f.k){
+        popHtml+='<div class="fxp-bg" data-act="fxhclose"></div><div class="fxp-card" role="dialog" aria-modal="true" aria-label="'+esc(fxName(f))+'"><div class="fxp-top"><div class="fxp-t"><b class="fx-name" data-notr="1">'+esc(fxName(f))+'</b><span class="fx-meta muted" data-notr="1"><bdi dir="ltr">'+c+(other?' · '+other:'')+'</bdi>'+(f.day?' · '+T2('day '+f.day,'يوم '+f.day):'')+'</span></div><button type="button" class="iconbtn fxp-x" data-act="fxhclose" aria-label="'+esc(T2('Close','إغلاق'))+'">×</button></div>'
+          +'<span class="fx-st fx-st-'+stCls+'">'+esc(stTxt)+stX+'</span>'+(note?'<p class="fxp-note" data-notr="1">'+esc(note)+'</p>':'')+figs
+          +(pays||'<p class="note">'+T2('No payments yet.','لا دفعات بعد.')+'</p>')+form
+          +(form?'':'<span class="fx-btns">'+btns+'</span><div class="fx-links">'+edBtn+'<button type="button" class="fx-lnk" data-act="fxhclose">'+T2('Close','إغلاق')+'</button></div>')+'</div>';
+      }
+      const pct2=s.exp>0?Math.min(100,Math.round(s.paid/s.exp*100)):(s.paid>0?100:0);
+      const bar2='<span class="fx-bar'+(s.diff<-0.5?' over':(s.st==='closed'&&s.diff>0.5?' saved':''))+'" role="img" aria-label="'+esc(nf(s.paid)+' / '+nf(s.exp))+'"><i style="width:'+pct2+'%"></i></span>';
+      return '<li class="fx-item fx-'+stCls+'">'+head2+figs+bar2+mini
+        +'<span class="fx-btns fx-b2">'+btns+'</span><div class="fx-links">'+hBtn+edBtn+'</div></li>';
     }).join('');
     return '<section class="fx-group fx-g-'+g+'"><div class="fx-gh"><h4><i class="fx-gdot"></i>'+T2(GRP[g][0],GRP[g][1])+'</h4><span class="fx-gsum num">'+esc(gsum)+'</span></div><div class="fx-gbar" role="img" aria-label="'+gpct+'%"><i style="width:'+gpct+'%"></i></div><div class="fx-gbal">'+gb+'</div><ul class="fx-list">'+rows+'</ul>'+foot+'</section>';
   }).join('');
   const inner='<h3>'+T2('Bills','الفواتير')+'</h3><details class="fx-help"><summary>'+T2('How bills work','كيف تعمل الفواتير')+'</summary><div class="note">'+T2('Tap Paid when you pay a bill. If you pay in parts, or top up later, tap Add payment as many times as you need: each payment is kept and added up. Tap a payment to edit it, or × to remove it (it asks first, and you can undo). If you pay less than planned and nothing more is due, tap No more to pay and the difference counts as saved. Paying more shows as over.','اضغط "تم دفع" عند سداد الفاتورة. وإذا دفعت على أجزاء أو بمبلغ مختلف اضغط "أضف دفعة" بقدر ما تحتاج: تُحفظ كل دفعة وتُجمع. واضغط على أي دفعة لتعديلها، أو × لحذفها (يسألك أولًا ويمكنك التراجع). وإذا دفعت أقل من المخطط ولا يوجد شيء آخر، اضغط "لا دفع آخر" وسيُحسب الفرق توفيرًا. ودفع الأكثر يظهر زيادة.')+'</div></details>'
-    +nav+summary+fxBalBox(ym)+groups;
+    +nav+summary+fxBalBox(ym)+groups+popHtml;
+  const sc0=window.scrollY,cardEl=el.querySelector('.sheet-card'),card0=cardEl?cardEl.scrollTop:0;
   el.innerHTML=sheetShell(T2('Bills','الفواتير'),inner,'fx-sheet');
   el.hidden=false;trDom();
+  const c1=el.querySelector('.sheet-card');if(c1)c1.scrollTop=card0;
+  window.scrollTo(0,sc0);
 }
 function fxSaveForm(k){
   const sh=ui.sheet;if(!sh)return;collectSf();
@@ -3745,9 +3760,11 @@ document.addEventListener('click',e=>{
   else if(a==='mday'){ui.mday=Math.max(-90,Math.min(0,(t.dataset.v==='0'?0:(ui.mday||0)+Number(t.dataset.v))));render()}
   else if(a==='mdayset'){ui.mday=Math.max(-90,Math.min(0,Number(t.dataset.v)||0));render();window.scrollTo(0,0)}
   else if(a==='mlogedit'){const sp=spendHabit();if(sp){openSheet('exp',t.dataset.p,sp.id,t.dataset.d);expStartEdit(t.dataset.p,t.dataset.id)}}
-  else if(a==='fxmo'){const sh=ui.sheet;if(sh){const n=+t.dataset.n;sh.ym=prevYm(sh.ym,-n);sh.k=null;sh.mode=null;renderSheet()}}
+  else if(a==='fxmo'){const sh=ui.sheet;if(sh){const n=+t.dataset.n;sh.ym=prevYm(sh.ym,-n);sh.k=null;sh.mode=null;sh.hist=null;renderSheet()}}
   else if(a==='fxopen'){const sh=ui.sheet;if(sh){collectSf();sh.k=t.dataset.k;sh.mode='pay';sh.pi=null;sh.f={};ui.fxDel=null;ui.fxUndo=null;renderSheet()}}
   else if(a==='fxedit'){const sh=ui.sheet;if(sh){collectSf();sh.k=t.dataset.k;sh.mode='edit';sh.f={};renderSheet()}}
+  else if(a==='fxhist'){const sh=ui.sheet;if(sh){collectSf();sh.hist=t.dataset.k;sh.k=null;sh.mode=null;sh.pi=null;sh.f={};ui.fxDel=null;ui.fxUndo=null;renderSheet()}}
+  else if(a==='fxhclose'){const sh=ui.sheet;if(sh){sh.hist=null;sh.k=null;sh.mode=null;sh.pi=null;sh.f={};ui.fxDel=null;ui.fxUndo=null;renderSheet()}}
   else if(a==='fxclose'){const sh=ui.sheet;if(sh){sh.k=null;sh.mode=null;sh.pi=null;sh.f={};renderSheet()}}
   else if(a==='fxeditpay'){const sh=ui.sheet;if(sh){collectSf();let q=null;['p1','p2'].forEach(pid=>{const e=((F[pid]||{})[sh.ym]||{})[t.dataset.k];if(e){const pl=Array.isArray(e.p)?e.p:(e.a!=null?[{i:'L',d:e.d,a:e.a,n:''}]:[]);const x=pl.find(y=>y.i===t.dataset.i);if(x)q=x}});
     if(q){ui.fxDel=null;ui.fxUndo=null;sh.k=t.dataset.k;sh.mode='pay';sh.pi=q.i;sh.f={fa:String(q.a),fd:q.d,fn:q.n||''};renderSheet()}}}

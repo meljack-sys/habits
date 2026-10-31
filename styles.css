@@ -1724,3 +1724,12 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 /* Budget vs actual: a row opens its record list */
 .bt-click{cursor:pointer}
 .bt-click:hover>*,.bt-click:focus-visible>*{background:var(--surface2)}
+
+/* ---------- Bills: use the page width, several bills per screen ---------- */
+.fx-help{margin:-2px 0 10px}
+.fx-help summary{cursor:pointer;font-size:13px;color:var(--ink2);font-weight:600;min-height:32px;display:flex;align-items:center}
+.fx-help .note{margin:6px 0 0}
+.fx-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;padding-top:11px}
+.fx-sheet .fx-item,.fx-sheet .fx-item:first-child{border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:var(--surface);align-content:start;gap:8px}
+.fx-item .fx-btns .chipbtn{min-height:38px;padding:6px 10px}
+@media (min-width:900px){.fx-list{grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}.fx-group{margin-top:16px}}

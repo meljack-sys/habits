@@ -2042,7 +2042,7 @@ function habitRow(h,pid,d,dstr){
   const rp=repOf(h,pid),on=isTicked(h,pid,dstr)||weekDone(h,pid,d);
   const hn=esc(hname(h));
   const u=unitOf(h.kind),du=(Number(h.amount)&&u&&h.type==='tick')?nf(h.amount)+' '+u:'';
-  const tagA='<span class="tag">'+svgi(h.area)+esc(areaName(h.area))+(h.joint?' · Together':'')+'</span>';
+  const tagA='<span class="tag'+(h.joint?' tag-j':'')+'">'+svgi(h.area)+'<span class="tn">'+esc(areaName(h.area))+'</span>'+(h.joint?'<span class="ts"> · </span>Together':'')+'</span>';
   const data='data-p="'+pid+'" data-h="'+esc(h.id)+'" data-d="'+dstr+'"';
   const areaCls=' area-'+esc(h.area)+(h.joint?' joint-habit':'');
   const perTxt=h.per==='month'?'<span>'+h.target+' a month</span>':'';
@@ -2130,7 +2130,8 @@ function viewToday(){
       +(left===0?'<div class="done-banner">'+svgi('check','',3)+'<span>Every habit done. Well done.</span></div>':'')
       +'<div class="rows">'+AREAS.map(a=>{
         const rs=rows.filter(h=>h.area===a.id);if(!rs.length)return '';
-        return '<div class="agroup area-'+a.id+'"><div class="agh">'+svgi(a.id)+'<span>'+esc(areaName(a.id))+'</span></div>'+rs.map(h=>habitRow(h,pid,d,dstr)).join('')+'</div>';
+        const cs0=rs.filter(h=>h.type!=='cap'),cd0=cs0.filter(h=>isTicked(h,pid,dstr)).length;
+        return '<div class="agroup area-'+a.id+'"><div class="agh">'+svgi(a.id)+'<span style="flex:1;min-width:0">'+esc(areaName(a.id))+'</span>'+(cs0.length?'<span class="agc'+(cd0===cs0.length?' all':'')+'">'+cd0+'/'+cs0.length+'</span>':'')+'</div>'+rs.map(h=>habitRow(h,pid,d,dstr)).join('')+'</div>';
       }).join('')+'</div></section>';
   }).join('');
   return nav+(isToday?meBanner()+moneyMini():'')+'<div class="grid'+(activePids().length>1?' two':'')+'">'+blocks+'</div>';

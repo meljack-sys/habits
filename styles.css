@@ -1814,3 +1814,22 @@ html[dir="rtl"] .foldbtn[aria-expanded="true"] .ic{transform:scaleX(-1) rotate(9
 .fx-item .fx-pays li .fx-pedit .fx-pl{flex:1}
 .fx-sheet .fx-item .fx-pays{justify-content:stretch;justify-items:stretch;grid-template-columns:minmax(0,1fr)}
 .fx-sheet .fx-item .fx-pays li{width:100%}
+
+/* ---------- Today: one clean tile per life area ---------- */
+.rows .agroup{border:1px solid var(--line);border-inline-start:0;padding:0;margin:0;gap:0;border-radius:16px;background:var(--surface);overflow:hidden;align-content:start;box-shadow:0 1px 2px rgba(40,20,70,.05)}
+.rows .agroup .agh{margin:0;padding:10px 14px;gap:10px;background:linear-gradient(110deg,var(--tint,var(--surface2)),var(--surface) 80%);border-bottom:1px solid var(--line);font-size:13.5px;text-transform:none;letter-spacing:0}
+.agc{flex:none;font-size:12px;font-weight:800;color:var(--ink2);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.agc.all{color:#fff;background:var(--cat,var(--brand));border-color:transparent}
+.rows .agroup .row{border:0;border-top:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none;min-height:62px;padding:9px 14px;gap:12px;grid-template-columns:38px minmax(0,1fr) auto}
+.rows .agroup .agh+.row{border-top:0}
+.rows .agroup .row.on{background:color-mix(in srgb,var(--cat,var(--brand)) 7%,var(--surface))}
+.rows .agroup .row .chk{width:38px;height:38px}
+.rows .agroup .row .chk svg{width:20px;height:20px}
+.rows .agroup .row .nm{font-size:14.5px;font-weight:750}
+.rows .agroup .row .meta{font-size:12px;margin-top:2px}
+.rows .agroup .row:hover{background:var(--surface2)}
+.rows:has(>.agroup){gap:14px}
+@media (min-width:1100px){.grid:not(.two) .rows:has(>.agroup){grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px;align-items:start}}
+@media (min-width:760px) and (max-width:1099px){.grid:not(.two) .rows:has(>.agroup){grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}}
+.rows .agroup .row .tag:not(.tag-j){display:none}
+.rows .agroup .row .tag-j svg,.rows .agroup .row .tag-j .tn,.rows .agroup .row .tag-j .ts{display:none}

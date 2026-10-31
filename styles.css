@@ -1692,3 +1692,12 @@ body.is-sample .budgetcard .card-h h2::after,body.is-sample .spendcat .card-h h2
 .cell.lim-over{background:#C62828;border-color:#C62828;color:#fff}.cell.lim-over .cn{color:#fff}
 :root[data-theme="dark"] .sc{color:#FF6B6B;fill:#FF6B6B;stroke:#FF6B6B}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sc{color:#FF6B6B;fill:#FF6B6B;stroke:#FF6B6B}}
+
+/* ---------- Money: average daily spend strip, top of every Money page ---------- */
+.mavg{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 16px;box-shadow:var(--shadow);display:grid;gap:4px}
+.mavg-main{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.mavg-l{color:var(--ink2);font-weight:600}
+.mavg-v{font-size:26px;font-weight:800;line-height:1.1}
+.mavg-o{color:var(--ink3)}
+.mavg-sub{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 14px;color:var(--ink3);font-size:13px}
+.mavg-miss{color:#B3261E}

@@ -2570,6 +2570,18 @@ function mtabInit(){
     if(!ui.sheet||!ui.sheet.page||ui.sheet.type!==m)ui.sheet=(m==='fix')?{type:'fix',f:{},ym:ymOf(ds(today())),mode:null,k:null,page:true}:{type:'bud',f:{},page:true};
   }else if(ui.sheet&&ui.sheet.page)ui.sheet=null;
 }
+/* average daily spend this month: shown at the top of every Money page (same rule as before: recorded days only, unrecorded days skipped and shown) */
+function moneyAvgStrip(){
+  if(!spendHabit())return '';
+  const t=today(),m=P.mo(0),q=spendStat(m[0],t);
+  if(!q)return '';
+  const lim=spLim(ds(t));
+  return '<div class="mavg" role="status"><div class="mavg-main"><span class="mavg-l">'+T2('Average spend a day · ','متوسط المصروف في اليوم · ')+esc(fmtMonLong.format(t))+'</span>'
+    +'<b class="num mavg-v">'+(q.avg!=null?nf(q.avg):'–')+'</b><small>EGP</small>'
+    +(q.avg!=null?'<small class="mavg-o num" dir="ltr">'+esc(secTxt(q.avg))+'</small>':'')+'</div>'
+    +'<div class="mavg-sub"><span>'+T2('Daily limit ','الحد اليومي ')+'<b class="num">'+nf(lim)+'</b></span>'
+    +'<span>'+q.n+T2(' days recorded',' يوم مسجّل')+(q.miss>0?' · <b class="mavg-miss">'+q.miss+T2(' not recorded',' غير مسجّل')+'</b>':'')+'</span></div></div>';
+}
 function viewMoney(){
   mtabInit();
   const sub=ui.mtab||'log';
@@ -2580,7 +2592,7 @@ function viewMoney(){
   else if(!spendHabit())body='<div class="card"><p class="note">'+T2('Turn on the daily spending habit in Setup to use the log and the dashboard.','فعّل عادة تسجيل المصروف اليومي من الإعدادات لاستخدام السجل واللوحة.')+'</p></div>';
   else if(sub==='dash')body=moneyDash();
   else body=moneyLog();
-  return '<div class="mwrap">'+quoteBanner('money')+nav+body+'</div>';
+  return '<div class="mwrap">'+quoteBanner('money')+moneyAvgStrip()+nav+body+'</div>';
 }
 const mdPer=()=>ui.mdPer||'month';
 function moneyDash(){

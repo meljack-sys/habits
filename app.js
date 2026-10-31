@@ -640,6 +640,7 @@ function budNorm(b){
   ['lines','cats','accts','fixed'].forEach(k=>{const a=arr(b[k]);b[k]=a&&a.length?a.filter(Boolean):JSON.parse(JSON.stringify(BUD_DEF[k]))});
   b.cats.forEach(c=>{c.sub=arr(c.sub)||[]});
   b.rates=Object.assign({},BUD_DEF.rates,b.rates||{});
+  b.ratesM=(b.ratesM&&typeof b.ratesM==='object')?b.ratesM:{};
   b.uae=Object.assign({},BUD_DEF.uae,b.uae||{});
   b.ooin=b.ooin?1:0;b.v=b.v||1;
   b.dlim=(b.dlim==null||isNaN(Number(b.dlim)))?BUD_DEF.dlim:Math.max(0,Number(b.dlim));
@@ -662,12 +663,25 @@ const expCats=all=>{const l=bud().cats;return all?l:l.filter(c=>c.on!==false)};
 const catName=k=>{const c=catOf(k);if(!c)return '';return fillNames((ui.lang==='ar'&&c.ar)?c.ar:(c.en||c.ar||''))};
 const subName=(ck,sk)=>{const c=catOf(ck);const s=c&&(c.sub||[]).find(x=>x.k===sk);return s?((ui.lang==='ar'&&s.ar)?s.ar:s.en):''};
 const acctName=k=>{const a=bud().accts.find(x=>x.k===k);return a?((ui.lang==='ar'&&a.ar)?a.ar:a.n):''};
-const rateOf=cur=>cur==='EGP'?1:(Number((bud().rates||{})[cur])||0);
-const toEgp=(amt,cur)=>r2(amt*rateOf(cur));
+/* exchange rates are set once a month and apply to that month only (B.ratesM['YYYY-MM']). A month with none uses the nearest earlier month, else the nearest later one, else the starting rates. */
+const curYm=()=>ymOf(ds(today()));
+function ratesFor(ym){
+  const m=bud().ratesM||{},ks=Object.keys(m).sort();
+  if(m[ym])return m[ym];
+  let pick=null;ks.forEach(k=>{if(k<ym)pick=k});
+  if(!pick)pick=ks.find(k=>k>ym)||null;
+  return pick?m[pick]:(bud().rates||{});
+}
+const ratesSet=ym=>!!((bud().ratesM||{})[ym]);
+const rateOf=(cur,ym)=>{if(cur==='EGP')return 1;const r=ratesFor(ym||curYm())||{};return Number(r[cur])||Number((bud().rates||{})[cur])||0};
+const toEgp=(amt,cur,ym)=>r2(amt*rateOf(cur,ym));
+/* a budget line is kept in SAR once it has been saved in SAR; its EGP value then follows that month's SAR rate */
+const lineAmt=(l,ym)=>{if(!l)return 0;const sr=Number(l.sar);return (l.sar!=null&&l.sar!==''&&!isNaN(sr))?r2(sr*rateOf('SAR',ym)):(Number(l.amt)||0)};
 const secTxt=egp=>{const a=rateOf('AED'),s=rateOf('SAR');return '≈ '+(a?nf(egp/a)+' AED':'')+(a&&s?' · ':'')+(s?nf(egp/s)+' SAR':'')};
 const fxName=f=>f.bl?lname(lineOf(f.bl)):fillNames((ui.lang==='ar'&&f.ar)?f.ar:f.en);
-const fxAmt=f=>f.bl?(lineOf(f.bl)||{}).amt||0:Number(f.amt)||0;
+const fxAmt=(f,ym)=>f.bl?lineAmt(lineOf(f.bl),ym):Number(f.amt)||0;
 const fxCur=f=>f.bl?'EGP':(f.cur||'AED');
+const shYm=sh=>{const d=String((sh&&sfv(sh,'ed',sh.d))||(sh&&sh.d)||'');return /^\d{4}-\d{2}/.test(d)?d.slice(0,7):curYm()};
 const fxActive=(f,ym)=>{const l=f.bl?lineOf(f.bl):null;return !(l&&l.from&&ym<l.from)};
 const fxNote=f=>ui.lang==='ar'?(f.noteAr||f.note||''):(f.note||'');
 const GRP={eg:['Egypt','مصر','EGP'],uae:['UAE family house','بيت العائلة في الإمارات','AED'],loan:['Loans','القروض','']};
@@ -692,7 +706,7 @@ function eDaily(x){
 function spLim(dstr){
   const man=Number(bud().dlim);if(man>0)return Math.round(man);
   let sum=0,any=false;
-  bud().lines.forEach(l=>{if(l.dl&&Number(l.amt)>0){sum+=Number(l.amt);any=true}});
+  bud().lines.forEach(l=>{const la=lineAmt(l,ymOf(dstr));if(l.dl&&la>0){sum+=la;any=true}});
   if(any)return Math.round(sum/dimOf(ymOf(dstr)));
   const h=S.habits.find(x=>x.kind==='spend'&&x.type==='num');return (h&&Number(h.goal))||1500;
 }
@@ -865,7 +879,7 @@ function fxUnmark(k,ym){
 }
 /* state of one bill in a month: paid | closed | partial | overdue | soon | later | noday */
 function fxState(f,ym){
-  const exp=Number(fxAmt(f))||0,pays=fxPays(ym,f.k),paid=fxSum(ym,f.k),closed=fxClosed(ym,f.k);
+  const exp=Number(fxAmt(f,ym))||0,pays=fxPays(ym,f.k),paid=fxSum(ym,f.k),closed=fxClosed(ym,f.k);
   const base={exp:exp,paid:paid,pays:pays,diff:r2(exp-paid)};
   if(closed)return Object.assign(base,{st:'closed'});
   if(paid>0&&exp>0&&paid>=exp*0.995)return Object.assign(base,{st:'paid'});
@@ -893,7 +907,7 @@ function fxBalance(ym){
   bud().fixed.filter(f=>fxActive(f,ym)).forEach(f=>{
     const s=fxState(f,ym);if(s.st!=='paid'&&s.st!=='closed')return;
     const d=s.diff;if(Math.abs(d)<0.5)return;
-    const c=fxCur(f),e=toEgp(Math.abs(d),c),g=out.g[f.g]||(out.g[f.g]={s:0,o:0,se:0,oe:0});
+    const c=fxCur(f),e=toEgp(Math.abs(d),c,ym),g=out.g[f.g]||(out.g[f.g]={s:0,o:0,se:0,oe:0});
     if(d>0){out.saved+=e;g.s+=Math.abs(d);g.se+=e}else{out.over+=e;g.o+=Math.abs(d);g.oe+=e}
   });
   out.saved=r2(out.saved);out.over=r2(out.over);return out;
@@ -946,7 +960,7 @@ function lineStatus(l,ym,act){
   const oo=bud().ooin?0:a.oo;
   const counted=r2(a.net+a.fp-oo);
   const t=today(),cur=ym===ymOf(ds(t));
-  const budget=Number(l.amt)||0;
+  const budget=lineAmt(l,ym);
   let base=budget;
   if(l.kd==='d'&&cur)base=budget*t.getDate()/dimOf(ym);
   const has=(a.net!==0||a.fp>0);
@@ -1036,8 +1050,7 @@ function ledgerCsv(per){
   const cols=['date','type','amount','currency','account','merchant','budget_line','category','subcategory','one_off','module','note','amount_egp','amount_aed','amount_sar'];
   const rows=[cols.join(',')];
   const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
-  const aed=rateOf('AED'),sar=rateOf('SAR');
-  const conv=egp=>[r2(egp),aed?r2(egp/aed):'',sar?r2(egp/sar):''];
+  const conv=(egp,ym)=>{const aed=rateOf('AED',ym),sar=rateOf('SAR',ym);return [r2(egp),aed?r2(egp/aed):'',sar?r2(egp/sar):'']};
   const out=[];
   eachEntry((x,d)=>{
     if(d<R.a||d>R.b)return;
@@ -1045,7 +1058,7 @@ function ledgerCsv(per){
     const sub=(x.sc&&c)?((c.sub||[]).find(s=>s.k===x.sc)||{}).en||'':'';
     const ty=x.ty==='r'?'refund':x.ty==='i'?'income':x.ty==='w'?'withdrawal':x.ty==='l'?'loan given':x.ty==='p'?'loan repaid':'expense';
     const cur=x.cur||'EGP',amt=x.cur?(Number(x.oa)||0):(Number(x.a)||0);
-    const cv=conv(Number(x.a)||0);
+    const cv=conv(Number(x.a)||0,ymOf(d));
     out.push([d,[d,ty,amt,cur,acctName0(x.ac),x.n==='Earlier total'?'':((x.ln?x.ln+(x.n?' · ':''):'')+x.n),eSkip(x)?'':(l?(l.x||l.en):''),eSkip(x)?'':(c?(c.x||c.en):''),sub,(c&&c.oo)?'yes':'no','main','',cv[0],cv[1],cv[2]]]);
   });
   bud().fixed.forEach(f=>{
@@ -1053,7 +1066,7 @@ function ledgerCsv(per){
     Object.keys(yms).forEach(ym=>{
       fxPays(ym,f.k).forEach(q=>{
         const d=q.d||ym+'-01';if(d<R.a||d>R.b)return;
-        const cur=fxCur(f),egp=toEgp(Number(q.a)||0,cur);const cv=conv(egp);
+        const cur=fxCur(f),egp=toEgp(Number(q.a)||0,cur,ym);const cv=conv(egp,ym);
         const l=f.bl?lineOf(f.bl):null;
         out.push([d,[d,'expense',q.a,cur,'',f.bl?(l.x||l.en):f.en,f.bl?(l.x||l.en):f.en,f.bl?(l.x||l.en):f.en,'','no',f.g==='uae'?'uae_house':f.g==='loan'?'loans':'main','Bill payment'+(q.n?' · '+q.n:''),cv[0],cv[1],cv[2]]]);
       });
@@ -1101,7 +1114,7 @@ function fullMoneyExport(){
         if(!list.length&&!closed)return;
         const s=fxState(f,ym);
         months.push({bill:name,month:ym,currency:cur,planned:s.exp,paid:s.paid,difference_planned_minus_paid:s.diff,status:s.st,closed_by_user:closed});
-        list.forEach(q=>pays.push({bill:name,month:ym,date:q.d,paid_by:pn(q.pid),amount:q.a,currency:cur,amount_egp:toEgp(q.a,cur),note:q.n}));
+        list.forEach(q=>pays.push({bill:name,month:ym,date:q.d,paid_by:pn(q.pid),amount:q.a,currency:cur,amount_egp:toEgp(q.a,cur,ym),note:q.n}));
       });
     });
     pays.sort((p,q)=>p.date<q.date?-1:p.date>q.date?1:0);
@@ -1120,10 +1133,10 @@ function fullMoneyExport(){
       control_totals:{transactions:tx.length,first_date:tx.length?tx[0].date:'',last_date:tx.length?tx[tx.length-1].date:'',by_type:byType,bill_payments:pays.length,bill_payments_total_egp:r2(pays.reduce((t,q)=>t+q.amount_egp,0))},
       transactions:tx,fixed_bills:bills,fixed_bill_months:months,fixed_bill_payments:pays,
       budget:{
-        lines:b.lines.map(l=>({key:l.k,name:fe(l.en),monthly_amount_egp:Number(l.amt)||0,kind:l.kd==='f'?'fixed monthly':'logged day by day',counts_toward_daily_limit:!!l.dl,starts_from:l.from||''})),
+        lines:b.lines.map(l=>({key:l.k,name:fe(l.en),monthly_amount_egp_this_month:lineAmt(l),monthly_amount_sar:(l.sar!=null&&l.sar!==''?Number(l.sar):null),kind:l.kd==='f'?'fixed monthly':'logged day by day',counts_toward_daily_limit:!!l.dl,starts_from:l.from||''})),
         categories:b.cats.map(c=>({key:c.k,name:fe(c.en),budget_line:(lineOf(c.bl)||{}).en?fe(lineOf(c.bl).en):c.bl,active:c.on!==false,one_off:!!c.oo,subcategories:(c.sub||[]).map(s=>s.en)})),
         accounts:b.accts.map(a=>a.n),
-        exchange_rates_to_egp:b.rates,daily_spending_limit_egp:Number(b.dlim)||0,one_offs_count_in_daily_limit:!!b.ooin,uae_house_fund_aed:Number((b.uae||{}).fund)||0}
+        exchange_rates_to_egp:b.rates,exchange_rates_by_month:b.ratesM||{},daily_spending_limit_egp:Number(b.dlim)||0,one_offs_count_in_daily_limit:!!b.ooin,uae_house_fund_aed:Number((b.uae||{}).fund)||0}
     };
     const blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json;charset=utf-8'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='money-full-export-'+ds(today())+'.json';
@@ -2111,6 +2124,7 @@ function renderSheet(){
   if(ui.sheet.type==='fix'){renderFixSheet(el,ui.sheet);return}
   if(ui.sheet.type==='bud'){renderBudSheet(el,ui.sheet);return}
   if(ui.sheet.type==='txl'){renderTxlSheet(el,ui.sheet);return}
+  if(ui.sheet.type==='rates'){renderRatesSheet(el,ui.sheet);return}
   const sh=ui.sheet,h=S.habits.find(x=>x.id===sh.hid);if(!h){ui.sheet=null;el.hidden=true;return}
   if(sh.type==='exp'){renderExpSheet(el,sh,h);return}
   const rp=repOf(h,sh.pid),cur=getVal(rp,sh.d,h.id);
@@ -2183,7 +2197,7 @@ function renderExpSheet(el,sh,h){
     const tySeg='<div class="pill-seg exp-ty" role="group" aria-label="'+esc(T2('Type','النوع'))+'">'+(editing?['x','r','i','w','l','p']:['x','r','i','w','l','p','b']).map(k=>'<button type="button" data-act="expty" data-v="'+k+'" aria-pressed="'+(ty===k)+'">'+T2(tyTxt[k][0],tyTxt[k][1])+'</button>').join('')+'</div>';
     const curSeg='<div class="chips exp-cur" role="group" aria-label="'+esc(T2('Paid in','العملة'))+'">'+['EGP','SAR','AED','USD'].map(c=>chipBtn('expcur',c,c,sh.cur===c)).join('')+'</div>';
     const amtN=parseFloat(f('amt'));
-    const conv=(sh.cur!=='EGP'&&!isNaN(amtN)&&amtN>0)?'<div class="note exp-conv">= <b class="num">'+nf2(toEgp(amtN,sh.cur))+'</b> EGP · 1 '+sh.cur+' = '+nf2(rateOf(sh.cur))+' EGP'+(canEditBud()?'':'')+'</div>':(sh.cur!=='EGP'&&!rateOf(sh.cur)?'<div class="note exp-conv bad">'+T2('Set the '+sh.cur+' rate in Budgets first.','حدّد سعر '+sh.cur+' في الميزانيات أولًا.')+'</div>':'');
+    const conv=(sh.cur!=='EGP'&&!isNaN(amtN)&&amtN>0)?'<div class="note exp-conv">= <b class="num">'+nf2(toEgp(amtN,sh.cur,shYm(sh)))+'</b> EGP · 1 '+sh.cur+' = '+nf2(rateOf(sh.cur,shYm(sh)))+' EGP'+(canEditBud()?'':'')+'</div>':(sh.cur!=='EGP'&&!rateOf(sh.cur)?'<div class="note exp-conv bad">'+T2('Set the '+sh.cur+' rate in Budgets first.','حدّد سعر '+sh.cur+' في الميزانيات أولًا.')+'</div>':'');
     let cats='',subRow='';
     if(!eSkip({ty:ty})&&ty!=='b'){
       const vis=expCats();const all=vis.slice();
@@ -2218,7 +2232,7 @@ function renderExpSheet(el,sh,h){
         +Object.keys(gs).map(g=>'<div class="note exp-bgrp">'+esc((GRP[g]||[g,g])[ui.lang==='ar'?1:0])+'</div><div class="chips exp-bills" role="group">'+gs[g].map(f=>chipBtn('expbill',f.k,fxName(f)+(fxCur(f)!=='EGP'?' · '+fxCur(f):''),sh.bill===f.k)).join('')+'</div>').join('')
         +(bf?(()=>{const s0=fxState(bf,bym);return '<div class="note exp-conv">'+T2('Planned ','المخطط ')+'<b class="num">'+nf2(s0.exp)+'</b> '+billCur+' · '+T2('paid so far ','المدفوع حتى الآن ')+'<b class="num">'+nf2(s0.paid)+'</b>'+(s0.exp>0&&s0.diff>0?' · '+T2('left ','المتبقي ')+'<b class="num">'+nf2(s0.diff)+'</b>':'')+'</div>'})():'');
       const an=parseFloat(f('amt'));
-      if(bf&&billCur!=='EGP'&&!isNaN(an)&&an>0)billPick+='<div class="note exp-conv">= <b class="num">'+nf2(toEgp(an,billCur))+'</b> EGP</div>';
+      if(bf&&billCur!=='EGP'&&!isNaN(an)&&an>0)billPick+='<div class="note exp-conv">= <b class="num">'+nf2(toEgp(an,billCur,shYm(sh)))+'</b> EGP</div>';
     }
     const acs='<div class="exp-lbl">'+((ty==='w'||ty==='l')?T2('From account (optional)','من حساب (اختياري)'):ty==='p'?T2('Into account (optional)','إلى حساب (اختياري)'):T2('Paid with (optional)','طريقة الدفع (اختياري)'))+'</div><div class="chips exp-accts" role="group">'+bud().accts.map(a=>chipBtn('expac',a.k,acctName(a.k),sh.ac===a.k)).join('')+'</div>';
     const dv=sh.eid?String(sfv(sh,'ed',sh.d)):sh.d,atToday=dv>=ds(today());
@@ -2255,11 +2269,11 @@ function expFormValues(sh){
   const amtIn=parseFloat(sfv(sh,'amt'));
   if(isNaN(amtIn)||amtIn<=0){toast(T2('Enter an amount.','اكتب المبلغ.'));const a=$('#exp-amt');if(a)a.focus();return null}
   const cur=sh.cur||'EGP';
-  if(cur!=='EGP'&&!rateOf(cur)){toast(T2('Set the '+cur+' rate in Budgets first.','حدّد سعر '+cur+' في الميزانيات أولًا.'));return null}
+  if(cur!=='EGP'&&!rateOf(cur,shYm(sh))){toast(T2('Set the '+cur+' rate in Budgets first.','حدّد سعر '+cur+' في الميزانيات أولًا.'));return null}
   const note=String(sfv(sh,'note')||'').trim();
   if(noCard(note)){toast(T2('Please do not type card numbers here.','من فضلك لا تكتب أرقام البطاقات هنا.'));return null}
   const ty=sh.ty||'x';
-  const o={a:cur==='EGP'?amtIn:toEgp(amtIn,cur),oa:amtIn,cur:cur,ty:ty,n:note,ac:sh.ac||''};
+  const o={a:cur==='EGP'?amtIn:toEgp(amtIn,cur,shYm(sh)),oa:amtIn,cur:cur,ty:ty,n:note,ac:sh.ac||''};
   if(!eSkip({ty:ty})){o.c=sh.cat||'';o.sc=sh.sc||''}else{o.c='';o.sc=''}
   if(ty==='l'||ty==='p'){const ln=String(sfv(sh,'loan')||'').trim();if(!ln){toast(T2('Write who the loan is with.','اكتب السلفة مع مين.'));const a=$('#exp-loan');if(a)a.focus();return null}o.ln=ln}
   const lk=ty==='r'?String(sfv(sh,'lk')||''):'';
@@ -2387,7 +2401,7 @@ function renderFixSheet(el,sh){
     const items=bud().fixed.filter(f=>f.g===g&&fxActive(f,ym));if(!items.length)return '';
     const cur=GRP[g][2];
     let planned=0,paidSum=0,paidN=0;
-    items.forEach(f=>{const s=fxState(f,ym);planned+=fxAmt(f);paidSum+=s.paid;if(s.st==='paid'||s.st==='closed')paidN++});
+    items.forEach(f=>{const s=fxState(f,ym);planned+=fxAmt(f,ym);paidSum+=s.paid;if(s.st==='paid'||s.st==='closed')paidN++});
     const gsum=g==='loan'?T2(paidN+' of '+items.length+' settled',paidN+' من '+items.length+' مسدّدة'):T2('paid ','المدفوع ')+'\u2066'+nf(paidSum)+' / '+nf(planned)+' '+cur+'\u2069';
     const GB=fxBalance(ym).g[g]||{s:0,o:0,se:0,oe:0},gcur=g==='loan'?'EGP':cur,gS=g==='loan'?GB.se:GB.s,gO=g==='loan'?GB.oe:GB.o;
     const gb=fxRes(gS-gO,gcur);
@@ -2401,7 +2415,7 @@ function renderFixSheet(el,sh){
     const rank={overdue:0,soon:1,partial:1,later:2,noday:3,paid:4,closed:4};
     const sorted=items.map((f,i)=>({f:f,i:i,r:rank[fxState(f,ym).st]})).sort((x,y)=>x.r-y.r||x.i-y.i).map(x=>x.f);
     const rows=sorted.map(f=>{
-      const s=fxState(f,ym),c=fxCur(f),am=fxAmt(f),stCls=s.st;
+      const s=fxState(f,ym),c=fxCur(f),am=fxAmt(f,ym),stCls=s.st;
       let stTxt='',stX='';
       if(s.st==='paid'){stTxt=T2('Paid in full','مدفوعة بالكامل');if(s.diff<-0.5)stX=' · <b class="fx-bad">'+T2('over by ','أكثر بـ ')+nfc(-s.diff,c)+'</b>'}
       else if(s.st==='closed'){stTxt=T2('Closed','مغلقة');if(s.diff>0.5)stX=' · <b class="fx-good">'+T2('saved ','وفّرتم ')+nfc(s.diff,c)+'</b>';else if(s.diff<-0.5)stX=' · <b class="fx-bad">'+T2('over by ','زادت ')+nfc(-s.diff,c)+'</b>'}
@@ -2504,6 +2518,34 @@ function budRatesChanged(){
   });
   budTotalsLive();
 }
+function ratesHistory(){
+  const m=bud().ratesM||{},ks=Object.keys(m).sort().reverse();
+  if(!ks.length)return '';
+  return '<details class="bd-rhist"><summary>'+T2('Rates of earlier months','أسعار الأشهر السابقة')+'</summary><ul class="rep-list">'+ks.map(k=>{const a=k.split('-');return '<li class="rep-row"><span>'+esc(fmtMonLong.format(new Date(+a[0],+a[1]-1,1)))+'</span><span class="num" dir="ltr">'+['AED','SAR','USD'].map(c=>c+' '+(m[k][c]||'–')).join(' · ')+'</span></li>'}).join('')+'</ul></details>';
+}
+/* the first time Money is opened in a new month, the rates for that month must be entered (Muhammed only; it blocks until saved) */
+const dataReady=()=>mode!=='sample'&&(!DB||!firstSnap);
+const ratesDue=()=>ui.tab==='money'&&dataReady()&&canEditBud()&&!ratesSet(curYm());
+function renderRatesSheet(el,sh){
+  const ym=curYm(),a=ym.split('-'),mname=fmtMonLong.format(new Date(+a[0],+a[1]-1,1)),prev=ratesFor(prevYm(ym,1))||{};
+  const fld=c=>'<label class="f bd-rate">1 '+c+' =<span class="bd-rin"><input class="in num" type="number" inputmode="decimal" min="0" step="any" data-sf="nr-'+c+'" value="'+esc(sfv(sh,'nr-'+c,''))+'" placeholder="'+esc(String(prev[c]||rateOf(c)||''))+'"><small>EGP</small></span></label>';
+  el.innerHTML='<div class="sheet-bg"></div><div class="sheet-card exp-sheet" role="dialog" aria-modal="true" aria-label="'+esc(T2('Exchange rates for ','أسعار الصرف لشهر ')+mname)+'">'
+    +'<h3>'+T2('Exchange rates for ','أسعار الصرف لشهر ')+esc(mname)+'</h3>'
+    +'<div class="note" style="margin:-2px 0 12px">'+T2('A new month has started. Enter this month\'s rates once. They apply to this month only, and your SAR budgets turn into EGP with them.','بدأ شهر جديد. اكتب أسعار هذا الشهر مرة واحدة. تُطبَّق على هذا الشهر فقط، وتتحول بها ميزانياتك بالريال إلى جنيه.')+'</div>'
+    +'<div class="bd-rates">'+['SAR','AED','USD'].map(fld).join('')+'</div>'
+    +'<div class="note">'+T2('Last month: ','الشهر الماضي: ')+'<span class="num" dir="ltr">'+['SAR','AED','USD'].map(c=>c+' '+(prev[c]||'–')).join(' · ')+'</span></div>'
+    +'<div class="sticky-save"><button type="button" class="btn" data-act="ratessave">'+T2('Save rates for ','احفظ أسعار ')+esc(mname)+'</button></div></div>';
+  el.hidden=false;trDom();
+  const f=$('[data-sf="nr-SAR"]');if(f&&!f.value)setTimeout(()=>{try{f.focus()}catch(e){}},50);
+}
+function ratesSave(){
+  const sh=ui.sheet;if(!sh||sh.type!=='rates')return;collectSf();
+  const ym=curYm(),v={};let bad=false;
+  ['AED','SAR','USD'].forEach(c=>{const n=parseFloat(sfv(sh,'nr-'+c,''));if(isNaN(n)||n<=0)bad=true;else v[c]=n});
+  if(bad){toast(T2('Enter all three rates. Each must be more than zero.','اكتب الأسعار الثلاثة. ويجب أن يكون كل سعر أكبر من صفر.'));return}
+  budEnsure();B.ratesM=B.ratesM||{};B.ratesM[ym]=v;B.rates=Object.assign({},B.rates,v);
+  budSave();ui.sheet=null;toast(T2('Rates saved for this month.','تم حفظ أسعار هذا الشهر.'));render();
+}
 function renderBudSheet(el,sh){
   const can=canEditBud(),f=k=>sfv(sh,k);
   const t=ds(today());
@@ -2512,9 +2554,9 @@ function renderBudSheet(el,sh){
     const tag=l.dl?'<span class="tag-dl">'+T2('counts toward the daily limit','يدخل في الحد اليومي')+'</span>':'';
     const sub=l.kd==='f'?T2('fixed monthly','ثابت كل شهر'):T2('logged day by day','يُسجَّل يومًا بيوم');
     return '<li class="bd-item"><div class="bd-main"><b data-notr="1">'+esc(lname(l))+'</b><small class="muted">'+sub+(l.from?' · '+T2('starts '+l.from,'يبدأ '+l.from):'')+'</small>'+tag+'</div>'
-      +(can?triInputs(sh,'la-'+l.k,Number(sfv(sh,'la-'+l.k,String(l.amt)))||0,l.k):'<span class="bd-val num">'+nf(l.amt)+' <small>EGP</small></span><small class="muted">'+esc(triOthers(l.amt,'EGP'))+'</small>')+'</li>';
+      +(can?triInputs(sh,'la-'+l.k,Number(sfv(sh,'la-'+l.k,String(lineAmt(l))))||0,l.k):'<span class="bd-val num">'+nf(lineAmt(l))+' <small>EGP</small></span><small class="muted">'+esc(triOthers(lineAmt(l),'EGP'))+'</small>')+'</li>';
   }).join('');
-  const total=bud().lines.reduce((s,l)=>s+(Number(l.amt)||0),0);
+  const total=bud().lines.reduce((s,l)=>s+lineAmt(l),0);
   const rates=['AED','SAR','USD'].map(c=>'<label class="f bd-rate">1 '+c+' =<span class="bd-rin"><input class="in num" type="number" inputmode="decimal" min="0" step="any" data-sf="rt-'+c+'" value="'+esc(sfv(sh,'rt-'+c,String(rateOf(c))))+'"'+(can?'':' disabled')+'><small>EGP</small></span></label>').join('');
   const accts='<div class="chips bd-accts">'+bud().accts.map(a=>'<span class="chipbtn acct-chip" data-notr="1">'+esc(acctName(a.k))+(can?'<button type="button" class="acct-x" data-act="acdel" data-v="'+esc(a.k)+'" aria-label="'+esc(T2('Remove ','احذف ')+acctName(a.k))+'">×</button>':'')+'</span>').join('')+'</div>'
     +(can?'<div class="bd-add"><label class="f">'+T2('New account or card (name only, never the full number)','حساب أو بطاقة جديدة (الاسم فقط، ولا تكتب الرقم كاملًا أبدًا)')+'<input class="in" data-sf="acn" type="text" maxlength="30" value="'+esc(f('acn'))+'" autocomplete="off" placeholder="'+esc(T2('e.g. Visa 4821','مثلًا فيزا 4821'))+'"></label><button type="button" class="btn alt" data-act="acadd">'+T2('Add account','أضف حساب')+'</button></div>':'');
@@ -2528,7 +2570,7 @@ function renderBudSheet(el,sh){
     +(can?'<label class="f bd-dlim">'+T2('Daily spending limit (EGP). Put 0 to use the living budget ÷ days in the month.','حد المصروف اليومي (بالجنيه). اكتب 0 ليُحسب من ميزانية المعيشة ÷ عدد أيام الشهر.')+'<input class="in num" type="number" inputmode="decimal" min="0" step="any" data-sf="dlim" value="'+esc(sfv(sh,'dlim',String(Number(bud().dlim)||0)))+'"></label>':'')
     +'<div class="note">'+T2('Daily limit today: ','الحد اليومي اليوم: ')+'<b class="num">'+nf(lim)+' EGP</b>'+(Number(bud().dlim)>0?'':' '+T2('(living budget ÷ days in the month)','(ميزانية المعيشة ÷ عدد أيام الشهر)'))+'</div>'
     +(can?'<label class="chk-line"><input type="checkbox" data-sf="ooin"'+(sfv(sh,'ooin',!!bud().ooin)===true?' checked':'')+'> '+T2('Count one-offs (like home setup) in the budget and the daily limit','احسب المصاريف لمرة واحدة (مثل تجهيز البيت) ضمن الميزانية والحد اليومي')+'</label>':'')+'</section>'
-    +acc('rates',T2('Exchange rates','أسعار الصرف'),ratesSum,'<div class="bd-rates">'+rates+'</div><div class="note">'+T2('EGP is the main currency. An expense paid in another currency is converted once, at the rate on the day you add it.','الجنيه هو العملة الأساسية. يُحوَّل المصروف بعملة أخرى مرة واحدة بسعر يوم إضافته.')+'</div>')
+    +acc('rates',T2('Exchange rates','أسعار الصرف'),ratesSum,'<div class="bd-rates">'+rates+'</div><div class="note">'+T2('These are the rates for '+fmtMonLong.format(today())+' only. You set new ones at the start of every month. An expense in another currency is converted once, at the rate of the month it belongs to. Budget amounts are kept in SAR, so each month they follow that month\'s SAR rate.','هذه أسعار '+fmtMonLong.format(today())+' فقط. تُدخل أسعارًا جديدة في بداية كل شهر. المصروف بعملة أخرى يُحوَّل مرة واحدة بسعر الشهر الذي يخصّه. الميزانيات تُحفظ بالريال، فتتبع كل شهر سعر الريال لذلك الشهر.')+'</div>'+ratesHistory())
     +acc('accts',T2('Accounts and cards','الحسابات والكروت'),bud().accts.length+' '+T2('accounts','حسابات'),accts)
     +acc('cats',T2('Categories','الفئات'),nCats+' '+T2('categories','فئة'),catEditorHtml(sh))
     +(can?acc('addline',T2('Add a budget line','أضف بند ميزانية'),T2('a new monthly line','بند شهري جديد'),addLine):'')
@@ -2540,10 +2582,14 @@ function budSaveForm(){
   const sh=ui.sheet;if(!sh||!canEditBud())return;collectSf();
   budEnsure();
   const nl=[];let bad=false;
-  B.lines.forEach(l=>{const raw=sfv(sh,'la-'+l.k,String(l.amt));const v=parseFloat(raw);if(isNaN(v)||v<0)bad=true;else nl.push([l,v])});
+  B.lines.forEach(l=>{const raw=sfv(sh,'la-'+l.k,String(lineAmt(l)));const v=parseFloat(raw);if(isNaN(v)||v<0)bad=true;else nl.push([l,v])});
   if(bad){toast(T2('Check the amounts: numbers only.','راجع المبالغ: أرقام فقط.'));return}
-  nl.forEach(x=>{x[0].amt=x[1]});
-  ['AED','SAR','USD'].forEach(c=>{const v=parseFloat(sfv(sh,'rt-'+c,String(rateOf(c))));if(!isNaN(v)&&v>0)B.rates[c]=v});
+  /* this month's rates first, then the budgets (kept in SAR, so next month's rate moves their EGP value) */
+  B.ratesM=B.ratesM||{};const rm=Object.assign({},ratesFor(curYm()));
+  ['AED','SAR','USD'].forEach(c=>{const v=parseFloat(sfv(sh,'rt-'+c,String(rateOf(c))));if(!isNaN(v)&&v>0){B.rates[c]=v;rm[c]=v}});
+  B.ratesM[curYm()]=rm;
+  const sr=rateOf('SAR',curYm());
+  nl.forEach(x=>{x[0].amt=x[1];if(sr>0)x[0].sar=Math.round(x[1]/sr*1e4)/1e4});
   B.ooin=sfv(sh,'ooin',!!B.ooin)===true?1:0;
   {const dv=parseFloat(sfv(sh,'dlim',String(Number(B.dlim)||0)));if(!isNaN(dv)&&dv>=0)B.dlim=dv}
   budSave();toast(T2('Budgets saved.','تم حفظ الميزانيات.'));sh.f={};renderSheet();render();
@@ -2559,7 +2605,7 @@ function lineAdd(){
   const sh=ui.sheet;if(!sh||!canEditBud())return;collectSf();
   const n=String(sfv(sh,'ln')).trim(),v=parseFloat(sfv(sh,'lm'));
   if(!n||isNaN(v)||v<0){toast(T2('Give the line a name and an amount.','اكتب اسم البند والمبلغ.'));return}
-  budEnsure();B.lines.push({k:'l_'+Date.now().toString(36),en:n,ar:'',x:n,amt:v,kd:'d'});budSave();sfSet('ln','');sfSet('lm','');renderSheet();
+  budEnsure();B.lines.push({k:'l_'+Date.now().toString(36),en:n,ar:'',x:n,amt:v,sar:(rateOf('SAR')>0?Math.round(v/rateOf('SAR')*1e4)/1e4:undefined),kd:'d'});budSave();sfSet('ln','');sfSet('lm','');renderSheet();
 }
 /* ---------- Today: money card ---------- */
 function meBanner(){
@@ -2679,7 +2725,7 @@ function budgetCard(){
   if(!spendHabit())return '';
   const t=today(),nowYm=ymOf(ds(t)),per=mdPer()==='last'?'last':'cur',ym=per==='last'?prevYm(nowYm,1):nowYm;
   const act=monthAct(ym);
-  const ls=bud().lines.filter(l=>!(l.from&&ym<l.from)).slice().sort((a,b)=>(a.kd===b.kd?0:a.kd==='d'?-1:1)||((Number(b.amt)||0)-(Number(a.amt)||0)));
+  const ls=bud().lines.filter(l=>!(l.from&&ym<l.from)).slice().sort((a,b)=>(a.kd===b.kd?0:a.kd==='d'?-1:1)||(lineAmt(b,ym)-lineAmt(a,ym)));
   let totB=0,totC=0;
   const cur=[];
   const rows=ls.map(l=>{
@@ -2720,7 +2766,7 @@ function txlRecords(sh){
   if(sh.line){
     const ym=sh.ym;
     bud().fixed.forEach(f=>{if(f.bl!==sh.line)return;
-      fxPays(ym,f.k).forEach(q=>out.push({d:q.d,pid:q.pid,t:0,bill:true,what:fxName(f),note:q.n||'',ac:'',v:toEgp(q.a,fxCur(f)),orig:'',ref:false,skip:false}))});
+      fxPays(ym,f.k).forEach(q=>out.push({d:q.d,pid:q.pid,t:0,bill:true,what:fxName(f),note:q.n||'',ac:'',v:toEgp(q.a,fxCur(f),ym),orig:'',ref:false,skip:false}))});
   }
   out.sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:(b.t-a.t));
   return out;
@@ -3511,6 +3557,7 @@ function render(){
   const y0=window.scrollY,sEl=$('#sheet');
   if(sEl&&sEl.parentNode!==document.body)document.body.appendChild(sEl);
   $('#view').innerHTML=(ui.tab==='setup'&&mode!=='sample'?'':banner())+(['today','week','dash','impact'].indexOf(ui.tab)>=0?quoteBanner(ui.tab):'')+fn();
+  if(ratesDue()){if(!(ui.sheet&&ui.sheet.type==='rates'))ui.sheet={type:'rates',f:{}}}else if(ui.sheet&&ui.sheet.type==='rates')ui.sheet=null;
   const mp=$('#mpage');
   if(sEl){if(mp&&ui.sheet&&ui.sheet.page){mp.appendChild(sEl);sEl.classList.add('as-page')}else sEl.classList.remove('as-page')}
   post();renderSheet();checkTrophies();trDom();
@@ -3546,6 +3593,7 @@ document.addEventListener('click',e=>{
   else if(a==='expty'){const sh=ui.sheet;if(sh){collectSf();sh.ty=t.dataset.v;if(eSkip({ty:sh.ty})){sh.cat='';sh.sc=''}renderSheet()}}
   else if(a==='exploan'){const sh=ui.sheet;if(sh){collectSf();sfSet('loan',t.dataset.v);renderSheet()}}
   else if(a==='expbill'){const sh=ui.sheet;if(sh){collectSf();sh.bill=t.dataset.v;renderSheet();const fo=$('#exp-amt');if(fo)setTimeout(()=>{try{fo.focus()}catch(e){}},30)}}
+  else if(a==='ratessave')ratesSave();
   else if(a==='catcell')txlOpenCat(t.dataset.k,t.dataset.ym);
   else if(a==='budrow')txlOpenLine(t.dataset.k,t.dataset.ym);
   else if(a==='expcur'){const sh=ui.sheet;if(sh){collectSf();sh.cur=t.dataset.v;renderSheet()}}

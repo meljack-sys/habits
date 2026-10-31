@@ -1701,3 +1701,7 @@ body.is-sample .budgetcard .card-h h2::after,body.is-sample .spendcat .card-h h2
 .mavg-o{color:var(--ink3)}
 .mavg-sub{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 14px;color:var(--ink3);font-size:13px}
 .mavg-miss{color:#B3261E}
+
+/* ---------- Amount boxes: no up/down arrows ---------- */
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}

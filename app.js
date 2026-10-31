@@ -1085,8 +1085,8 @@ async function exportLedger(per){
   }catch(e){toast(T2('Could not save the file.','تعذّر حفظ الملف.'))}
 }
 /* ---------- Full money export for the CFO chat: every money record, all time, one JSON file ---------- */
-function fullMoneyExport(){
-  try{
+function moneyExportData(){
+  {
     const b=bud(),pn=id=>(person(id)&&person(id).name)||id;
     const fe=s=>String(s||'').replace(/\{p1\}/g,pn('p1')).replace(/\{p2\}/g,pn('p2'));
     const TY={x:'expense',r:'refund',i:'income',w:'withdrawal_or_transfer',l:'loan_given',p:'loan_repaid_to_me'};
@@ -1138,8 +1138,85 @@ function fullMoneyExport(){
         accounts:b.accts.map(a=>a.n),
         exchange_rates_to_egp:b.rates,exchange_rates_by_month:b.ratesM||{},daily_spending_limit_egp:Number(b.dlim)||0,one_offs_count_in_daily_limit:!!b.ooin,uae_house_fund_aed:Number((b.uae||{}).fund)||0}
     };
-    const blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json;charset=utf-8'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='money-full-export-'+ds(today())+'.json';
+    return out;
+  }
+}
+/* ---- file builders: CSV, and a real .xlsx written by hand (zip without compression), so no library is needed ---- */
+const csvCell=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+function moneyCsvText(out){
+  const cols=['record','date','month','logged_by','type','bill_or_category','subcategory','budget_line','amount','currency','amount_egp','account','merchant_or_note','one_off','counts_as_spending','spending_effect_egp','loan_person','refund_of_entry_id','entry_id','logged_at'];
+  const rows=[cols.join(',')];
+  out.transactions.forEach(t=>rows.push([ 'transaction',t.date,t.date.slice(0,7),t.logged_by,t.type,t.category,t.subcategory,t.budget_line,t.original_amount,t.currency,t.amount_egp,t.account,t.merchant_or_note,t.one_off?'yes':'no',t.counts_as_spending?'yes':'no',t.spending_effect_egp,t.loan_person,t.refund_of_entry_id,t.id,t.logged_at].map(csvCell).join(',')));
+  out.fixed_bill_payments.forEach(q=>rows.push(['bill_payment',q.date,q.month,q.paid_by,'bill payment',q.bill,'','',q.amount,q.currency,q.amount_egp,'',q.note,'no','no','','','','',''].map(csvCell).join(',')));
+  return '\ufeff'+rows.join('\r\n');
+}
+const xlsxEsc=v=>String(v==null?'':v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const xlsxCol=n=>{let r='';n++;while(n>0){const m=(n-1)%26;r=String.fromCharCode(65+m)+r;n=Math.floor((n-1)/26)}return r};
+function xlsxSheet(rows,widths){
+  const data=rows.map((r,i)=>'<row r="'+(i+1)+'">'+r.map((v,c)=>{
+    const ref=xlsxCol(c)+(i+1),st=i===0?' s="1"':'';
+    if(typeof v==='number'&&isFinite(v))return '<c r="'+ref+'"'+st+'><v>'+v+'</v></c>';
+    if(typeof v==='boolean')v=v?'yes':'no';
+    return '<c r="'+ref+'" t="inlineStr"'+st+'><is><t xml:space="preserve">'+xlsxEsc(v)+'</t></is></c>'}).join('')+'</row>').join('');
+  const cols='<cols>'+(widths||[]).map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>').join('')+'</cols>';
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/>'+(widths&&widths.length?cols:'')+'<sheetData>'+data+'</sheetData></worksheet>';
+}
+let CRC_T=null;
+function crc32(u8){
+  if(!CRC_T){CRC_T=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);CRC_T[n]=c>>>0}}
+  let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC_T[(c^u8[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;
+}
+function zipStore(files){
+  const enc=new TextEncoder(),parts=[],cen=[];let off=0;
+  files.forEach(f=>{
+    const nm=enc.encode(f.name),d=enc.encode(f.text),crc=crc32(d);
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(8,0,true);lh.setUint16(10,0,true);lh.setUint16(12,0x21,true);
+    lh.setUint32(14,crc,true);lh.setUint32(18,d.length,true);lh.setUint32(22,d.length,true);lh.setUint16(26,nm.length,true);lh.setUint16(28,0,true);
+    parts.push(new Uint8Array(lh.buffer),nm,d);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(10,0,true);ch.setUint16(12,0,true);ch.setUint16(14,0x21,true);
+    ch.setUint32(16,crc,true);ch.setUint32(20,d.length,true);ch.setUint32(24,d.length,true);ch.setUint16(28,nm.length,true);ch.setUint32(42,off,true);
+    cen.push(new Uint8Array(ch.buffer),nm);
+    off+=30+nm.length+d.length;
+  });
+  let cs=0;cen.forEach(x=>{cs+=x.length});
+  const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+  return new Blob(parts.concat(cen,[new Uint8Array(e.buffer)]),{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+function exportXlsx(out){
+  const tbl=(arr,keys)=>{const k=keys||(arr.length?Object.keys(arr[0]):['(empty)']);return [k].concat(arr.map(o=>k.map(c=>o[c])))};
+  const wd=t=>t[0].map((_,c)=>Math.min(48,Math.max(10,...t.slice(0,60).map(r=>String(r[c]==null?'':r[c]).length+2))));
+  const rateRows=[['month','AED','SAR','USD']].concat(Object.keys(out.budget.exchange_rates_by_month||{}).sort().map(m=>{const r=out.budget.exchange_rates_by_month[m];return [m,r.AED,r.SAR,r.USD]}));
+  const r0=out.budget.exchange_rates_to_egp||{};rateRows.push(['starting rates (used when a month has none)',r0.AED,r0.SAR,r0.USD]);
+  const readme=[['Money export'],[out.about],['Exported on',out.exported_on],['']].concat(out.how_to_read.map(x=>[x])).concat([[''],['Control totals'],['transactions',out.control_totals.transactions],['first date',out.control_totals.first_date],['last date',out.control_totals.last_date],['bill payments',out.control_totals.bill_payments],['bill payments total (EGP)',out.control_totals.bill_payments_total_egp]]).concat(Object.keys(out.control_totals.by_type).map(k=>['total '+k+' (EGP)',out.control_totals.by_type[k].total_egp]));
+  const sheets=[
+    ['Read me',readme,[110,20]],
+    ['Transactions',tbl(out.transactions)],
+    ['Bill payments',tbl(out.fixed_bill_payments)],
+    ['Bill months',tbl(out.fixed_bill_months)],
+    ['Bills',tbl(out.fixed_bills)],
+    ['Budget lines',tbl(out.budget.lines)],
+    ['Categories',tbl(out.budget.categories.map(c=>Object.assign({},c,{subcategories:c.subcategories.join('; ')})))],
+    ['Accounts',[['account']].concat(out.budget.accounts.map(a=>[a]))],
+    ['Rates',rateRows,[44,10,10,10]]
+  ];
+  const files=[
+    {name:'[Content_Types].xml',text:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+sheets.map((x,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('')+'</Types>'},
+    {name:'_rels/.rels',text:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+    {name:'xl/workbook.xml',text:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map((x,i)=>'<sheet name="'+xlsxEsc(x[0])+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets></workbook>'},
+    {name:'xl/_rels/workbook.xml.rels',text:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((x,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+'<Relationship Id="rId'+(sheets.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
+    {name:'xl/styles.xml',text:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'}
+  ].concat(sheets.map((x,i)=>({name:'xl/worksheets/sheet'+(i+1)+'.xml',text:xlsxSheet(x[1],x[2]||wd(x[1]))})));
+  return zipStore(files);
+}
+function fullMoneyExport(fmt){
+  try{
+    const out=moneyExportData(),day=ds(today());let blob,name;
+    if(fmt==='xlsx'){blob=exportXlsx(out);name='money-full-export-'+day+'.xlsx'}
+    else if(fmt==='csv'){blob=new Blob([moneyCsvText(out)],{type:'text/csv;charset=utf-8'});name='money-full-export-'+day+'.csv'}
+    else{blob=new Blob([JSON.stringify(out,null,1)],{type:'application/json;charset=utf-8'});name='money-full-export-'+day+'.json'}
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
     document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
     toast(T2('Saved. Send this file to your CFO chat.','تم الحفظ. أرسل الملف إلى المدير المالي.'));
   }catch(e){toast(T2('Could not save the file.','تعذّر حفظ الملف.'))}
@@ -2928,7 +3005,7 @@ function reportCard(){
     body=list.length?'<ul class="rep-list">'+list.map(o=>'<li class="rep-row"><span data-notr="1">'+esc(o.n)+'</span><b class="num">'+nf(o.v)+'</b><small class="muted num">'+o.c+'×</small></li>').join('')+'</ul>':'<div class="note">'+T2('Add a merchant or note to your expenses and the top ones show here.','اكتب اسم المحل أو ملاحظة مع المصاريف وسيظهر هنا الأعلى.')+'</div>';
   }
   return '<section class="card span2 reportcard"><div class="card-h"><div><h2>'+T2('Money report','تقرير المال')+'</h2><span class="sub">'+esc(R.label)+' · EGP</span></div>'+segP+'</div>'+segS+'<div class="rep-body">'+body+'</div>'
-    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="ledger" data-v="'+per+'">'+T2('Export CSV for the ledger','صدّر ملف CSV للدفتر')+'</button><button type="button" class="chipbtn" data-act="fullexp">'+T2('Export all money details (CFO)','صدّر كل بيانات المال (للمدير المالي)')+'</button></div></section>';
+    +'<div class="mc-btns"><button type="button" class="chipbtn" data-act="ledger" data-v="'+per+'">'+T2('Export CSV for the ledger','صدّر ملف CSV للدفتر')+'</button></div><div class="mc-btns mc-exp"><span class="muted">'+T2('Everything, for the CFO:','كل البيانات، للمدير المالي:')+'</span><button type="button" class="chipbtn" data-act="fullexp" data-v="xlsx">Excel</button><button type="button" class="chipbtn" data-act="fullexp" data-v="csv">CSV</button><button type="button" class="chipbtn" data-act="fullexp" data-v="json">JSON</button></div></section>';
 }
 function sheetSave(){
   const sh=ui.sheet;if(!sh)return;const h=S.habits.find(x=>x.id===sh.hid);if(!h)return;
@@ -3616,7 +3693,7 @@ document.addEventListener('click',e=>{
   else if(a==='repper'){ui.repPer=t.dataset.v;render()}
   else if(a==='repsec'){ui.repSec=t.dataset.v;render()}
   else if(a==='ledger')exportLedger(t.dataset.v);
-  else if(a==='fullexp')fullMoneyExport();
+  else if(a==='fullexp')fullMoneyExport(t.dataset.v);
   else if(a==='setme'){meSet(t.dataset.p);render()}
   else if(a==='pfopen'){ui.pf=t.dataset.p;ui.tab='profile';render();window.scrollTo(0,0)}
   else if(a==='pfnext'){const pid=ui.pf==='p2'?'p2':'p1',n=pfFirstTodo(pid);if(!n){toast('Everything is answered. Thank you.');return}

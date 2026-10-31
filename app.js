@@ -2143,8 +2143,15 @@ const sfv=(sh,k,d)=>(sh.f&&sh.f[k]!==undefined)?sh.f[k]:(d===undefined?'':d);
 function sfSet(k,v){const sh=ui.sheet;if(!sh)return;(sh.f||(sh.f={}))[k]=v;const n=document.querySelector('#sheet [data-sf="'+k+'"]');if(n){if(n.type==='checkbox')n.checked=!!v;else n.value=v}}
 function sheetShell(label,inner,cls){if(ui.sheet&&ui.sheet.page)return '<div class="sheet-card exp-sheet mpage-card '+(cls||'')+'">'+inner+'</div>';return '<div class="sheet-bg" data-act="sheetclose"></div><div class="sheet-card exp-sheet '+(cls||'')+'" role="dialog" aria-modal="true" aria-label="'+esc(label)+'">'+inner+'</div>'}
 function tyTag(x){return x.ty==='r'?'<span class="tag-r">'+T2('Refund','مرتجع')+'</span>':x.ty==='i'?'<span class="tag-i">'+T2('Income','دخل')+'</span>':x.ty==='w'?'<span class="tag-w">'+T2('Cash withdrawal / transfer','سحب نقدي / تحويل')+'</span>':(x.ty==='l'||x.ty==='p')?'<span class="tag-w">'+T2(tyTxt[x.ty][0],tyTxt[x.ty][1])+(x.ln?' · '+esc(x.ln):'')+'</span>':''}
-const tyTxt={x:['Expense','مصروف'],r:['Refund','مرتجع'],i:['Income','دخل'],w:['Cash withdrawal / transfer','سحب نقدي / تحويل'],l:['Loan I gave','سلفة أعطيتها'],p:['Loan paid back to me','سداد سلفة لي']};
+const tyTxt={x:['Expense','مصروف'],r:['Refund','مرتجع'],i:['Income','دخل'],w:['Cash withdrawal / transfer','سحب نقدي / تحويل'],l:['Loan I gave','سلفة أعطيتها'],p:['Loan paid back to me','سداد سلفة لي'],b:['Bill payment','دفعة فاتورة']};
 function lastAcSet(k){ui.lastAc=k;try{localStorage.setItem('istiqama.lastac',k||'')}catch(e){}}
+/* bill payments made on one day, as list rows (read only: change them in Bills) */
+function billDayRows(dstr){
+  const out=[],ym0=ymOf(dstr);
+  bud().fixed.forEach(f=>fxPays(ym0,f.k).forEach(q=>{if(q.d===dstr)out.push('<li class="exp-item exp-bill"><span class="dot" style="background:'+pcol(q.pid)+'" title="'+esc(pname(q.pid))+'"></span><span class="exp-main"><span class="exp-what"><span class="tag-w">'+T2('Bill','فاتورة')+'</span><span data-notr="1">'+esc(fxName(f))+'</span>'+(q.n?'<span data-notr="1">'+esc(q.n)+'</span>':'')+'</span></span><span class="exp-amt num">'+nf2(q.a)+' <small>'+fxCur(f)+'</small></span></li>')}));
+  return out.join('');
+}
+const billNote=()=>'<div class="note">'+T2('Change or remove bill payments in Bills.','تعديل أو حذف دفعات الفواتير من صفحة الفواتير.')+'</div>';
 function chipBtn(act,val,txt,sel,extra){return '<button type="button" class="chipbtn'+(sel?' sel':'')+(extra?' '+extra:'')+'" data-act="'+act+'" data-v="'+esc(val)+'" data-notr="1" aria-pressed="'+(!!sel)+'">'+esc(txt)+'</button>'}
 function renderExpSheet(el,sh,h){
   const fid=document.activeElement&&document.activeElement.id;
@@ -2171,12 +2178,12 @@ function renderExpSheet(el,sh,h){
   }else{
     const editing=!!sh.eid;
     const ty=sh.ty;
-    const tySeg='<div class="pill-seg exp-ty" role="group" aria-label="'+esc(T2('Type','النوع'))+'">'+['x','r','i','w','l','p'].map(k=>'<button type="button" data-act="expty" data-v="'+k+'" aria-pressed="'+(ty===k)+'">'+T2(tyTxt[k][0],tyTxt[k][1])+'</button>').join('')+'</div>';
+    const tySeg='<div class="pill-seg exp-ty" role="group" aria-label="'+esc(T2('Type','النوع'))+'">'+(editing?['x','r','i','w','l','p']:['x','r','i','w','l','p','b']).map(k=>'<button type="button" data-act="expty" data-v="'+k+'" aria-pressed="'+(ty===k)+'">'+T2(tyTxt[k][0],tyTxt[k][1])+'</button>').join('')+'</div>';
     const curSeg='<div class="chips exp-cur" role="group" aria-label="'+esc(T2('Paid in','العملة'))+'">'+['EGP','SAR','AED','USD'].map(c=>chipBtn('expcur',c,c,sh.cur===c)).join('')+'</div>';
     const amtN=parseFloat(f('amt'));
     const conv=(sh.cur!=='EGP'&&!isNaN(amtN)&&amtN>0)?'<div class="note exp-conv">= <b class="num">'+nf2(toEgp(amtN,sh.cur))+'</b> EGP · 1 '+sh.cur+' = '+nf2(rateOf(sh.cur))+' EGP'+(canEditBud()?'':'')+'</div>':(sh.cur!=='EGP'&&!rateOf(sh.cur)?'<div class="note exp-conv bad">'+T2('Set the '+sh.cur+' rate in Budgets first.','حدّد سعر '+sh.cur+' في الميزانيات أولًا.')+'</div>':'');
     let cats='',subRow='';
-    if(!eSkip({ty:ty})){
+    if(!eSkip({ty:ty})&&ty!=='b'){
       const vis=expCats();const all=vis.slice();
       if(sh.cat&&!all.some(c=>c.k===sh.cat)&&catOf(sh.cat))all.push(catOf(sh.cat));
       cats='<div class="exp-lbl">'+T2('Category','الفئة')+'</div><div class="chips exp-cats" role="group" aria-label="'+esc(T2('Category','الفئة'))+'">'+all.map(c=>{const l=lineOf(c.bl);const out=!(l&&l.dl)||(c.oo&&!bud().ooin);return chipBtn('expcat',c.k,catName(c.k)+(c.oo?' · '+T2('one-off','لمرة واحدة'):''),sh.cat===c.k,out?'out':'')}).join('')+'<button type="button" class="chipbtn exp-editcats" data-act="expcatsedit">'+T2('Edit categories','عدّل الفئات')+'</button></div>';
@@ -2200,11 +2207,22 @@ function renderExpSheet(el,sh,h){
       loanF='<label class="f">'+T2('Who is the loan with?','السلفة مع مين؟')+'<input class="in" id="exp-loan" data-sf="loan" type="text" maxlength="40" value="'+esc(f('loan'))+'" placeholder="'+esc(T2('e.g. Ahmed, or Car loan','مثلًا: أحمد، أو سلفة السيارة'))+'"></label>'
         +(ls.length?'<div class="chips exp-loans" role="group" aria-label="'+esc(T2('Existing loans','السلف الحالية'))+'">'+ls.map(l=>chipBtn('exploan',l.name,l.name+(l.out>0?' · '+nf(l.out):''),cur0===l.key)).join('')+'</div>':'');
     }
+    let billPick='',billCur='';
+    if(ty==='b'){
+      const bym=ymOf(sh.d),fl=bud().fixed.filter(f=>fxActive(f,bym)),gs={};
+      fl.forEach(f=>{(gs[f.g]=gs[f.g]||[]).push(f)});
+      const bf=fl.find(f=>f.k===sh.bill);if(bf)billCur=fxCur(bf);
+      billPick='<div class="exp-lbl">'+T2('Which bill?','أي فاتورة؟')+'</div>'
+        +Object.keys(gs).map(g=>'<div class="note exp-bgrp">'+esc((GRP[g]||[g,g])[ui.lang==='ar'?1:0])+'</div><div class="chips exp-bills" role="group">'+gs[g].map(f=>chipBtn('expbill',f.k,fxName(f)+(fxCur(f)!=='EGP'?' · '+fxCur(f):''),sh.bill===f.k)).join('')+'</div>').join('')
+        +(bf?(()=>{const s0=fxState(bf,bym);return '<div class="note exp-conv">'+T2('Planned ','المخطط ')+'<b class="num">'+nf2(s0.exp)+'</b> '+billCur+' · '+T2('paid so far ','المدفوع حتى الآن ')+'<b class="num">'+nf2(s0.paid)+'</b>'+(s0.exp>0&&s0.diff>0?' · '+T2('left ','المتبقي ')+'<b class="num">'+nf2(s0.diff)+'</b>':'')+'</div>'})():'');
+      const an=parseFloat(f('amt'));
+      if(bf&&billCur!=='EGP'&&!isNaN(an)&&an>0)billPick+='<div class="note exp-conv">= <b class="num">'+nf2(toEgp(an,billCur))+'</b> EGP</div>';
+    }
     const acs='<div class="exp-lbl">'+((ty==='w'||ty==='l')?T2('From account (optional)','من حساب (اختياري)'):ty==='p'?T2('Into account (optional)','إلى حساب (اختياري)'):T2('Paid with (optional)','طريقة الدفع (اختياري)'))+'</div><div class="chips exp-accts" role="group">'+bud().accts.map(a=>chipBtn('expac',a.k,acctName(a.k),sh.ac===a.k)).join('')+'</div>';
     const dv=sh.eid?String(sfv(sh,'ed',sh.d)):sh.d,atToday=dv>=ds(today());
     const ds0='<div class="f exp-dategrp"><label for="exp-date">'+T2('Date','التاريخ')+(sh.eid?'':' <small class="muted">'+T2('(use the arrows or the calendar to add for another day)','(استخدم الأسهم أو التقويم لإضافة مصروف ليوم آخر)')+'</small>')+'</label><div class="exp-datenav"><button type="button" class="iconbtn" data-act="expday" data-n="-1" aria-label="'+esc(T2('Previous day','اليوم السابق'))+'">'+svgi('chl')+'</button><input class="in" type="date" id="exp-date" data-sf="ed" value="'+esc(dv)+'" max="'+esc(ds(today()))+'"><button type="button" class="iconbtn" data-act="expday" data-n="1" aria-label="'+esc(T2('Next day','اليوم التالي'))+'"'+(atToday?' disabled':'')+'>'+svgi('chr')+'</button></div></div>';
-    const lbl=ty==='i'?T2('Where from (optional)','المصدر (اختياري)'):(ty==='w'||ty==='l'||ty==='p')?T2('Note (optional)','ملاحظة (اختياري)'):T2('Merchant or note (optional)','المحل أو ملاحظة (اختياري)');
-    const addTxt=editing?T2('Save changes','احفظ التعديل'):(ty==='r'?T2('Add refund','أضف مرتجع'):ty==='i'?T2('Add income','أضف دخل'):ty==='w'?T2('Add withdrawal / transfer','أضف سحبًا / تحويلًا'):ty==='l'?T2('Add loan','أضف سلفة'):ty==='p'?T2('Add repayment','أضف سداد'):T2('Add expense','أضف مصروف'));
+    const lbl=ty==='i'?T2('Where from (optional)','المصدر (اختياري)'):(ty==='w'||ty==='l'||ty==='p'||ty==='b')?T2('Note (optional)','ملاحظة (اختياري)'):T2('Merchant or note (optional)','المحل أو ملاحظة (اختياري)');
+    const addTxt=editing?T2('Save changes','احفظ التعديل'):(ty==='b'?T2('Add bill payment','أضف دفعة فاتورة'):ty==='r'?T2('Add refund','أضف مرتجع'):ty==='i'?T2('Add income','أضف دخل'):ty==='w'?T2('Add withdrawal / transfer','أضف سحبًا / تحويلًا'):ty==='l'?T2('Add loan','أضف سلفة'):ty==='p'?T2('Add repayment','أضف سداد'):T2('Add expense','أضف مصروف'));
     const rows=list.slice().reverse().map(x=>{
       const nm=(x.c&&catName(x.c))?'<b data-notr="1">'+esc(catName(x.c))+(x.sc?' · '+esc(subName(x.c,x.sc)):'')+'</b>':'';
       const note=x.n?'<span data-notr="1">'+esc(expNote(x.n))+'</span>':'';
@@ -2215,13 +2233,14 @@ function renderExpSheet(el,sh,h){
         +'<span class="exp-amt num'+(x.ty==='r'?' neg':(x.ty==='i'||x.ty==='p')?' pos':'')+'">'+(x.ty==='r'||x.ty==='l'?'−':(x.ty==='i'||x.ty==='p')?'+':'')+nf2(x.a)+'</span>'
         +'<button type="button" class="iconbtn exp-del" data-act="expdel" data-p="'+x.pid+'" data-id="'+esc(x.id)+'" aria-label="'+esc(T2('Delete this entry','احذف هذا المصروف'))+'">'+svgi('minus','',3)+'</button></li>';
     }).join('');
+    const billRows=billDayRows(sh.d);
     const none=(isToday&&!list.some(x=>!eSkip(x)))?'<button type="button" class="btn alt exp-none" data-act="expnone">'+T2('Nothing spent today','لم أصرف شيئًا اليوم')+'</button>':'';
-    body='<div class="exp-form">'+ds0+'<label class="f">'+T2('Amount','المبلغ')+'<input class="in" id="exp-amt" data-sf="amt" type="number" inputmode="decimal" step="any" min="0" value="'+esc(f('amt'))+'" placeholder="0"></label>'
-      +tySeg+'<div class="exp-lbl">'+T2('Paid in','العملة')+'</div>'+curSeg+conv
-      +lk+loanF+cats+subRow+acs
+    body='<div class="exp-form">'+ds0+'<label class="f">'+T2('Amount','المبلغ')+(billCur?' ('+billCur+')':'')+'<input class="in" id="exp-amt" data-sf="amt" type="number" inputmode="decimal" step="any" min="0" value="'+esc(f('amt'))+'" placeholder="0"></label>'
+      +tySeg+(ty==='b'?billPick:'<div class="exp-lbl">'+T2('Paid in','العملة')+'</div>'+curSeg+conv)
+      +lk+loanF+cats+subRow+(ty==='b'?'':acs)
       +'<label class="f">'+lbl+'<input class="in" id="exp-note" data-sf="note" type="text" maxlength="200" value="'+esc(f('note'))+'" placeholder="'+esc(ty==='i'?T2('e.g. client payment','مثلًا دفعة عميل'):ty==='w'?T2('e.g. ATM, or transfer to savings','مثلًا: ماكينة صراف، أو تحويل إلى المدخرات'):T2('e.g. Spinneys, taxi','مثلًا: سوبرماركت، تاكسي'))+'" autocomplete="off"></label>'
       +'<div class="sticky-save"><button type="button" class="btn" data-act="expadd">'+addTxt+'</button>'+(editing?'<button type="button" class="btn alt" data-act="expcancel">'+T2('Cancel edit','إلغاء التعديل')+'</button>':'<button type="button" class="btn alt" data-act="sheetclose">'+T2('Done','تم')+'</button>')+'</div>'+none+'</div>'
-      +(rows?'<h4 class="exp-lh">'+(isToday?T2('Added today','أُضيف اليوم'):T2('Added on this day','أُضيف في هذا اليوم'))+' <small class="muted">'+T2('(tap one to edit)','(اضغط على أي واحد لتعديله)')+'</small></h4><ul class="exp-list">'+rows+'</ul>':'<div class="note exp-empty">'+T2('Nothing added yet.','لم يُضف شيء بعد.')+'</div>');
+      +((rows||billRows)?'<h4 class="exp-lh">'+(isToday?T2('Added today','أُضيف اليوم'):T2('Added on this day','أُضيف في هذا اليوم'))+' <small class="muted">'+T2('(tap one to edit)','(اضغط على أي واحد لتعديله)')+'</small></h4><ul class="exp-list">'+rows+billRows+'</ul>'+(billRows?billNote():''):'<div class="note exp-empty">'+T2('Nothing added yet.','لم يُضف شيء بعد.')+'</div>');
   }
   el.innerHTML=sheetShell(hname(h),head+totalCard+body);
   el.hidden=false;
@@ -2249,6 +2268,7 @@ function expAddFromSheet(){
   const sh=ui.sheet;if(!sh||sh.type!=='exp'||sh.edit)return;
   const h=S.habits.find(x=>x.id===sh.hid);if(!h)return;
   collectSf();
+  if(sh.ty==='b'&&!sh.eid){expAddBill(sh);return}
   const o=expFormValues(sh);if(!o)return;
   if(sh.eid){
     const nd=String(sfv(sh,'ed',sh.d))||sh.d;
@@ -2264,6 +2284,21 @@ function expAddFromSheet(){
   /* the next entry starts clean (keeps type, account, currency) */
   sfSet('amt','');sfSet('note','');sfSet('lk','');sfSet('ed',sh.d);
   sh.cat='';sh.sc='';sh.cur='EGP';
+  const sc=window.scrollY;render();window.scrollTo(0,sc);
+  const fo=$('#exp-amt');if(fo)setTimeout(()=>{try{fo.focus()}catch(e){}},30);
+}
+/* a bill payment logged from the Log goes into the same bill records as the Bills page, so nothing is counted twice */
+function expAddBill(sh){
+  const f=bud().fixed.find(x=>x.k===sh.bill);
+  if(!f){toast(T2('Pick the bill first.','اختر الفاتورة أولًا.'));return}
+  const amt=parseFloat(sfv(sh,'amt'));
+  if(isNaN(amt)||amt<=0){toast(T2('Enter an amount.','اكتب المبلغ.'));const a=$('#exp-amt');if(a)a.focus();return}
+  const note=String(sfv(sh,'note')||'').trim();
+  if(noCard(note)){toast(T2('Please do not type card numbers here.','من فضلك لا تكتب أرقام البطاقات هنا.'));return}
+  const nd=String(sfv(sh,'ed',sh.d)||sh.d),okd=/^\d{4}-\d{2}-\d{2}$/.test(nd)&&nd<=ds(today())?nd:sh.d;
+  fxAdd(f.k,ymOf(okd),okd,amt,note);sh.d=okd;
+  toast(T2('Bill payment added: ','تمت إضافة دفعة: ')+fxName(f)+' · '+nf2(amt)+' '+fxCur(f));
+  sfSet('amt','');sfSet('note','');sfSet('ed',sh.d);
   const sc=window.scrollY;render();window.scrollTo(0,sc);
   const fo=$('#exp-amt');if(fo)setTimeout(()=>{try{fo.focus()}catch(e){}},30);
 }
@@ -2621,9 +2656,10 @@ function moneyLog(){
       +'<button type="button" class="exp-main exp-edit" data-act="mlogedit" data-p="'+x.pid+'" data-id="'+esc(x.id)+'" data-d="'+dstr+'" aria-label="'+esc(T2('Edit this entry','عدّل هذا المصروف'))+'"><span class="exp-what">'+tag+nm+note+(!nm&&!note&&!tag?'<span class="muted">'+T2('Expense','مصروف')+'</span>':'')+'</span><small class="muted exp-time" data-notr="1">'+esc(meta)+'</small></button>'
       +'<span class="exp-amt num'+(x.ty==='r'?' neg':(x.ty==='i'||x.ty==='p')?' pos':'')+'">'+(x.ty==='r'||x.ty==='l'?'−':(x.ty==='i'||x.ty==='p')?'+':'')+nf2(x.a)+'</span></li>';
   }).join('');
+  const billRows=billDayRows(dstr);
   const addBtn='<button type="button" class="btn mlog-add" data-act="exp" data-p="'+who+'" data-h="'+esc(sp.id)+'" data-d="'+dstr+'">'+svgi('plus','',3)+' '+T2('Add expense, refund, income, loan or withdrawal','أضف مصروف أو مرتجع أو دخل أو سلفة أو سحب')+'</button>';
   const dayCard='<section class="card span2 mlog-day"><div class="card-h"><h2>'+T2('Log','السجل')+'</h2></div>'+nav+totalCard+addBtn
-    +(rows?'<h4 class="exp-lh">'+T2('Entries','المسجّل')+' <small class="muted">'+T2('(tap one to edit or delete)','(اضغط على أي واحد لتعديله أو حذفه)')+'</small></h4><ul class="exp-list">'+rows+'</ul>':'<div class="note exp-empty">'+T2('Nothing logged for this day yet.','لم يُسجَّل شيء لهذا اليوم بعد.')+'</div>')+'</section>';
+    +((rows||billRows)?'<h4 class="exp-lh">'+T2('Entries','المسجّل')+' <small class="muted">'+T2('(tap one to edit or delete)','(اضغط على أي واحد لتعديله أو حذفه)')+'</small></h4><ul class="exp-list">'+rows+billRows+'</ul>'+(billRows?billNote():''):'<div class="note exp-empty">'+T2('Nothing logged for this day yet.','لم يُسجَّل شيء لهذا اليوم بعد.')+'</div>')+'</section>';
   /* recent days */
   const days=[];for(let i=0;i<7;i++){const dd=addDays(t,-i),k=ds(dd);if(dd<pd(S.start))break;const l2=expList(k,sp,null);const p2=dayParts(l2);days.push({i:i,d:dd,k:k,n:l2.filter(x=>!eMove(x)).length,p:p2,lim:spLim(k)})}
   const emptyN=days.filter(x=>!x.n).length;
@@ -3447,6 +3483,7 @@ document.addEventListener('click',e=>{
   else if(a==='expday'){const sh=ui.sheet;if(sh&&sh.type==='exp'&&!sh.edit){collectSf();const cur=sh.eid?String(sfv(sh,'ed',sh.d)):sh.d,dt=pd(cur);dt.setDate(dt.getDate()+(+t.dataset.n||0));const nd=ds(dt);if(nd>ds(today()))return;if(sh.eid){sfSet('ed',nd);renderSheet()}else expPickDate(nd)}}
   else if(a==='expty'){const sh=ui.sheet;if(sh){collectSf();sh.ty=t.dataset.v;if(eSkip({ty:sh.ty})){sh.cat='';sh.sc=''}renderSheet()}}
   else if(a==='exploan'){const sh=ui.sheet;if(sh){collectSf();sfSet('loan',t.dataset.v);renderSheet()}}
+  else if(a==='expbill'){const sh=ui.sheet;if(sh){collectSf();sh.bill=t.dataset.v;renderSheet();const fo=$('#exp-amt');if(fo)setTimeout(()=>{try{fo.focus()}catch(e){}},30)}}
   else if(a==='expcur'){const sh=ui.sheet;if(sh){collectSf();sh.cur=t.dataset.v;renderSheet()}}
   else if(a==='expcat'){const sh=ui.sheet;if(sh){collectSf();sh.cat=sh.cat===t.dataset.v?'':t.dataset.v;sh.sc='';renderSheet()}}
   else if(a==='expsc'){const sh=ui.sheet;if(sh){collectSf();sh.sc=sh.sc===t.dataset.v?'':t.dataset.v;renderSheet()}}

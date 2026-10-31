@@ -3334,18 +3334,35 @@ function weightCard(pids){
   const body=items.map(it=>{
     const p=it.pts;
     if(p.length<2)return '<div style="margin-bottom:10px">'+(pids.length>1?'<div class="pname"><span class="dot" style="background:'+pcol(it.pid)+'"></span>'+esc(pname(it.pid))+'</div>':'')+'<p class="note">'+(p.length?'First weigh-in: '+nf1(p[0].v)+' kg. A second one will draw the trend.':'No weigh-ins yet. Log your weight once a week.')+'</p></div>';
-    const W=340,Hh=110,pl=30,pr=10,pt=12,pb=22;
-    const mn=Math.min.apply(null,p.map(x=>x.v))-1,mx=Math.max.apply(null,p.map(x=>x.v))+1;
-    const X=i=>pl+(W-pl-pr)*i/(p.length-1),Y=v=>pt+(Hh-pt-pb)*(1-(v-mn)/(mx-mn));
-    const line=p.map((x,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(x.v).toFixed(1)).join('');
+    const W=520,Hh=240,pl=44,pr=18,pt=30,pb=50,col=pcol(it.pid);
+    const lo=Math.min.apply(null,p.map(x=>x.v)),hi=Math.max.apply(null,p.map(x=>x.v));
+    const mn=Math.floor(lo-0.5),mx=Math.ceil(hi+0.5),step=Math.max(1,Math.ceil((mx-mn)/4)),top=mn+step*Math.ceil((mx-mn)/step);
+    const t0=p[0].d.getTime(),span=Math.max(1,p[p.length-1].d.getTime()-t0);
+    const X=i=>pl+(W-pl-pr)*(p[i].d.getTime()-t0)/span,Y=v=>pt+(Hh-pt-pb)*(1-(v-mn)/(top-mn));
     const dl=Math.round((p[p.length-1].v-p[0].v)*10)/10;
-    let g='<text x="'+(pl-4)+'" y="'+(Y(mx)+4)+'" text-anchor="end" class="axis">'+nf1(mx)+'</text><text x="'+(pl-4)+'" y="'+(Y(mn)+4)+'" text-anchor="end" class="axis">'+nf1(mn)+'</text>'
-      +'<path d="'+line+'" fill="none" stroke="'+pcol(it.pid)+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
-    p.forEach((x,i)=>{g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(x.v).toFixed(1)+'" r="4" fill="'+pcol(it.pid)+'" stroke="var(--surface)" stroke-width="2" data-tip="'+esc('<b>'+fmtShort.format(x.d)+'</b><br>'+nf1(x.v)+' kg')+'"/>'});
-    g+='<text x="'+X(0)+'" y="'+(Hh-6)+'" text-anchor="start" class="axis">'+fmtShort.format(p[0].d)+'</text><text x="'+X(p.length-1)+'" y="'+(Hh-6)+'" text-anchor="end" class="axis">'+fmtShort.format(p[p.length-1].d)+'</text>';
-    return '<div style="margin-bottom:12px">'+(pids.length>1?'<div class="pname"><span class="dot" style="background:'+pcol(it.pid)+'"></span>'+esc(pname(it.pid))+'</div>':'')
-      +'<div class="note" style="margin-bottom:4px">Latest '+nf1(p[p.length-1].v)+' kg · '+(dl>0?'+':'')+dl+' kg since '+fmtShort.format(p[0].d)+'</div><div class="chartbox"><svg viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="Weight trend">'+g+'</svg></div></div>';
-  }).join('');
+    let g='';
+    for(let v=mn;v<=top+0.001;v+=step){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-6)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end" class="axis wt-ax">'+nf1(v)+'</text>'}
+    g+='<text x="'+(pl-6)+'" y="'+(pt-14)+'" text-anchor="end" class="axis wt-ax">kg</text>';
+    /* area under the line, then the line; gaps of more than 9 days are dashed and say how many days */
+    let area='M'+X(0).toFixed(1)+' '+(Hh-pb);
+    p.forEach((x,i)=>{area+='L'+X(i).toFixed(1)+' '+Y(x.v).toFixed(1)});
+    area+='L'+X(p.length-1).toFixed(1)+' '+(Hh-pb)+'Z';
+    g+='<path d="'+area+'" fill="'+col+'" opacity=".12"/>';
+    for(let i=1;i<p.length;i++){
+      const days=Math.round((p[i].d-p[i-1].d)/864e5),gap=days>9;
+      g+='<path d="M'+X(i-1).toFixed(1)+' '+Y(p[i-1].v).toFixed(1)+'L'+X(i).toFixed(1)+' '+Y(p[i].v).toFixed(1)+'" fill="none" stroke="'+col+'" stroke-width="3" stroke-linecap="round"'+(gap?' stroke-dasharray="3 6" opacity=".75"':'')+'/>';
+      if(gap)g+='<text x="'+((X(i-1)+X(i))/2).toFixed(1)+'" y="'+(Math.min(Y(p[i].v),Y(p[i-1].v))-9).toFixed(1)+'" text-anchor="middle" class="axis wt-gap">'+days+' '+T2('days','يوم')+'</text>';
+    }
+    p.forEach((x,i)=>{
+      const cx=X(i).toFixed(1),cy=Y(x.v).toFixed(1),row=i%2?14:0,pv=i?p[i-1].v:null,nx=i<p.length-1?p[i+1].v:null,below=pv!=null?x.v<pv:(nx!=null&&x.v<nx);
+      g+='<line x1="'+cx+'" x2="'+cx+'" y1="'+(Hh-pb)+'" y2="'+(Hh-pb+4)+'" stroke="var(--ink3)"/>'
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="5.5" fill="'+col+'" stroke="var(--surface)" stroke-width="2.5" data-tip="'+esc('<b>'+fmtShort.format(x.d)+'</b><br>'+nf1(x.v)+' kg')+'"/>'
+        +'<text x="'+(+cx+(i===0?-3:i===p.length-1?3:0))+'" y="'+(+cy+(below?21:-11))+'" text-anchor="'+(i===0?'start':i===p.length-1?'end':'middle')+'" class="wt-val" fill="'+col+'">'+nf1(x.v)+'</text>'
+        +'<text x="'+cx+'" y="'+(Hh-pb+17+row)+'" text-anchor="middle" class="axis wt-ax">'+fmtShort.format(x.d)+'</text>';
+    });
+    return '<div style="margin-bottom:12px">'+(pids.length>1?'<div class="pname"><span class="dot" style="background:'+col+'"></span>'+esc(pname(it.pid))+'</div>':'')
+      +'<div class="note" style="margin-bottom:4px">'+T2('Latest ','الأخير ')+nf1(p[p.length-1].v)+' kg · '+(dl>0?'+':'')+dl+' kg '+T2('since ','منذ ')+fmtShort.format(p[0].d)+' · '+T2('lowest ','الأدنى ')+nf1(lo)+' · '+p.length+' '+T2('weigh-ins','قياسات')+'</div><div class="chartbox wt-box" dir="ltr"><svg viewBox="0 0 '+W+' '+Hh+'" style="min-width:460px" role="img" aria-label="Weight trend">'+g+'</svg></div></div>';
+}).join('');
   return '<section class="card"><div class="card-h"><h2>Weight trend</h2><span class="sub">weekly weigh-ins</span></div>'+body+'</section>';
 }
 const ACH_ICON={spark:'other',sun:'t_today',flame:'flame',check:'check',book:'mind',run:'body',drop:'body',scale:'body',wallet:'money',pot:'money',brief:'money',idea:'other',talk:'family',star:'other',heart:'heart',couple:'family'};
@@ -3643,6 +3660,7 @@ function render(){
   if(sEl){if(mp&&ui.sheet&&ui.sheet.page){mp.appendChild(sEl);sEl.classList.add('as-page')}else sEl.classList.remove('as-page')}
   post();renderSheet();checkTrophies();trDom();
   /* wide tables open at the current month (last column) */
+  document.querySelectorAll('.wt-box').forEach(w=>{w.scrollLeft=w.scrollWidth});
   document.querySelectorAll('.cat-wrap').forEach(w=>{w.scrollLeft=(document.documentElement.dir==='rtl'?-1:1)*w.scrollWidth});
   if(window.scrollY!==y0)window.scrollTo(0,y0);
 }

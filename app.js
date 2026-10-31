@@ -2687,7 +2687,7 @@ function budgetCard(){
     const diff=s.budget-s.counted,pct=s.budget>0?Math.round(s.counted/s.budget*100):0;
     const pace=(l.kd==='d'&&s.cur&&s.budget>0)?'<small class="bt-pace num">'+T2('should be ≈ ','المفروض ≈ ')+nf(s.pace)+' '+T2('by today','اليوم')+'</small>':'';
     cur.push('<li><b data-notr="1">'+esc(lname(l))+'</b><span class="num" dir="ltr">'+T2('Spent','المصروف')+' ≈ '+triOthers(s.counted,'EGP')+' · '+T2('Budget','الميزانية')+' ≈ '+triOthers(s.budget,'EGP')+'</span></li>');
-    return '<tr class="bt-'+s.st+'"><th scope="row"><b data-notr="1">'+esc(lname(l))+'</b>'+bsBadge(s.st)+pace+'</th>'
+    return '<tr class="bt-'+s.st+' bt-click" data-act="budrow" data-k="'+esc(l.k)+'" data-ym="'+ym+'" tabindex="0" role="button" aria-label="'+esc(T2('Show the records of ','اعرض سجلات ')+lname(l))+'"><th scope="row"><b data-notr="1">'+esc(lname(l))+'</b>'+bsBadge(s.st)+pace+'</th>'
       +'<td class="num">'+nf(s.budget)+'</td>'
       +'<td class="num"><b>'+nf(s.counted)+'</b><small>'+pct+'%</small></td>'
       +'<td class="num bt-d"><b>'+(s.st==='due'?'–':(diff>=0?'':'+')+nf(Math.abs(diff)))+'</b><small>'+(s.st==='due'?T2('not paid','لم يُدفع'):diff>=0?T2('left','متبقي'):T2('over','زيادة'))+'</small></td></tr>';
@@ -2738,6 +2738,11 @@ function renderTxlSheet(el,sh){
   el.hidden=false;trDom();
 }
 const monthEnd=ym=>ym+'-'+String(dimOf(ym)).padStart(2,'0');
+function txlOpenLine(k,ym){
+  const l=lineOf(k),a=ym.split('-'),d0=new Date(+a[0],+a[1]-1,1);
+  ui.sheet={type:'txl',cat:null,line:k,A:ym+'-01',B:monthEnd(ym),ym:ym,title:l?lname(l):k,sub:fmtMonLong.format(d0)+' · '+T2('what is counted in this budget line','ما يُحسب في هذا البند')};
+  renderSheet();
+}
 function txlOpenCat(k,ym){
   const a=ym.split('-'),d0=new Date(+a[0],+a[1]-1,1);
   ui.sheet={type:'txl',cat:k,A:ym+'-01',B:monthEnd(ym),ym:ym,title:(k==='_none'?T2('Not categorised','بدون فئة'):catName(k)),sub:fmtMonLong.format(d0)};
@@ -3542,6 +3547,7 @@ document.addEventListener('click',e=>{
   else if(a==='exploan'){const sh=ui.sheet;if(sh){collectSf();sfSet('loan',t.dataset.v);renderSheet()}}
   else if(a==='expbill'){const sh=ui.sheet;if(sh){collectSf();sh.bill=t.dataset.v;renderSheet();const fo=$('#exp-amt');if(fo)setTimeout(()=>{try{fo.focus()}catch(e){}},30)}}
   else if(a==='catcell')txlOpenCat(t.dataset.k,t.dataset.ym);
+  else if(a==='budrow')txlOpenLine(t.dataset.k,t.dataset.ym);
   else if(a==='expcur'){const sh=ui.sheet;if(sh){collectSf();sh.cur=t.dataset.v;renderSheet()}}
   else if(a==='expcat'){const sh=ui.sheet;if(sh){collectSf();sh.cat=sh.cat===t.dataset.v?'':t.dataset.v;sh.sc='';renderSheet()}}
   else if(a==='expsc'){const sh=ui.sheet;if(sh){collectSf();sh.sc=sh.sc===t.dataset.v?'':t.dataset.v;renderSheet()}}

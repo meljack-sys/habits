@@ -3201,7 +3201,7 @@ function viewDash(){
     trendBody=barChart(ser,labs);
   }
   legend='<div class="legend">'+cols.map(c=>'<span><i style="background:'+c.color+'"></i>'+esc(c.name)+'</span>').join('')+'</div>';
-  const trendCard='<section class="card span2"><div class="card-h"><h2>Progress over time</h2><div class="pill-seg" role="group" aria-label="Range"><button data-act="trend" data-v="week" aria-pressed="'+(ui.trend==='week')+'">Weeks</button><button data-act="trend" data-v="month" aria-pressed="'+(ui.trend==='month')+'">Months</button></div></div>'+trendBody+legend+'</section>';
+  const trendCard='<section class="card"><div class="card-h"><h2>Progress over time</h2><div class="pill-seg" role="group" aria-label="Range"><button data-act="trend" data-v="week" aria-pressed="'+(ui.trend==='week')+'">Weeks</button><button data-act="trend" data-v="month" aria-pressed="'+(ui.trend==='month')+'">Months</button></div></div>'+trendBody+legend+'</section>';
   /* heatmaps */
   const heats=pids.map(pid=>'<section class="card"><div class="card-h"><h2>'+(pids.length>1?esc(pname(pid))+': ':'')+'Last 12 weeks</h2></div>'+weeklyBarStrip(pid)+'</section>').join('');
   /* balance */
@@ -3248,7 +3248,7 @@ function habitsMonthCard(pids,mo){
     }).join('');
     return '<div class="agroup2 area-'+a.id+'"><div class="areahead" style="margin-bottom:8px"><span class="areaico" style="width:34px;height:34px">'+svgi(a.id)+'</span><h3 style="flex:1;min-width:0">'+esc(areaName(a.id))+'</h3><span style="display:flex;gap:6px">'+chips+'</span></div>'+rows+'</div>';
   }).join('');
-  return '<section class="card span2"><div class="card-h"><h2>'+T2('Each habit','كل عادة')+' · '+perRange().lbl.toLowerCase()+'</h2><span class="sub">grouped by category</span></div>'+groups+'</section>';
+  return '<section class="card span2"><div class="card-h"><h2>'+T2('Each habit','كل عادة')+' · '+perRange().lbl.toLowerCase()+'</h2><span class="sub">grouped by category</span></div><div class="agroups">'+groups+'</div></section>';
 }
 function spendStat(from,to){
   const h=S.habits.find(x=>x.type==='num'&&x.kind==='spend');if(!h)return null;
@@ -3346,7 +3346,7 @@ function weightCard(pids){
     return '<div style="margin-bottom:12px">'+(pids.length>1?'<div class="pname"><span class="dot" style="background:'+pcol(it.pid)+'"></span>'+esc(pname(it.pid))+'</div>':'')
       +'<div class="note" style="margin-bottom:4px">Latest '+nf1(p[p.length-1].v)+' kg · '+(dl>0?'+':'')+dl+' kg since '+fmtShort.format(p[0].d)+'</div><div class="chartbox"><svg viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="Weight trend">'+g+'</svg></div></div>';
   }).join('');
-  return '<section class="card span2"><div class="card-h"><h2>Weight trend</h2><span class="sub">weekly weigh-ins</span></div>'+body+'</section>';
+  return '<section class="card"><div class="card-h"><h2>Weight trend</h2><span class="sub">weekly weigh-ins</span></div>'+body+'</section>';
 }
 const ACH_ICON={spark:'other',sun:'t_today',flame:'flame',check:'check',book:'mind',run:'body',drop:'body',scale:'body',wallet:'money',pot:'money',brief:'money',idea:'other',talk:'family',star:'other',heart:'heart',couple:'family'};
 const tierIdx=(t,n)=>t<=0?0:(n<=1?3:Math.floor(1+(t-1)*5/(n-1)));

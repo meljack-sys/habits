@@ -690,6 +690,7 @@ const fxActive=(f,ym)=>{const l=f.bl?lineOf(f.bl):null;return !(l&&l.from&&ym<l.
 const fxNote=f=>ui.lang==='ar'?(f.noteAr||f.note||''):(f.note||'');
 const GRP={eg:['Egypt','مصر','EGP'],uae:['UAE family house','بيت العائلة في الإمارات','AED'],loan:['Loans','القروض','']};
 const nf2=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
+const nfw=n=>Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const nfc=(n,c)=>nf2(n)+' '+c;
 const noCard=s=>/\d[\d \-]{10,}\d/.test(String(s||''));
 const expNote=n=>n==='Earlier total'?T2('Earlier total','إجمالي سابق'):n;
@@ -1666,7 +1667,7 @@ function metricRows(pids,kinds,area){
     R('Days with sweets',x=>nf(pick(x).sweetOver)+'<small>days</small>');
   }
   if(kinds.weight){
-    R('Latest weight',x=>pick(x).wLast==null?'–':nf1(pick(x).wLast)+'<small>kg</small>');
+    R('Latest weight',x=>pick(x).wLast==null?'–':nfw(pick(x).wLast)+'<small>kg</small>');
     R('Change in the period',x=>{const p=pick(x);if(p.wN<2)return '<small>needs two weigh-ins</small>';const d=Math.round((p.wLast-p.wFirst)*10)/10;return (d>0?'+':'')+d+'<small>kg</small>'});
     R('Weigh-ins logged',x=>nf(pick(x).wN)+'<small>times</small>');
   }
@@ -2078,8 +2079,8 @@ function habitRow(h,pid,d,dstr){
       if(has){const ok=Number(v)<=lim;meta=stBadge(ok,'Within the limit','Over the limit')+'<span>limit '+nf(lim)+' '+esc(S.currency)+'</span>'+(ne?'<span>'+ne+(ne===1?' expense':' expenses')+'</span>':'');right='<span class="wk">'+nf(v)+'<br><small style="font-weight:500">'+esc(S.currency)+'</small></span>'}
       else meta='<span>Tap to add what you spend. Limit '+nf(lim)+' '+esc(S.currency)+' a day</span>';
     }else if(h.kind==='weight'){
-      if(has){const p=prevVal(pid,h,dstr,60);const dl=p?Math.round((Number(v)-p.v)*10)/10:null;
-        meta='<span>'+(dl==null?'First weigh-in':(dl>0?'+':'')+dl+' kg since last time')+'</span>';right='<span class="wk">'+nf1(v)+'<br><small style="font-weight:500">kg</small></span>'}
+      if(has){const p=prevVal(pid,h,dstr,60);const dl=p?Math.round((Number(v)-p.v)*100)/100:null;
+        meta='<span>'+(dl==null?'First weigh-in':(dl>0?'+':'')+nfw(dl)+' kg since last time')+'</span>';right='<span class="wk">'+nfw(v)+'<br><small style="font-weight:500">kg</small></span>'}
       else meta='<span>Tap to enter your weight</span>';
     }else{
       if(has){const ok=!h.goal||Number(v)>=h.goal;meta=(h.goal?stBadge(ok,'Goal reached','Below goal '+nf(h.goal)):'');right='<span class="wk">'+nf(v)+'<br><small style="font-weight:500">'+esc(unitOf(h.kind))+'</small></span>'}
@@ -3342,15 +3343,15 @@ function weightCard(pids){
   if(!items.length)return '';
   const body=items.map(it=>{
     const p=it.pts;
-    if(p.length<2)return '<div style="margin-bottom:10px">'+(pids.length>1?'<div class="pname"><span class="dot" style="background:'+pcol(it.pid)+'"></span>'+esc(pname(it.pid))+'</div>':'')+'<p class="note">'+(p.length?'First weigh-in: '+nf1(p[0].v)+' kg. A second one will draw the trend.':'No weigh-ins yet. Log your weight once a week.')+'</p></div>';
+    if(p.length<2)return '<div style="margin-bottom:10px">'+(pids.length>1?'<div class="pname"><span class="dot" style="background:'+pcol(it.pid)+'"></span>'+esc(pname(it.pid))+'</div>':'')+'<p class="note">'+(p.length?'First weigh-in: '+nfw(p[0].v)+' kg. A second one will draw the trend.':'No weigh-ins yet. Log your weight once a week.')+'</p></div>';
     const W=520,Hh=240,pl=44,pr=18,pt=30,pb=50,col=pcol(it.pid);
     const lo=Math.min.apply(null,p.map(x=>x.v)),hi=Math.max.apply(null,p.map(x=>x.v));
     const mn=Math.floor(lo-0.5),mx=Math.ceil(hi+0.5),step=Math.max(1,Math.ceil((mx-mn)/4)),top=mn+step*Math.ceil((mx-mn)/step);
     const t0=p[0].d.getTime(),span=Math.max(1,p[p.length-1].d.getTime()-t0);
     const X=i=>pl+(W-pl-pr)*(p[i].d.getTime()-t0)/span,Y=v=>pt+(Hh-pt-pb)*(1-(v-mn)/(top-mn));
-    const dl=Math.round((p[p.length-1].v-p[0].v)*10)/10;
+    const dl=Math.round((p[p.length-1].v-p[0].v)*100)/100;
     let g='';
-    for(let v=mn;v<=top+0.001;v+=step){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-6)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end" class="axis wt-ax">'+nf1(v)+'</text>'}
+    for(let v=mn;v<=top+0.001;v+=step){g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-6)+'" y="'+(Y(v)+4).toFixed(1)+'" text-anchor="end" class="axis wt-ax">'+nfw(v)+'</text>'}
     g+='<text x="'+(pl-6)+'" y="'+(pt-14)+'" text-anchor="end" class="axis wt-ax">kg</text>';
     /* area under the line, then the line; gaps of more than 9 days are dashed and say how many days */
     let area='M'+X(0).toFixed(1)+' '+(Hh-pb);
@@ -3365,12 +3366,12 @@ function weightCard(pids){
     p.forEach((x,i)=>{
       const cx=X(i).toFixed(1),cy=Y(x.v).toFixed(1),row=i%2?14:0,pv=i?p[i-1].v:null,nx=i<p.length-1?p[i+1].v:null,below=pv!=null?x.v<pv:(nx!=null&&x.v<nx);
       g+='<line x1="'+cx+'" x2="'+cx+'" y1="'+(Hh-pb)+'" y2="'+(Hh-pb+4)+'" stroke="var(--ink3)"/>'
-        +'<circle cx="'+cx+'" cy="'+cy+'" r="5.5" fill="'+col+'" stroke="var(--surface)" stroke-width="2.5" data-tip="'+esc('<b>'+fmtShort.format(x.d)+'</b><br>'+nf1(x.v)+' kg')+'"/>'
-        +'<text x="'+(+cx+(i===0?-3:i===p.length-1?3:0))+'" y="'+(+cy+(below?21:-11))+'" text-anchor="'+(i===0?'start':i===p.length-1?'end':'middle')+'" class="wt-val" fill="'+col+'">'+nf1(x.v)+'</text>'
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="5.5" fill="'+col+'" stroke="var(--surface)" stroke-width="2.5" data-tip="'+esc('<b>'+fmtShort.format(x.d)+'</b><br>'+nfw(x.v)+' kg')+'"/>'
+        +'<text x="'+(+cx+(i===0?-3:i===p.length-1?3:0))+'" y="'+(+cy+(below?21:-11))+'" text-anchor="'+(i===0?'start':i===p.length-1?'end':'middle')+'" class="wt-val" fill="'+col+'">'+nfw(x.v)+'</text>'
         +'<text x="'+cx+'" y="'+(Hh-pb+17+row)+'" text-anchor="middle" class="axis wt-ax">'+fmtShort.format(x.d)+'</text>';
     });
     return '<div style="margin-bottom:12px">'+(pids.length>1?'<div class="pname"><span class="dot" style="background:'+col+'"></span>'+esc(pname(it.pid))+'</div>':'')
-      +'<div class="note" style="margin-bottom:4px">'+T2('Latest ','الأخير ')+nf1(p[p.length-1].v)+' kg · '+(dl>0?'+':'')+dl+' kg '+T2('since ','منذ ')+fmtShort.format(p[0].d)+' · '+T2('lowest ','الأدنى ')+nf1(lo)+' · '+p.length+' '+T2('weigh-ins','قياسات')+'</div><div class="chartbox wt-box" dir="ltr"><svg viewBox="0 0 '+W+' '+Hh+'" style="min-width:460px" role="img" aria-label="Weight trend">'+g+'</svg></div></div>';
+      +'<div class="note" style="margin-bottom:4px">'+T2('Latest ','الأخير ')+nfw(p[p.length-1].v)+' kg · '+(dl>0?'+':'')+nfw(dl)+' kg '+T2('since ','منذ ')+fmtShort.format(p[0].d)+' · '+T2('lowest ','الأدنى ')+nfw(lo)+' · '+p.length+' '+T2('weigh-ins','قياسات')+'</div><div class="chartbox wt-box" dir="ltr"><svg viewBox="0 0 '+W+' '+Hh+'" style="min-width:460px" role="img" aria-label="Weight trend">'+g+'</svg></div></div>';
 }).join('');
   return '<section class="card"><div class="card-h"><h2>Weight trend</h2><span class="sub">weekly weigh-ins</span></div>'+body+'</section>';
 }

@@ -1,6 +1,7 @@
 # Habits, Together: Control
 
 ## Status (as of 2026-10-31)
+- Pushed 2026-10-31 (third batch): Today goes back to one wide themed box per life area (3-4 habits per row inside, areas stacked); Bills cards are one fixed size showing the last 2 payments (no notes), with full history, notes, edit and add-payment in a pop-out. Live check: PENDING.
 - Pushed 2026-10-31 (second batch, from Muhammed's review): Today shows one tile per life area with a done count; Log button reads "Record transaction", type buttons are short (Expense, Refund, Income, Cash out, Lent, Repaid, Bill), picking an option no longer jumps to the amount; Bills show name, Planned/Paid/Left in large dark type with one-line notes; weight shown with two decimals (91.00). Live check: PENDING.
 - Pushed 2026-10-31 (12 commits, up to 9a1efe0): Money (average-spend strip, bill payments in Log, no amount arrows, 6-month category table with drill-down, clickable budget rows, Bills grid, monthly exchange rates, Excel/CSV/JSON export) and outside Money (5 period tabs on Dashboard and Impact, denser laptop layout, new weight chart, Setup fold/unfold). Only tested on sample data. Live check on phone and laptop: PENDING.
 - First Money open after this push asks for October's exchange rates (Muhammed's phone only).
@@ -46,7 +47,8 @@
 - "Where the money goes" is a table: last 6 months plus an average of completed months with spending. It counts logged entries only, not bill payments.
 - Budget amounts can be typed in EGP, SAR or AED; the line is kept as a SAR amount and EGP follows each month's rate.
 - Weights are always shown with two decimals.
-- Today: area name is not repeated on each row inside an area tile; shared habits show "Together".
+- Today: one wide box per life area, never several areas side by side. Area name is not repeated on each row; shared habits show "Together".
+- Bills: every card is the same size and shows only the last 2 payments (no notes). History, notes, edit, delete and add payment live in a pop-out.
 - Money export comes as Excel, CSV and JSON, all with the same totals.
 - Period tabs everywhere outside Money: Last week, This week, This month, Last month, All time.
 - Setup sections fold; habit areas start folded, Expand all / Collapse all on top.
